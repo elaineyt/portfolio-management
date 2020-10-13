@@ -123,6 +123,7 @@
 				
 				getPositions();
 				
+				
 				var username = '<%= session.getAttribute("username")%>'
 				
 				// Redirect user if they are not logged in
@@ -167,17 +168,18 @@
 				$('#logoutButton').click(
 						function(e) {
 							// * Send http request to server to overwrite session attribute.
-							var username = '<%= session.setAttribute("username", "")%>'
 							let HTTP = new XMLHttpRequest();
 					        var d = new Date();
 					        var n = d.getTime();
-							const url = "http://localhost:8080/logout?username=" + username.toString() + "&t=" + n;
-						    HTTP.open("GET", url);
+							const url = "http://localhost:8080/logout";
+						    HTTP.open("POST", url);
 						    HTTP.send();
 						    
-						    if(HTTP.status == 200) {
-						    	// Successfully logged out user
-						    	window.location.href = 'http://localhost:8080/index.jsp';
+						    HTTP.onreadystatechange = (e) => {
+							    if(HTTP.status == 200) {
+							    	// Successfully logged out user
+							    	window.location.href = 'http://localhost:8080/index.jsp';
+							    }
 						    }
 						}
 					);
