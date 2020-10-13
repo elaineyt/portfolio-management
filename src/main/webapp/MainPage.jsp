@@ -28,7 +28,6 @@
 </style>
 </head>
 <body>
-
 	<div class="jumbotron text-center">
 		<h1>CS310 Stock Portfolio Management</h1>
 	</div>
@@ -122,7 +121,6 @@
 			function(){
 				
 				getPositions();
-				
 				
 				var username = '<%= session.getAttribute("username")%>'
 				
