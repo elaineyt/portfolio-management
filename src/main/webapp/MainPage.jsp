@@ -28,7 +28,6 @@
 </style>
 </head>
 <body>
-	<input type="hidden" name="username" value="${sessionScope.username}" />
 	<div class="jumbotron text-center">
 		<h1>CS310 Stock Portfolio Management</h1>
 	</div>
