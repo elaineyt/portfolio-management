@@ -20,12 +20,21 @@
 .errorMessage {
 	color: red;
 }
+#top-right {
+	position: absolute;
+	top: 5px;
+	right: 5px;
+}
 </style>
 </head>
 <body>
 
 	<div class="jumbotron text-center">
 		<h1>CS310 Stock Portfolio Management</h1>
+	</div>
+	
+	<div id="top-right">
+		<button id="logoutButton" type="button" class="btn btn-primary">Logout</button>
 	</div>
 
 	<div class="container">
@@ -114,6 +123,14 @@
 				
 				getPositions();
 				
+				
+				var username = '<%= session.getAttribute("username")%>'
+				
+				// Redirect user if they are not logged in
+				if(username == "") {
+					window.location.href = 'http://localhost:8080/index.jsp';
+				}
+				
 				// Data Picker Initialization
 				$('#addStockBuyDate').datepicker({
 					autoclose: true
@@ -147,6 +164,25 @@
 						$("#addStockModal").modal('show');
 					}
 				);
+				
+				$('#logoutButton').click(
+						function(e) {
+							// * Send http request to server to overwrite session attribute.
+							let HTTP = new XMLHttpRequest();
+					        var d = new Date();
+					        var n = d.getTime();
+							const url = "http://localhost:8080/logout";
+						    HTTP.open("POST", url);
+						    HTTP.send();
+						    
+						    HTTP.onreadystatechange = (e) => {
+							    if(HTTP.status == 200) {
+							    	// Successfully logged out user
+							    	window.location.href = 'http://localhost:8080/index.jsp';
+							    }
+						    }
+						}
+					);
 			}
 		);
 	
