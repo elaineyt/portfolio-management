@@ -116,6 +116,7 @@
 	
 	<script>
 	const finnhub_token = "bts376n48v6teecg7ul0";
+	var positions = new Set();
 	
 		$(document).ready(
 			function(){
@@ -201,9 +202,15 @@
         		var response = JSON.parse(HTTP.responseText);
         		for(var i = 0; i < response.positions.length; i++){
         			var tickerSymbol = response.positions[i].position;
-        			var row = "<div class='row'><div class='col-sm-2'><input type='checkbox'/></div><div class='col-sm-8'>" + tickerSymbol + 
-        			"</div><div class='col-sm-2'><button type='button' class='btn' onclick=deleteStockModal('" + tickerSymbol + "')>X</button></div></div>";
-                	$("#positions").append(row);
+        			var dateBought = response.positions[i].date_bought;
+        			var dateSold = response.positions[i].date_sold;
+        			var today = new Date();
+        			if(Date.parse(dateBought) <= today && today <= Date.parse(dateSold)){
+        				var row = "<div class='row'><div class='col-sm-2'><input type='checkbox'/></div><div class='col-sm-8'>" + tickerSymbol + 
+        				"</div><div class='col-sm-2'><button type='button' class='btn' onclick=deleteStockModal('" + tickerSymbol + "')>X</button></div></div>";
+                		$("#positions").append(row);
+        			}
+        			positions.add(tickerSymbol);
         		}
         	}   
         }
@@ -226,6 +233,7 @@
        	HTTP.onreadystatechange = (e) => {
        		if(HTTP.readyState == 4 && HTTP.status == 200){
        			$("#deleteStockModal").modal('hide');
+       			positions.delete(tickerSymbol);
        			getPositions();
        		}   
        	}
@@ -248,6 +256,10 @@
        			// invalid ticker symbol
        			if(HTTP.responseText.toString() == "{\"c\":0,\"h\":0,\"l\":0,\"o\":0,\"pc\":0,\"t\":0}"){
        				$('#addStockErrorTS').html("Invalid ticker symbol.");
+       				error = true;
+       			}
+       			else if(positions.has(tickerSymbol)){
+       				$('#addStockErrorTS').html("Portfolio already contains this stock.");
        				error = true;
        			}
     			// number of shares is left blank
@@ -282,11 +294,11 @@
     			}	
        				
 
-       				// Get session attribute here 
-       				var username = '<%= session.getAttribute("username")%>';
+       			// Get session attribute here 
+       			var username = '<%= session.getAttribute("username")%>';
 
        	
-       				
+       			
        			if(error == false){
        	            const HTTP = new XMLHttpRequest();
        	            const url = "http://localhost:8080/portfolio?username=" + username.toString() + "&position=" + tickerSymbol.toString() + "&share_count=" + 
@@ -296,10 +308,14 @@
        	            
        	            HTTP.onreadystatechange = (e) => {
        	            	if(HTTP.readyState == 4 && HTTP.status == 200){
-       	            		$("#addStockModal").modal('hide');
-       	            		var row = "<div class='row'><div class='col-sm-2'><input type='checkbox'/></div><div class='col-sm-8'>" + tickerSymbol + 
-       	        			"</div><div class='col-sm-2'><button type='button' class='btn' onclick=deleteStockModal('" + tickerSymbol + "')>X</button></div></div>";
-       	                	$("#positions").append(row);
+       	        			$("#addStockModal").modal('hide');
+       	        			var today = new Date();
+       	            		if(Date.parse(buyDate.toString()) <= today && today <= Date.parse(sellDate.toString())){
+       	            			var row = "<div class='row'><div class='col-sm-2'><input type='checkbox'/></div><div class='col-sm-8'>" + tickerSymbol + 
+       	        				"</div><div class='col-sm-2'><button type='button' class='btn' onclick=deleteStockModal('" + tickerSymbol + "')>X</button></div></div>";
+       	                		$("#positions").append(row);
+       	            		}
+       	            		positions.add(tickerSymbol);
        	            	}   
        	            }	
        			}	
