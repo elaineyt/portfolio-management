@@ -1,0 +1,51 @@
+Meeting Participants
+Andreas Bigger
+Elaine Tran
+Henry Cikanek
+Adam Dillard
+Tyler Jensen
+
+Sprint Backlog:
+
+1. Login/Register Requirements
+
+Password should be hashed
+Change “Register” to “Create Account”
+3 login attempts (existing username, incorrect password), then lock out for 1 minute
+Double check UI is completely what CP’s want in RE
+Logout Functionality
+Acceptance tests
+
+2. Graph
+Line for total portfolio value and whatever individual stock is selected
+Total portfolio value is calculated everyday - historical value reflects current stocks you have - deletion should lead to 0 trace you ever had the stock
+Line graphs can only go until today - end date cannot be after today
+If today is between buy and sell date and stock is selected in portfolio list, display in graph (with corresponding color)
+If no end date, current date is end date
+If no start date - start date is earliest date of a stock purchase
+No requirements on axis labeling
+Start date/end date specified with pop-up calendar or mm/dd/yyyy
+Acceptance tests
+
+3. Bulk Upload Button
+Next to Add Stock Button
+Lead to pop-up that has Cancel and Upload button
+Upload button allows you to pick csv from file explorer
+No requirement on format of CSV, but will add all fields to position list
+Acceptance tests
+
+4. Main Page
+120 seconds of inactivity redirects to login screen
+Logout redirect to login screen
+If user is not logged in, redirect to the login page
+USC CS310 Stock Portfolio Management align left in banner (no logo requirement)
+#787878 banner color, no color requirement, no font requirements, no text color requirement
+Total value display with daily percent change beneath with green/red upward/downward triangle
+Acceptance tests
+
+5. Portfolio List
+Acceptance tests
+
+Why these task were chosen:
+
+Taking into account our Sprint 2 Retrospective, we chose a fairly comprehensive task load as we seek to take the website into full functionality during this sprint while ironing out tests, refactors, and a few additional features. We are on track to complete login and logout functionality. As well as the graph and main page.
