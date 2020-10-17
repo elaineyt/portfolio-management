@@ -324,7 +324,7 @@ public class PortfolioTest extends Mockito {
     }
 	
 	@Test
-    public void testSuccessfulDoPost() throws Exception {
+    public void testDoPost() throws Exception {
 		HttpServletRequest request = mock(HttpServletRequest.class);
         HttpServletResponse response = mock(HttpServletResponse.class);
 
@@ -401,7 +401,7 @@ public class PortfolioTest extends Mockito {
     }
 	
 	@Test
-    public void testSuccessfulDoGet() throws Exception {
+    public void testDoGet() throws Exception {
         HttpServletRequest request = mock(HttpServletRequest.class);       
         HttpServletResponse response = mock(HttpServletResponse.class);    
 
@@ -553,7 +553,7 @@ public class PortfolioTest extends Mockito {
     }
 	
 	@Test
-    public void testSuccessfulDoDelete() throws Exception {
+    public void testDoDelete() throws Exception {
 		HttpServletRequest request = mock(HttpServletRequest.class);
         HttpServletResponse response = mock(HttpServletResponse.class);
 
