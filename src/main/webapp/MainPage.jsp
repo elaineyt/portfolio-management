@@ -260,8 +260,9 @@ canvas{
 							   	window.location.href = 'http://localhost:8080/index.jsp';
 							}
 						}
+					}
 
-					);
+				);
 				
 				// Try to redirect user
 				try {
