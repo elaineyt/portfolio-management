@@ -172,12 +172,26 @@ canvas{
 				
 				getPositions();
 				
-				var username = '<%= session.getAttribute("username")%>'
-				
-				// Redirect user if they are not logged in
-				if(username == "") {
-					window.location.href = 'http://localhost:8080/index.jsp';
-				}
+				const idleDurationSecs = 120;    // X number of seconds
+			    const redirectUrl = 'http://localhost:8080/index.jsp';  // Redirect idle users to this URL
+			    let idleTimeout; // variable to hold the timeout, do not modify
+			
+			    const resetIdleTimeout = function() {
+			
+			        // Clears the existing timeout
+			        if(idleTimeout) clearTimeout(idleTimeout);
+			
+			        // Set a new idle timeout to load the redirectUrl after idleDurationSecs
+			        idleTimeout = setTimeout(() => window.location.href = redirectUrl, idleDurationSecs * 1000);
+			    };
+			
+			    // Init on page load
+			    resetIdleTimeout();
+			
+			    // Reset the idle timeout on any of the events listed below
+			    ['click', 'touchstart', 'mousemove'].forEach(evt => 
+			        document.addEventListener(evt, resetIdleTimeout, false)
+			    );
 				
 				// Data Picker Initialization
 				$('#addStockBuyDate').datepicker({
@@ -246,10 +260,26 @@ canvas{
 							   	window.location.href = 'http://localhost:8080/index.jsp';
 							}
 						}
-					}
-				);
+
+					);
 				
-				
+				// Try to redirect user
+				try {
+					var username = '<%= session.getAttribute("username")%>';
+					
+					// Redirect user if they are not logged in
+					if(username == "") {
+						window.location.href = 'http://localhost:8080/index.jsp';
+					}	
+					
+					// Redirect user if they are not logged in
+					if(<%= session.getAttribute("username").equals("") %>) {
+						window.location.href = 'http://localhost:8080/index.jsp';
+					}	
+				} catch(e) {
+					// username is not null so we want it as a string
+					username = '<%= session.getAttribute("username")%>';
+				}
 			}
 		);
 	
