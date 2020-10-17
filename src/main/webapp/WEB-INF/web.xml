@@ -5,18 +5,13 @@
 <web-app>
   <display-name>Project2</display-name>
   <servlet>
-  	<servlet-name>GreetingServlet</servlet-name>
-  	<servlet-class>csci310.servlets.GreetingServlet</servlet-class>
-  	</servlet>
+  	<servlet-name>Portfolio</servlet-name>
+  	<servlet-class>csci310.servlets.Portfolio</servlet-class>
+  </servlet>
   <servlet-mapping>
-  	<servlet-name>GreetingServlet</servlet-name>
-  	<url-pattern>/greeting</url-pattern>
-  	
-  	</servlet-mapping>
-  <servlet><servlet-name>
-  		Portfolio
-  		</servlet-name><servlet-class>csci310.servlets.Portfolio</servlet-class></servlet>
-  <servlet-mapping><servlet-name>Portfolio</servlet-name><url-pattern>/portfolio</url-pattern></servlet-mapping>
+  	<servlet-name>Portfolio</servlet-name>
+	<url-pattern>/portfolio</url-pattern>
+  </servlet-mapping>
   <servlet>
   	<servlet-name>User</servlet-name>
   	<servlet-class>csci310.servlets.User</servlet-class></servlet>
@@ -29,12 +24,12 @@
   <servlet-mapping>
   	<servlet-name>Login</servlet-name>
   	<url-pattern>/login</url-pattern>
-</servlet-mapping>
-<servlet>
+  </servlet-mapping>
+  <servlet>
   	<servlet-name>Logout</servlet-name>
   	<servlet-class>csci310.servlets.Logout</servlet-class></servlet>
   <servlet-mapping>
   	<servlet-name>Logout</servlet-name>
   	<url-pattern>/logout</url-pattern>
-</servlet-mapping>
+  </servlet-mapping>
 </web-app>
