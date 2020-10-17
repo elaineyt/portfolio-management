@@ -265,21 +265,12 @@ canvas{
 				);
 				
 				// Try to redirect user
-				try {
-					var username = '<%= session.getAttribute("username")%>';
-					
-					// Redirect user if they are not logged in
-					if(username == "") {
-						window.location.href = 'http://localhost:8080/index.jsp';
-					}	
-					
-					// Redirect user if they are not logged in
-					if(<%= session.getAttribute("username").equals("") %>) {
-						window.location.href = 'http://localhost:8080/index.jsp';
-					}	
-				} catch(e) {
-					// username is not null so we want it as a string
-					username = '<%= session.getAttribute("username")%>';
+				var username = '<%= session.getAttribute("username")%>';
+				var null_username = '<%= session.getAttribute("username") == null %>';
+				
+				// Redirect user if they are not logged in
+				if(username == "" || null_username == "true") {
+					window.location.href = 'http://localhost:8080/index.jsp';
 				}
 			}
 		);
