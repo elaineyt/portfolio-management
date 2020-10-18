@@ -97,6 +97,277 @@ public class StepDefinitions {
 		String buttonName = tab.getText();
 		assertTrue(buttonName.equals("Login")); 
 	}
+	
+	@When("I add an invalid stock")
+	public void i_add_an_invalid_stock() {
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		WebElement button = driver.findElement(By.id("addStockModalButton"));
+		button.click();
+		
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		driver.findElement(By.id("addStockTicker")).sendKeys("AAPLL");
+		driver.findElement(By.id("addStockShares")).sendKeys("1");
+		driver.findElement(By.id("addStockBuyDate")).sendKeys("10/15/2020");
+		driver.findElement(By.id("addStockSellDate")).sendKeys("10/31/2020");
+		
+		WebElement button1 = driver.findElement(By.id("addStock"));
+		button1.click();
+
+	}
+
+	@Then("the ticker symbol error should say {string}")
+	public void the_ticker_symbol_error_should_say(String string) {
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    String error = driver.findElement(By.id("addStockErrorTS")).getText();
+	    assertTrue(string.equals(error));
+	}
+	
+	@When("I add a duplicate stock")
+	public void i_add_a_duplicate_stock() {
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		WebElement button = driver.findElement(By.id("addStockModalButton"));
+		button.click();
+		
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		driver.findElement(By.id("addStockTicker")).sendKeys("AAPL");
+		driver.findElement(By.id("addStockShares")).sendKeys("1");
+		driver.findElement(By.id("addStockBuyDate")).sendKeys("10/15/2020");
+		driver.findElement(By.id("addStockSellDate")).sendKeys("10/31/2020");
+		
+		WebElement button1 = driver.findElement(By.id("addStock"));
+		button1.click();
+	}
+
+	@When("I add a stock without share amount")
+	public void i_add_a_stock_without_share_amount() {
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		WebElement button = driver.findElement(By.id("addStockModalButton"));
+		button.click();
+		
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		driver.findElement(By.id("addStockTicker")).sendKeys("GOOG");
+		driver.findElement(By.id("addStockShares")).sendKeys("");
+		driver.findElement(By.id("addStockBuyDate")).sendKeys("10/15/2020");
+		driver.findElement(By.id("addStockSellDate")).sendKeys("10/31/2020");
+		
+		WebElement button1 = driver.findElement(By.id("addStock"));
+		button1.click();
+	}
+
+	@Then("the share error should say {string}")
+	public void the_share_error_should_say(String string) {
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    String error = driver.findElement(By.id("addStockErrorShares")).getText();
+	    assertTrue(string.equals(error));
+	    
+	}
+
+	@When("I add a stock with a fractional share")
+	public void i_add_a_stock_with_a_fractional_share() {
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		WebElement button = driver.findElement(By.id("addStockModalButton"));
+		button.click();
+		
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		driver.findElement(By.id("addStockTicker")).sendKeys("GOOG");
+		driver.findElement(By.id("addStockShares")).sendKeys("0.5");
+		driver.findElement(By.id("addStockBuyDate")).sendKeys("10/15/2020");
+		driver.findElement(By.id("addStockSellDate")).sendKeys("10/31/2020");
+		
+		WebElement button1 = driver.findElement(By.id("addStock"));
+		button1.click();
+	    
+	}
+
+
+	@When("I add a stock with less than one share")
+	public void i_add_a_stock_with_less_than_one_share() {
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		WebElement button = driver.findElement(By.id("addStockModalButton"));
+		button.click();
+		
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		driver.findElement(By.id("addStockTicker")).sendKeys("GOOG");
+		driver.findElement(By.id("addStockShares")).sendKeys("0");
+		driver.findElement(By.id("addStockBuyDate")).sendKeys("10/15/2020");
+		driver.findElement(By.id("addStockSellDate")).sendKeys("10/31/2020");
+		
+		WebElement button1 = driver.findElement(By.id("addStock"));
+		button1.click();
+	}
+
+	@When("I add a stock with empty dates")
+	public void i_add_a_stock_with_empty_dates() {
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		WebElement button = driver.findElement(By.id("addStockModalButton"));
+		button.click();
+		
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		driver.findElement(By.id("addStockTicker")).sendKeys("GOOG");
+		driver.findElement(By.id("addStockShares")).sendKeys("1");
+		driver.findElement(By.id("addStockBuyDate")).sendKeys("");
+		driver.findElement(By.id("addStockSellDate")).sendKeys("");
+		
+		WebElement button1 = driver.findElement(By.id("addStock"));
+		button1.click();
+	}
+
+	@Then("the buy error should say {string}")
+	public void the_buy_error_should_say(String string) {
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    String error = driver.findElement(By.id("addStockErrorBuy")).getText();
+	    assertTrue(string.equals(error));
+	    
+	}
+
+	@When("I add a stock with empty buy date")
+	public void i_add_a_stock_with_empty_buy_date() {
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		WebElement button = driver.findElement(By.id("addStockModalButton"));
+		button.click();
+		
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		driver.findElement(By.id("addStockTicker")).sendKeys("GOOG");
+		driver.findElement(By.id("addStockShares")).sendKeys("1");
+		driver.findElement(By.id("addStockBuyDate")).sendKeys("");
+		driver.findElement(By.id("addStockSellDate")).sendKeys("10/31/2020");
+		
+		WebElement button1 = driver.findElement(By.id("addStock"));
+		button1.click();
+	}
+
+	@When("I add a stock with incorrect dates")
+	public void i_add_a_stock_with_incorrect_dates() {
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		WebElement button = driver.findElement(By.id("addStockModalButton"));
+		button.click();
+		
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		driver.findElement(By.id("addStockTicker")).sendKeys("GOOG");
+		driver.findElement(By.id("addStockShares")).sendKeys("1");
+		driver.findElement(By.id("addStockBuyDate")).sendKeys("10/15/2020");
+		driver.findElement(By.id("addStockSellDate")).sendKeys("10/14/2020");
+		
+		WebElement button1 = driver.findElement(By.id("addStock"));
+		button1.click();
+	}
+
+	@Then("the sell error should say {string}")
+	public void the_sell_error_should_say(String string) {
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    String error = driver.findElement(By.id("addStockErrorSell")).getText();
+	    assertTrue(string.equals(error));
+	}
+
+	
 
 
 	@After()
