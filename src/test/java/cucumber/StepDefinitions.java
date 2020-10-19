@@ -366,6 +366,78 @@ public class StepDefinitions {
 	    String error = driver.findElement(By.id("addStockErrorSell")).getText();
 	    assertTrue(string.equals(error));
 	}
+	
+	@When("I add a valid stock")
+	public void i_add_a_valid_stock() {
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		WebElement button = driver.findElement(By.id("addStockModalButton"));
+		button.click();
+		
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		driver.findElement(By.id("addStockTicker")).sendKeys("GOOG");
+		driver.findElement(By.id("addStockShares")).sendKeys("1");
+		driver.findElement(By.id("addStockBuyDate")).sendKeys("10/15/2020");
+		driver.findElement(By.id("addStockSellDate")).sendKeys("10/30/2020");
+		
+		WebElement button1 = driver.findElement(By.id("addStock"));
+		button1.click();
+	}
+
+	@Then("the stock should be added to my portfolio")
+	public void the_stock_should_be_added_to_my_portfolio() {
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		WebElement stock = driver.findElement(By.id("rGOOG"));
+		assertTrue(stock != null);
+	}
+	
+	@When("I delete a stock")
+	public void i_delete_a_stock() {
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		WebElement button = driver.findElement(By.xpath("//*[@id='rGOOG']/div[3]/button"));
+		button.click();
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		WebElement button1 = driver.findElement(By.id("deleteStock"));
+		button1.click();
+		
+	}
+
+	@Then("the stock should be removed from my porfolio")
+	public void the_stock_should_be_removed_from_my_porfolio() {
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		assertTrue(driver.findElement(By.id("rGOOG")) == null);
+	}
+
 
 	
 

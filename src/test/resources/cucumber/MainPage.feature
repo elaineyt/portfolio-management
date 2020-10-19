@@ -60,6 +60,19 @@ Feature: Main Page
 		And I login
 		When I add a stock with incorrect dates
 		Then the sell error should say "Sold date is prior to purchase date."
+		
+	Scenario: Add Valid Stock
+		Given I am on index.jsp
+		When I login
+		And I add a valid stock
+		Then the stock should be added to my portfolio
+		
+	Scenario: Delete Stock
+		Given I am on index.jsp
+		When I login
+		And I delete a stock
+		Then the stock should be removed from my porfolio
+		
 	
 
 		
