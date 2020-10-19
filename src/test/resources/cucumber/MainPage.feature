@@ -1,33 +1,79 @@
 Feature: Main Page
-  Scenario: Color of banner
-	Given I am on temps main page
-	When I check the banner color
-	Then the banner color should be red
+	Scenario: Color of banner
+		Given I am on mainpage.jsp
+		Then the banner color should be grey
 
-  Scenario: Banner title
-	Given A am on temps main page
-	When I check the banner title
-	Then the String should be “USC CS310 Stock Portfolio Management”
+	Scenario: Banner title
+		Given I am on mainpage.jsp
+		Then the banner should say "USC CS310 Stock Portfolio Management"
+		
+	Scenario: Log out of account
+		Given I am on index.jsp
+		When I login
+		And I click the logout button
+		Then I should be on index.jsp
+		
+	Scenario: Add stock Invalid stock
+		Given I am on index.jsp
+		When I login
+		And I add an invalid stock
+		Then the ticker symbol error should say "Invalid ticker symbol."
+		
+	Scenario: Add stock Duplicate stock
+		Given I am on index.jsp
+		When I login
+		And I add a duplicate stock
+		Then the ticker symbol error should say "Portfolio already contains this stock."
 
-  Scenario: Log out of account
-	Given E am on temps main page
-	When I click log out button in the top right
-	Then the page should have a log in button
+	Scenario: Add stock No specified number of shares
+		Given I am on index.jsp
+		When I login
+		And I add a stock without share amount
+		Then the share error should say "Please enter number of shares."
 
-  Scenario: Check add stock options
-	Given B am on temps main page
-	When I click on the add stock popup
-	Then I should see all cases in the addStock function
+	Scenario: Add stock Number of shares is not an int
+		Given I am on index.jsp
+		When I login
+		And I add a stock with a fractional share
+		Then the share error should say "Please enter a whole number of shares."
 
-  Scenario: add specific stock ticker
-	Given D am on temps main page
-	When I click the add stock popup
-	And I search RYN
-	And I click add RYN
-	Then RYN stock should be in my portfolio
+	Scenario: Add stock Number of shares less than 1
+		Given I am on index.jsp
+		When I login
+		And I add a stock with less than one share
+		Then the share error should say "Number of shares must be greater than zero." 
 
-  Scenario: Delete stock
-	Given C am on temps main page
-	When I click on stock RYN to remove
-	And I click delete RYN stock
-	Then “RYN” should no longer be in my portfolio
+	Scenario: Add stock Both buy and sell date empty
+		Given I am on index.jsp
+		And I login
+		When I add a stock with empty dates
+		Then the buy error should say "Purchase date is required."
+
+	Scenario: Add stock Buy date empty
+		Given I am on index.jsp
+		And I login
+		When I add a stock with empty buy date
+		Then the buy error should say "Sold date without purchase date."
+
+	Scenario: Add stock Sell date is before buy date
+		Given I am on index.jsp
+		And I login
+		When I add a stock with incorrect dates
+		Then the sell error should say "Sold date is prior to purchase date."
+		
+	Scenario: Add Valid Stock
+		Given I am on index.jsp
+		When I login
+		And I add a valid stock
+		Then the stock should be added to my portfolio
+		
+	Scenario: Delete Stock
+		Given I am on index.jsp
+		When I login
+		And I delete a stock
+		Then the stock should be removed from my porfolio
+		
+	
+
+		
+	
