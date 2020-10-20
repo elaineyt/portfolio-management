@@ -9,6 +9,7 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/css/bootstrap-datepicker.min.css" rel="stylesheet"/>
 <link class="include" rel="stylesheet" type="text/css" href="jquery.jqplot/jquery.jqplot.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <!-- <link rel = "stylesheet" type = "text/css" href="StyleSheet.css"/> -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
@@ -55,7 +56,24 @@ canvas{
 	<div class="container">
 		<div class="row">
 			<div class="col-sm-8">
-				<h3>Graph</h3>
+				<div class="row">
+                		<div class="col-sm-5">
+                    		<span id="currentPortfolioValue" style='font-size: 40px;'></span>
+                    		&nbsp;
+                    		<span id="currentPortfolioValueChange" style='font-size: 20px;'></span>
+                    		<span id="redDownTriangle" style="color:red;font-size:30px;display:none;"><i class="fa fa-caret-down"></i></span>
+                    		<span id="greenUpTriangle" style="color:green;font-size:30px;display:none;"><i class="fa fa-caret-up"></i></span>
+                    	</div>
+                    	<div class="col-sm-4">
+                    	</div>
+                    	<div class="col-sm-3">
+                    		<label for="graphUnits">Unit</label>
+							<select name="graphUnits" id="graphUnits">
+  							<option value="days">Days</option>
+  							<option value="weeks">Weeks</option>
+							</select>
+                    	</div>
+                    </div>
                 <div id="graph" style="height:300px; width:650px;">
                 	<canvas id="canvas"></canvas>
                 </div>
@@ -68,6 +86,16 @@ canvas{
                     	</div>
                     	<div class="col-sm-3">
                     		<input type="text" size="10" id="graphEndDate" />
+                    	</div>
+                    </div>
+                     <div class="row">
+                		<div class="col-sm-3" style='font-size: 12px;'>
+                    		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Start Date
+                    	</div>
+                    	<div class="col-sm-6">
+                    	</div>
+                    	<div class="col-sm-3" style='font-size: 12px;'>
+                    		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;End Date
                     	</div>
                     </div>
                     <div class="row">
@@ -264,6 +292,16 @@ canvas{
 
 				);
 				
+				$('#graphUnits').on('change', function(){
+					if($('#graphUnits').val() == "weeks"){
+						graphUnit = "W";
+					}
+					else{
+						graphUnit = "D";
+					}
+					switchUnits();
+				});
+				
 				// Try to redirect user
 				var username = '<%= session.getAttribute("username")%>';
 				var null_username = '<%= session.getAttribute("username") == null %>';
@@ -272,9 +310,51 @@ canvas{
 				if(username == "" || null_username == "true") {
 					window.location.href = 'http://localhost:8080/index.jsp';
 				}
+
 			}
 		);
 	
+	var currentPortfolioValueCounter = 0;
+	function getCurrentPortfolioValue() {
+		var yesterdayPortfolioValue = 0;
+		var currentPortfolioValue = 0;
+		
+		// pulls data from 5 days in case dates have limited values
+		var todayMinus5 = Date.parse(addDaysAndFormat(new Date(), -5))/1000;
+		var today = Date.parse(addDaysAndFormat(new Date(), 0))/1000;
+			
+		for(let [key, value] of positions){
+			const HTTP = new XMLHttpRequest();
+        	const url = "https://finnhub.io/api/v1/stock/candle?symbol=" + key + "&resolution=D&from=" + todayMinus5 + "&to=" + today + "&token=" + finnhub_token;
+        	HTTP.open("GET", url);
+        	HTTP.send();
+
+        	HTTP.onreadystatechange = (e) => {
+        		if(HTTP.readyState == 4 && HTTP.status == 200){
+        			var response = JSON.parse(HTTP.responseText);
+        			var rawData = response.c;
+        			currentPortfolioValue += rawData[rawData.length-1]*value.shares;
+        			yesterdayPortfolioValue += rawData[rawData.length-2]*value.shares;
+        			currentPortfolioValueCounter++;
+        			if(currentPortfolioValueCounter == positions.size) {
+        				$("#currentPortfolioValue").html("$" + currentPortfolioValue.toFixed(2));
+        				var percentChange = (currentPortfolioValue-yesterdayPortfolioValue)/yesterdayPortfolioValue*100;
+        				if(percentChange >= 0){
+        					$("#currentPortfolioValueChange").html("+" + percentChange.toFixed(2) + "%");
+        					$("#redDownTriangle").css('display', 'none');
+        					$("#greenUpTriangle").css('display', 'inline');
+        				}
+        				else{
+        					$("#currentPortfolioValueChange").html(percentChange.toFixed(2) + "%");
+        					$("#redDownTriangle").css('display', 'inline');
+        					$("#greenUpTriangle").css('display', 'none');
+        				}
+        			}
+        		}
+        	}
+		}	
+	}
+		
 	// Populate portfolio list
 	function getPositions() {
         var username = '<%= session.getAttribute("username")%>'
@@ -304,6 +384,9 @@ canvas{
         			}	
         		}
         		setDefaultGraphDates();
+        		stockHistoryLabels.push("Total Portfolio Value");
+        		getPortfolioValueHistory("D", 0);
+				getCurrentPortfolioValue();
         	}   
         }
     }
@@ -324,15 +407,17 @@ canvas{
        
        	HTTP.onreadystatechange = (e) => {
        		if(HTTP.readyState == 4 && HTTP.status == 200){
-       			$("#deleteStockModal").modal('hide');
-       			positions.delete(tickerSymbol);
+       			$("#deleteStockModal").modal('hide');	
+				$("#r" + tickerSymbol).remove();
 				var index = stockHistoryLabels.indexOf(tickerSymbol);
-        		config.data.datasets.splice(index, index+1);
-    			window.myLine.update();
-        		stockHistory.splice(index, 1);
-        		stockHistoryLabels.splice(index, 1);
-    			$("#r" + tickerSymbol).remove();
-    			drawGraph();
+        		if(index >= 0){
+					config.data.datasets.splice(index, 1);
+    				window.myLine.update();
+        			stockHistory.splice(index, 1);
+        			stockHistoryLabels.splice(index, 1);
+        		}
+        		deleteFromTotalPortfolio(tickerSymbol, positions.get(tickerSymbol).shares);
+        		positions.delete(tickerSymbol);
        		}   
        	}
 	}
@@ -385,8 +470,12 @@ canvas{
     				$('#addStockErrorBuy').html("Sold date without purchase date.");
     				error = true;
     			}
+    			// sell date is empty, set to far date into the future to be shown "indefinitely"
+    			else if(!sellDate){
+    				sellDate = addDaysAndFormat(new Date(), 10000);
+    			}
     			// sell date is before buy date
-    			if(sellDate < buyDate){
+    			else if(sellDate < buyDate){
     				$('#addStockErrorSell').html("Sold date is prior to purchase date.");
     				error = true;
     			}	
@@ -413,6 +502,7 @@ canvas{
        	        				"</div><div class='col-sm-2'><button type='button' class='btn' onclick=deleteStockModal('" + tickerSymbol + "')>X</button></div></div>";
        	                		$("#positions").append(row);
        	                		positions.set(tickerSymbol, new Position(tickerSymbol, numShares, buyDate, sellDate));
+       	                		addToTotalPortfolio(tickerSymbol, numShares);
        	            		}        		
        	            	}   
        	            }	
@@ -450,46 +540,192 @@ canvas{
 		return stockHistory;
 	}
 	
-	function populateStockHistory(tickerSymbol) {
+	function populateStockHistory(tickerSymbol, unit) {
 		var startDate = Date.parse($('#graphStartDate').val())/1000;
 		var endDate = Date.parse($('#graphEndDate').val())/1000;
 		
 		const HTTP = new XMLHttpRequest();
-        const url = "https://finnhub.io/api/v1/stock/candle?symbol=" + tickerSymbol + "&resolution=D&from=" + startDate + "&to=" + endDate + "&token=" + finnhub_token;
+        const url = "https://finnhub.io/api/v1/stock/candle?symbol=" + tickerSymbol + "&resolution=" + unit + "&from=" + startDate + "&to=" + endDate + "&token=" + finnhub_token;
         HTTP.open("GET", url);
         HTTP.send();
-
+        
         HTTP.onreadystatechange = (e) => {
         	if(HTTP.readyState == 4 && HTTP.status == 200){
         		var response = JSON.parse(HTTP.responseText);
         		var rawData = response.c;
-        		var increment = Math.floor(rawData.length/5); // resolution can change
         		stockHistory.push([]);
         		var index = stockHistory.length-1;
         		stockHistoryLabels.push(tickerSymbol);
-        		for(var i = 0; i < rawData.length; i+=increment){	
+        		for(var i = 0; i < rawData.length; i++){
+        			stockHistory[index].push(rawData[i]);
+        		}
+        		drawGraph(tickerSymbol, index);
+        	}
+        } 
+    }
+	
+	function populateStockHistoryChangeUnit(tickerSymbol, unit, iteration) {
+		var startDate = Date.parse($('#graphStartDate').val())/1000;
+		var endDate = Date.parse($('#graphEndDate').val())/1000;
+		
+		const HTTP = new XMLHttpRequest();
+        const url = "https://finnhub.io/api/v1/stock/candle?symbol=" + tickerSymbol + "&resolution=" + unit + "&from=" + startDate + "&to=" + endDate + "&token=" + finnhub_token;
+        HTTP.open("GET", url);
+        HTTP.send();
+        
+        HTTP.onreadystatechange = (e) => {
+        	if(HTTP.readyState == 4 && HTTP.status == 200){
+        		var response = JSON.parse(HTTP.responseText);
+        		var rawData = response.c;
+        		var increment = DaysBetween($('#graphStartDate').val(), $('#graphEndDate').val())/rawData.length;
+        		stockHistory.push([]);
+        		var index = stockHistory.length-1;
+        		for(var i = 0; i < rawData.length; i++){
+        			if(iteration == 0){
+        				if(unit == "D"){
+							config.data.labels.push(addDaysAndFormat($('#graphStartDate').val(), i*increment));
+						}
+						else{
+							config.data.labels.push(addDaysAndFormat($('#graphStartDate').val(), i*increment));
+						}
+        			}
         			stockHistory[index].push(rawData[i]);
         		}
         		
         		drawGraph(tickerSymbol, index);
         	}
-        }
-        
+        } 
     }
-
 
     function stockChecked(tickerSymbol, checkBox){
     	// if unchecked, remove from stock history and redraw
     	if(!checkBox.checked){
     		var index = stockHistoryLabels.indexOf(tickerSymbol);
-    		config.data.datasets.splice(index, index+1);
+    		config.data.datasets.splice(index, 1);
 			window.myLine.update();
     		stockHistory.splice(index, 1);
     		stockHistoryLabels.splice(index, 1);
-    		drawGraph();
+    		console.log(config.data.datasets);
     	}
     	else {
-    		populateStockHistory(tickerSymbol);
+    		populateStockHistory(tickerSymbol, graphUnit);
+    	}
+    }
+    
+    function addToTotalPortfolio(tickerSymbol, numShares){
+    	var startDate = Date.parse($('#graphStartDate').val())/1000;
+		var endDate = Date.parse($('#graphEndDate').val())/1000;
+		
+		var index = stockHistoryLabels.indexOf("Total Portfolio Value");
+		config.data.datasets.splice(index, 1);
+		window.myLine.update();
+		var newPortfolioData = stockHistory[index];
+		stockHistory.splice(index, 1);
+		stockHistoryLabels.splice(index, 1);
+		
+		const HTTP = new XMLHttpRequest();
+    	const url = "https://finnhub.io/api/v1/stock/candle?symbol=" + tickerSymbol + "&resolution=" + graphUnit + "&from=" + startDate + "&to=" + endDate + "&token=" + finnhub_token;
+    	HTTP.open("GET", url);
+    	HTTP.send();
+
+    	HTTP.onreadystatechange = (e) => {
+    		if(HTTP.readyState == 4 && HTTP.status == 200){
+    			var response = JSON.parse(HTTP.responseText);
+    			var rawData = response.c;
+    			for(var i = 0; i < rawData.length; i++){	
+    				newPortfolioData[i] += rawData[i]*numShares;
+    			}
+    			stockHistory.push(newPortfolioData);
+    			stockHistoryLabels.push("Total Portfolio Value");
+    			drawGraph("Total Portfolio Value", stockHistory.length-1);
+    		}
+    	}
+    }
+    
+    function deleteFromTotalPortfolio(tickerSymbol, numShares){
+    	var startDate = Date.parse($('#graphStartDate').val())/1000;
+		var endDate = Date.parse($('#graphEndDate').val())/1000;
+		
+		var index = stockHistoryLabels.indexOf("Total Portfolio Value");
+		config.data.datasets.splice(index, 1);
+		window.myLine.update();
+		var newPortfolioData = stockHistory[index];
+		stockHistory.splice(index, 1);
+		stockHistoryLabels.splice(index, 1);
+		
+		const HTTP = new XMLHttpRequest();
+    	const url = "https://finnhub.io/api/v1/stock/candle?symbol=" + tickerSymbol + "&resolution=" + graphUnit + "&from=" + startDate + "&to=" + endDate + "&token=" + finnhub_token;
+    	HTTP.open("GET", url);
+    	HTTP.send();
+
+    	HTTP.onreadystatechange = (e) => {
+    		if(HTTP.readyState == 4 && HTTP.status == 200){
+    			var response = JSON.parse(HTTP.responseText);
+    			var rawData = response.c;
+    			for(var i = 0; i < rawData.length; i++){	
+    				newPortfolioData[i] -= rawData[i]*numShares;
+    			}
+    			stockHistory.push(newPortfolioData);
+    			stockHistoryLabels.push("Total Portfolio Value");
+    			drawGraph("Total Portfolio Value", stockHistory.length-1);
+    		}
+    	}
+    }
+    
+    function getPortfolioValueHistory(unit, iteration){
+    	var startDate = Date.parse($('#graphStartDate').val())/1000;
+		var endDate = Date.parse($('#graphEndDate').val())/1000;
+		
+		stockHistory.push([]);
+		var index = stockHistory.length-1;
+		//stockHistoryLabels.push("Total Portfolio Value");
+		
+		var firstIt = true;
+		counter = 0;
+		for(let [key, value] of positions){
+			const HTTP = new XMLHttpRequest();
+        	const url = "https://finnhub.io/api/v1/stock/candle?symbol=" + key + "&resolution=" + unit + "&from=" + startDate + "&to=" + endDate + "&token=" + finnhub_token;
+        	HTTP.open("GET", url);
+        	HTTP.send();
+
+        	HTTP.onreadystatechange = (e) => {
+        		if(HTTP.readyState == 4 && HTTP.status == 200){
+        			var response = JSON.parse(HTTP.responseText);
+        			var rawData = response.c;
+        			var increment = DaysBetween($('#graphStartDate').val(), $('#graphEndDate').val())/rawData.length;
+        			if(firstIt){
+        				stockHistory[index] = rawData;
+        				for(var i = 0; i < stockHistory[index].length; i++){
+        					if(iteration == 0){
+        						//config.data.labels.push(i);
+        						if(unit == "D"){
+        							config.data.labels.push(addDaysAndFormat($('#graphStartDate').val(), Math.round(i*increment)));
+        						}
+        						else{
+        							config.data.labels.push(addDaysAndFormat($('#graphStartDate').val(), Math.round(i*increment)));
+        						}
+        					}
+        					stockHistory[index][i] *= value.shares;
+        				}
+        				firstIt = false;
+        			}
+        			else{
+        				for(var i = 0; i < stockHistory[index].length; i++){	
+        					stockHistory[index][i] += rawData[i]*value.shares;
+        				}
+        			}
+        			portfolioHistoryComplete();
+        		}
+        	}
+		}
+		
+    }
+    
+    var counter = 0;
+    function portfolioHistoryComplete(){
+    	counter++;
+    	if(counter == positions.size){	
+    		drawGraph("Total Portfolio Value", stockHistory.length-1);
     	}
     }
     
@@ -546,12 +782,44 @@ canvas{
     	}
     }
     
+    function switchUnits(){
+    	stockHistory = [];
+    	config.data.datasets = [];
+    	config.data.labels = [];
+		window.myLine.update();
+    	//var j = 0;
+    	const loop = async () => {
+    		for(var i = 0; i < stockHistoryLabels.length; i++){
+    			if(stockHistoryLabels[i] == "Total Portfolio Value"){
+    				//stockHistory.push([]);
+    				//config.data.datasets.push([]); //temporary
+    				//window.myLine.update();
+    				getPortfolioValueHistory(graphUnit, i);
+    				await sleep(200);
+    			}
+    			else{
+    				populateStockHistoryChangeUnit(stockHistoryLabels[i], graphUnit, i);
+    				await sleep(200);
+    				//j++;
+    			}
+    		}
+    	}
+    	
+    	loop();
+    }
+    
+    const sleep = (milliseconds) => {
+    	return new Promise(resolve => setTimeout(resolve, milliseconds));
+    }
+    
+    var graphUnit = "D";
+    
     
 	
 	
 	</script>
 	<script>
-		var lab = ['1', '2', '3', '4', '5', '6']
+		var lab = []
 		var config = {
 			type: 'line',
 			data: {
