@@ -69,8 +69,12 @@ public class Login extends HttpServlet {
         		
         		// * Cannot log in user that doesn't exist
         		if(rs.next()) {
+        			
+        			//hash password
+        			String hash_password = MD5.hash(password);
+        			
         			// * Check if user's passwords match
-        			if(!rs.getString("Password").equals(password)) {
+        			if(!rs.getString("Password").equals(hash_password)) {
         				jsonStr = "{\"Error\": \"Failed to log in user. Incorrect password.\"}";
         			}
         		} else {
@@ -80,8 +84,27 @@ public class Login extends HttpServlet {
         		// * Send Result
         		if(jsonStr == "{\"Success\": \"Successfully logged in.\"}") {
         	        session.setAttribute("username", username);
+//        	        ps = conn.prepareStatement("UPDATE Users SET failed_login_attempts'" + 0 + "' WHERE username='" + username + "'  ");
+//					ps.executeUpdate();
         		}
- 
+        		//increment failed login attempts
+        		else {
+//        			int failed_attempts = rs.getInt("failed_login_attempts");
+//        			
+//        			//lock out for a minute
+//        			if(failed_attempts > 2) {
+//        				jsonStr = "{\"Error\": \"Exceeded number of login attempts.\"}";
+//        				ps = conn.prepareStatement("UPDATE Users SET failed_login_attempts'" + 0 + "' WHERE username='" + username + "'  ");
+//    					ps.executeUpdate();
+//        			}
+//        			else {
+//        				failed_attempts = failed_attempts + 1;
+//        				ps = conn.prepareStatement("UPDATE Users SET failed_login_attempts'" + failed_attempts + "' WHERE username='" + username + "'  ");
+//    					ps.executeUpdate();
+//        			}
+//        			
+        			
+        		}
         		out.print(jsonStr);
         		out.flush();
         	} 
