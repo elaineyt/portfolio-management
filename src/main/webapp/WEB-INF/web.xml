@@ -6,8 +6,7 @@
   <display-name>Project2</display-name>
   <servlet>
   	<servlet-name>Portfolio</servlet-name>
-  	<servlet-class>csci310.servlets.Portfolio</servlet-class>
-  </servlet>
+  	<servlet-class>csci310.servlets.Portfolio</servlet-class></servlet>
   <servlet-mapping>
   	<servlet-name>Portfolio</servlet-name>
 	<url-pattern>/portfolio</url-pattern>
@@ -31,5 +30,12 @@
   <servlet-mapping>
   	<servlet-name>Logout</servlet-name>
   	<url-pattern>/logout</url-pattern>
+  </servlet-mapping>
+  <servlet>
+  	<servlet-name>Historical</servlet-name>
+  	<servlet-class>csci310.servlets.Historical</servlet-class></servlet>
+  <servlet-mapping>
+  	<servlet-name>Historical</servlet-name>
+  	<url-pattern>/historical</url-pattern>
   </servlet-mapping>
 </web-app>
