@@ -494,6 +494,9 @@ canvas{
         HTTP.onreadystatechange = (e) => {
         	if(HTTP.readyState == 4 && HTTP.status == 200){
         		var response = JSON.parse(HTTP.responseText);
+        		var row = "<div class='row' id='select-all-portfolio'><div class='col-sm-2 position-padding'><input type='checkbox' onclick='stockChecked(\"Select-All\", this)'/></div><div class='col-sm-8 position-padding'>" + "Select All" +
+				"</div></div>";
+        		$("#positions").append(row);
         		for(var i = 0; i < response.positions.length; i++){
         			var tickerSymbol = response.positions[i].position;
         			var shareCount = response.positions[i].share_count;
@@ -501,7 +504,7 @@ canvas{
         			var dateSold = response.positions[i].date_sold;
         			var today = new Date();
         			if(Date.parse(dateBought) <= today && today <= Date.parse(dateSold)){
-        				var row = "<div class='row' id='r" + tickerSymbol + "'><div class='col-sm-2 position-padding'><input type='checkbox' onclick='stockChecked(\"" + tickerSymbol + "\", this)'/></div><div class='col-sm-8 position-padding'>" + tickerSymbol + 
+        				var row = "<div class='row' id='r" + tickerSymbol + "'><div class='col-sm-2 position-padding'><input type='checkbox' id='cb-portfolio-" + tickerSymbol + "' onclick='stockChecked(\"" + tickerSymbol + "\", this)'/></div><div class='col-sm-8 position-padding'>" + tickerSymbol + 
         				"</div><div class='col-sm-2'><button type='button' class='btn' onclick=deleteStockModal('" + tickerSymbol + "')>X</button></div></div>";
                 		$("#positions").append(row);
                 		positions.set(tickerSymbol, new Position(tickerSymbol, shareCount, formatDate(dateBought), formatDate(dateSold)));
@@ -530,6 +533,9 @@ canvas{
         HTTP.onreadystatechange = (e) => {
         	if(HTTP.readyState == 4 && HTTP.status == 200){
         		var response = JSON.parse(HTTP.responseText);
+        		var row = "<div class='row' id='select-all-historical'><div class='col-sm-2 position-padding'><input type='checkbox' onclick='historicalStockChecked(\"Select-All\", this)'/></div><div class='col-sm-8 position-padding'>" + "Select All" +
+				"</div></div>";
+        		$("#historicalPositions").append(row);
         		for(var i = 0; i < response.positions.length; i++){
         			var tickerSymbol = response.positions[i].position;
         			var shareCount = response.positions[i].share_count;
@@ -537,16 +543,12 @@ canvas{
         			var dateSold = response.positions[i].date_sold;
         			var today = new Date();
         			if(Date.parse(dateBought) <= today && today <= Date.parse(dateSold)){
-        				var row = "<div class='row' id='r-historical-" + tickerSymbol + "'><div class='col-sm-2 position-padding'><input type='checkbox' onclick='stockChecked(\"Historical-" + tickerSymbol + "\", this)'/></div><div class='col-sm-8 position-padding'>" + tickerSymbol + 
+        				var row = "<div class='row' id='r-historical-" + tickerSymbol + "'><div class='col-sm-2 position-padding'><input type='checkbox' id='cb-historical-" + tickerSymbol + "' onclick='historicalStockChecked(\"" + tickerSymbol + "\", this)'/></div><div class='col-sm-8 position-padding'>" + tickerSymbol + 
         				"</div><div class='col-sm-2'><button type='button' class='btn' onclick=deleteHistoricalStockModal('" + tickerSymbol + "')>X</button></div></div>";
                 		$("#historicalPositions").append(row);
                 		historicalPositions.set(tickerSymbol, new Position(tickerSymbol, shareCount, formatDate(dateBought), formatDate(dateSold)));
         			}	
         		}
-        		setDefaultGraphDates();
-        		stockHistoryLabels.push("Total Portfolio Value");
-        		getPortfolioValueHistory("D", 0);
-				getCurrentPortfolioValue();
         	}   
         }
     }
@@ -588,7 +590,7 @@ canvas{
 	}
 	
 	function deleteHistoricalStock() {
-		var tickerSymbol = $("#modalHistoricalTickerSymbol").text();
+		var tickerSymbol = $("#historicalModalTickerSymbol").text();
 		var username = '<%= session.getAttribute("username")%>'
 		
 		const HTTP = new XMLHttpRequest();
@@ -688,11 +690,10 @@ canvas{
        	        			$("#addHistoricalStockModal").modal('hide');
        	        			var today = new Date();
        	            		if(Date.parse(buyDate.toString()) <= today && today <= Date.parse(sellDate.toString())){
-       	            			var row = "<div class='row' id='r-historical-" + tickerSymbol + "'><div class='col-sm-2 position-padding'><input type='checkbox' onclick='stockChecked(\"Historical-" + tickerSymbol + "\", this)'/></div><div class='col-sm-8 position-padding'>" + tickerSymbol + 
+       	            			var row = "<div class='row' id='r-historical-" + tickerSymbol + "'><div class='col-sm-2 position-padding'><input type='checkbox' id='cb-historical-" + tickerSymbol + "' onclick='historicalStockChecked(\"" + tickerSymbol + "\", this)'/></div><div class='col-sm-8 position-padding'>" + tickerSymbol + 
        	        				"</div><div class='col-sm-2'><button type='button' class='btn' onclick=deleteHistoricalStockModal('" + tickerSymbol + "')>X</button></div></div>";
        	                		$("#historicalPositions").append(row);
        	                		historicalPositions.set(tickerSymbol, new Position(tickerSymbol, numShares, buyDate, sellDate));
-       	                		createNewLine(tickerSymbol, numShares);
        	            		}        		
        	            	}   
        	            }	
@@ -777,7 +778,7 @@ canvas{
        	        			$("#addStockModal").modal('hide');
        	        			var today = new Date();
        	            		if(Date.parse(buyDate.toString()) <= today && today <= Date.parse(sellDate.toString())){
-       	            			var row = "<div class='row' id='r" + tickerSymbol + "'><div class='col-sm-2 position-padding'><input type='checkbox' onclick='stockChecked(\"" + tickerSymbol + "\", this)'/></div><div class='col-sm-8 position-padding'>" + tickerSymbol + 
+       	            			var row = "<div class='row' id='r" + tickerSymbol + "'><div class='col-sm-2 position-padding'><input type='checkbox' id='cb-portfolio-" + tickerSymbol + "' onclick='stockChecked(\"" + tickerSymbol + "\", this)'/></div><div class='col-sm-8 position-padding'>" + tickerSymbol + 
        	        				"</div><div class='col-sm-2'><button type='button' class='btn' onclick=deleteStockModal('" + tickerSymbol + "')>X</button></div></div>";
        	                		$("#positions").append(row);
        	                		positions.set(tickerSymbol, new Position(tickerSymbol, numShares, buyDate, sellDate));
@@ -843,6 +844,30 @@ canvas{
         } 
     }
 	
+	function populateHistoricalStockHistory(tickerSymbol, unit) {
+		var startDate = Date.parse($('#graphStartDate').val())/1000;
+		var endDate = Date.parse($('#graphEndDate').val())/1000;
+		
+		const HTTP = new XMLHttpRequest();
+        const url = "https://finnhub.io/api/v1/stock/candle?symbol=" + tickerSymbol + "&resolution=" + unit + "&from=" + startDate + "&to=" + endDate + "&token=" + finnhub_token;
+        HTTP.open("GET", url);
+        HTTP.send();
+        
+        HTTP.onreadystatechange = (e) => {
+        	if(HTTP.readyState == 4 && HTTP.status == 200){
+        		var response = JSON.parse(HTTP.responseText);
+        		var rawData = response.c;
+        		stockHistory.push([]);
+        		var index = stockHistory.length-1;
+        		stockHistoryLabels.push('Historical-' + tickerSymbol);
+        		for(var i = 0; i < rawData.length; i++){
+        			stockHistory[index].push(rawData[i]);
+        		}
+        		drawGraph(tickerSymbol, index);
+        	}
+        } 
+    }
+	
 	function populateStockHistoryChangeUnit(tickerSymbol, unit, iteration) {
 		var startDate = Date.parse($('#graphStartDate').val())/1000;
 		var endDate = Date.parse($('#graphEndDate').val())/1000;
@@ -879,15 +904,78 @@ canvas{
     function stockChecked(tickerSymbol, checkBox){
     	// if unchecked, remove from stock history and redraw
     	if(!checkBox.checked){
-    		var index = stockHistoryLabels.indexOf(tickerSymbol);
-    		config.data.datasets.splice(index, 1);
-			window.myLine.update();
-    		stockHistory.splice(index, 1);
-    		stockHistoryLabels.splice(index, 1);
-    		console.log(config.data.datasets);
+    		if(tickerSymbol === "Select-All") {
+    			positions.forEach((pos, key) => {
+    				if(key !== "Total Portfolio Value" && key.indexOf("Historical-") === -1) {
+    					var i = stockHistoryLabels.indexOf(key);
+    					if(i !== -1) {
+	    					config.data.datasets.splice(i, 1);
+	    					window.myLine.update();
+	    		    		stockHistory.splice(i, 1);
+	    		    		stockHistoryLabels.splice(i, 1);   
+	    		    		$("#cb-portfolio-" + key)[0].checked = false;
+    					}
+    				}
+    			});
+    		} else {
+	    		var index = stockHistoryLabels.indexOf(tickerSymbol);
+	    		config.data.datasets.splice(index, 1);
+				window.myLine.update();
+	    		stockHistory.splice(index, 1);
+	    		stockHistoryLabels.splice(index, 1);    			
+    		}
+    		// console.log(config.data.datasets);
     	}
     	else {
-    		populateStockHistory(tickerSymbol, graphUnit);
+    		if(tickerSymbol === "Select-All") {
+    			positions.forEach((pos, key) => {
+    				if(key !== "Total Portfolio Value" && key.indexOf("Historical-") === -1) {
+    					$("#cb-portfolio-" + key)[0].checked = true;
+	    				populateStockHistory(key, graphUnit);    					
+    				}
+    			});
+    		} else {
+	    		populateStockHistory(tickerSymbol, graphUnit);    			
+    		}
+    	}
+    }
+    
+    function historicalStockChecked(tickerSymbol, checkBox){
+    	// if unchecked, remove from stock history and redraw
+    	if(!checkBox.checked){
+    		if(tickerSymbol === "Select-All") {
+    			historicalPositions.forEach((pos, key) => {
+    				if(key !== "Total Portfolio Value") {
+    					var i = stockHistoryLabels.indexOf('Historical-' + key);
+    					if(i !== -1) {
+	    					config.data.datasets.splice(i, 1);
+	    					window.myLine.update();
+	    		    		stockHistory.splice(i, 1);
+	    		    		stockHistoryLabels.splice(i, 1);
+	    		    		$("#cb-historical-" + key)[0].checked = false;    						
+    					}
+    				}
+    			});
+    		} else {
+	    		var index = stockHistoryLabels.indexOf('Historical-' + tickerSymbol);
+	    		config.data.datasets.splice(index, 1);
+				window.myLine.update();
+	    		stockHistory.splice(index, 1);
+	    		stockHistoryLabels.splice(index, 1);    			
+    		}
+    		// console.log(config.data.datasets);
+    	}
+    	else {
+    		if(tickerSymbol === "Select-All") {
+    			historicalPositions.forEach((pos, key) => {
+    				if(key !== "Total Portfolio Value") {
+    					$("#cb-historical-" + key)[0].checked = true;
+	    				populateHistoricalStockHistory(key, graphUnit);    					
+    				}
+    			});
+    		} else {
+	    		populateHistoricalStockHistory(tickerSymbol, graphUnit);    			
+    		}
     	}
     }
     
@@ -917,36 +1005,6 @@ canvas{
     			stockHistory.push(newPortfolioData);
     			stockHistoryLabels.push("Total Portfolio Value");
     			drawGraph("Total Portfolio Value", stockHistory.length-1);
-    		}
-    	}
-    }
-    
-    function createNewLine(tickerSymbol, numShares){
-    	var startDate = Date.parse($('#graphStartDate').val())/1000;
-		var endDate = Date.parse($('#graphEndDate').val())/1000;
-		
-		var index = stockHistoryLabels.indexOf(tickerSymbol);
-		config.data.datasets.splice(index, 1);
-		window.myLine.update();
-		var newPortfolioData = stockHistory[index];
-		stockHistory.splice(index, 1);
-		stockHistoryLabels.splice(index, 1);
-		
-		const HTTP = new XMLHttpRequest();
-    	const url = "https://finnhub.io/api/v1/stock/candle?symbol=" + tickerSymbol + "&resolution=" + graphUnit + "&from=" + startDate + "&to=" + endDate + "&token=" + finnhub_token;
-    	HTTP.open("GET", url);
-    	HTTP.send();
-
-    	HTTP.onreadystatechange = (e) => {
-    		if(HTTP.readyState == 4 && HTTP.status == 200){
-    			var response = JSON.parse(HTTP.responseText);
-    			var rawData = response.c;
-    			for(var i = 0; i < rawData.length; i++){	
-    				newPortfolioData[i] += rawData[i]*numShares;
-    			}
-    			stockHistory.push(newPortfolioData);
-    			stockHistoryLabels.push('Historical-' + tickerSymbol);
-    			drawGraph(tickerSymbol, stockHistory.length-1);
     		}
     	}
     }
@@ -1089,6 +1147,7 @@ canvas{
     	else{
     		graphEndDate = $('#graphEndDate').val();
     	}
+    	switchUnits();
     }
     
     function switchUnits(){
