@@ -85,7 +85,15 @@ public class Login extends HttpServlet {
         		out.flush();
         	} 
         	catch (SQLException sqle) { /* Ignore */ } 
-        	finally { }
+        	finally {
+        		try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+        		
+        	}
         }
     }
 }

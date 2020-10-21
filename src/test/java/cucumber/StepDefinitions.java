@@ -11,6 +11,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.Color;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -68,6 +70,8 @@ public class StepDefinitions {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		WebDriverWait wait = new WebDriverWait(driver, 5);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("login-submit")));
 		driver.findElement(By.id("login-username")).sendKeys("test_user");
 		driver.findElement(By.id("login-password")).sendKeys("test_password");
 		WebElement button = driver.findElement(By.id("login-submit"));
@@ -138,14 +142,29 @@ public class StepDefinitions {
 	    assertTrue(string.equals(error));
 	}
 	
-	@When("I add a duplicate stock")
-	public void i_add_a_duplicate_stock() {
+	@Given("I have added a new stock")
+	public void i_have_added_a_new_stock() {
+		
+		driver.get(ROOT_URL);  
+		//login first
 		try {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		driver.findElement(By.id("login-username")).sendKeys("test_user");
+		driver.findElement(By.id("login-password")).sendKeys("test_password");
+		WebElement loginButton = driver.findElement(By.id("login-submit"));
+		loginButton.click();
+		
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		WebElement button = driver.findElement(By.id("addStockModalButton"));
 		button.click();
 		
@@ -163,6 +182,86 @@ public class StepDefinitions {
 		
 		WebElement button1 = driver.findElement(By.id("addStock"));
 		button1.click();
+	}
+	
+	@When("I add a duplicate stock")
+	public void i_add_a_duplicate_stock() {
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		WebElement button = driver.findElement(By.id("addStockModalButton"));
+		button.click();
+		
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		driver.findElement(By.id("addStockTicker")).clear();
+		driver.findElement(By.id("addStockShares")).clear();
+		driver.findElement(By.id("addStockBuyDate")).clear();
+		driver.findElement(By.id("addStockSellDate")).clear();
+		
+		driver.findElement(By.id("addStockTicker")).sendKeys("AAPL");
+		driver.findElement(By.id("addStockShares")).sendKeys("1");
+		driver.findElement(By.id("addStockBuyDate")).sendKeys("10/15/2020");
+		driver.findElement(By.id("addStockSellDate")).sendKeys("10/31/2020");
+		
+		WebElement button1 = driver.findElement(By.id("addStock"));
+		button1.click();
+	}
+	
+	@Then("the duplicate error should say {string}")
+	public void the_duplicate_error_should_say(String string) {
+		
+		try {
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		    String error = driver.findElement(By.id("addStockErrorTS")).getText();
+		    assertTrue(string.equals(error));
+			
+		}
+		finally {
+			try {
+				Thread.sleep(5000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			WebElement button = driver.findElement(By.xpath("//*[@id=\"addStockModal\"]/div/div/div[3]/button[1]"));
+			button.click();
+			
+			WebDriverWait wait1 = new WebDriverWait(driver, 5);
+			wait1.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='rAAPL']/div[3]/button")));
+			WebElement button1 = driver.findElement(By.xpath("//*[@id='rAAPL']/div[3]/button"));
+			try {
+				Thread.sleep(5000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			button1.click();
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			WebElement button2 = driver.findElement(By.id("deleteStock"));
+			button2.click();
+		}
+  
+	    
 	}
 
 	@When("I add a stock without share amount")
@@ -397,24 +496,94 @@ public class StepDefinitions {
 	@Then("the stock should be added to my portfolio")
 	public void the_stock_should_be_added_to_my_portfolio() {
 		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			WebElement stock = driver.findElement(By.id("rGOOG"));
+			assertTrue(stock != null);
 		}
-		WebElement stock = driver.findElement(By.id("rGOOG"));
-		assertTrue(stock != null);
+		finally {
+			WebDriverWait wait1 = new WebDriverWait(driver, 5);
+			wait1.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='rGOOG']/div[3]/button")));
+			WebElement button1 = driver.findElement(By.xpath("//*[@id='rGOOG']/div[3]/button"));
+			try {
+				Thread.sleep(5000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			button1.click();
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			WebElement button2 = driver.findElement(By.id("deleteStock"));
+			button2.click();
+			
+		}
 	}
 	
-	@When("I delete a stock")
-	public void i_delete_a_stock() {
+	@Given("I have added the stock")
+	public void i_have_added_the_stock() {
+		
+		driver.get(ROOT_URL);  
+		//login first
 		try {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		WebElement button = driver.findElement(By.xpath("//*[@id='rGOOG']/div[3]/button"));
+		driver.findElement(By.id("login-username")).sendKeys("test_user");
+		driver.findElement(By.id("login-password")).sendKeys("test_password");
+		WebElement loginButton = driver.findElement(By.id("login-submit"));
+		loginButton.click();
+		
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		WebElement button = driver.findElement(By.id("addStockModalButton"));
+		button.click();
+		
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		driver.findElement(By.id("addStockTicker")).sendKeys("TSLA");
+		driver.findElement(By.id("addStockShares")).sendKeys("1");
+		driver.findElement(By.id("addStockBuyDate")).sendKeys("10/15/2020");
+		driver.findElement(By.id("addStockSellDate")).sendKeys("10/30/2020");
+		
+		WebElement button1 = driver.findElement(By.id("addStock"));
+		button1.click();
+	}
+	
+	@When("I delete a stock")
+	public void i_delete_a_stock() {
+//		try {
+//			Thread.sleep(2000);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		
+		WebDriverWait wait = new WebDriverWait(driver, 5);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='rTSLA']/div[3]/button")));
+		WebElement button = driver.findElement(By.xpath("//*[@id='rTSLA']/div[3]/button"));
+
 		button.click();
 		try {
 			Thread.sleep(2000);
@@ -427,7 +596,7 @@ public class StepDefinitions {
 		
 	}
 
-	@Then("the stock should be removed from my porfolio")
+	@Then("the stock should be removed from my portfolio")
 	public void the_stock_should_be_removed_from_my_porfolio() {
 		try {
 			Thread.sleep(5000);
@@ -435,7 +604,9 @@ public class StepDefinitions {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		assertTrue(driver.findElement(By.id("rGOOG")) == null);
+		boolean exist = driver.findElements(By.id("rTSLA")).size() != 0;
+		
+		assertTrue(exist == false);
 	}
 
 

@@ -20,10 +20,9 @@ Feature: Main Page
 		Then the ticker symbol error should say "Invalid ticker symbol."
 		
 	Scenario: Add stock Duplicate stock
-		Given I am on index.jsp
-		When I login
+		Given I have added a new stock
 		And I add a duplicate stock
-		Then the ticker symbol error should say "Portfolio already contains this stock."
+		Then the duplicate error should say "Portfolio already contains this stock."
 
 	Scenario: Add stock No specified number of shares
 		Given I am on index.jsp
@@ -68,10 +67,9 @@ Feature: Main Page
 		Then the stock should be added to my portfolio
 		
 	Scenario: Delete Stock
-		Given I am on index.jsp
-		When I login
+		Given I have added the stock
 		And I delete a stock
-		Then the stock should be removed from my porfolio
+		Then the stock should be removed from my portfolio
 		
 	
 
