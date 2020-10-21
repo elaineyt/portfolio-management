@@ -55,7 +55,7 @@ canvas{
 
 	<div class="container">
 		<div class="row">
-			<div class="col-sm-8">
+			<div class="col-sm-6">
 				<div class="row">
                 		<div class="col-sm-5">
                     		<span id="currentPortfolioValue" style='font-size: 40px;'></span>
@@ -74,7 +74,7 @@ canvas{
 							</select>
                     	</div>
                     </div>
-                <div id="graph" style="height:300px; width:650px;">
+                <div id="graph" style="height:300px; width:auto;">
                 	<canvas id="canvas"></canvas>
                 </div>
                 <div class="container">
@@ -108,8 +108,77 @@ canvas{
                 </div>
 			</div>
 
-			<div class="col-sm-4">
+			<div class="col-sm-3">
 				<h3>My Portfolio</h3>
+				<div class="container" id="positions">
+				</div>
+				<button id="addStockModalButton" type="button" class="btn btn-primary">Add Stock</button>
+
+				<div class="modal fade" id="addStockModal" tabindex="-1"
+					role="dialog" aria-hidden="true">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title">Add Stock</h5>
+								<button type="button" class="close" data-dismiss="modal"
+									aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div class="modal-body">
+								<form>
+									<div class="form-group">
+										<label>Ticker Symbol</label> <input id="addStockTicker"
+											class="form-control">
+										<div id="addStockErrorTS" class="errorMessage"></div>
+									</div>
+									<div class="form-group">
+										<label>Shares</label> <input id="addStockShares"
+											class="form-control">
+										<div id="addStockErrorShares" class="errorMessage"></div>
+									</div>
+									<div class="form-group">
+										<label>Buy Date</label> <input id="addStockBuyDate"
+											class="form-control">
+										<div id="addStockErrorBuy" class="errorMessage"></div>
+									</div>
+									<div class="form-group">
+										<label>Sell Date</label> <input id="addStockSellDate"
+											class="form-control">
+										<div id="addStockErrorSell" class="errorMessage"></div>
+									</div>
+
+								</form>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary"
+									data-dismiss="modal">Close</button>
+								<button type="button" id="addStock" class="btn btn-primary">Add</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="modal fade" id="deleteStockModal" tabindex="-1"
+					role="dialog" aria-hidden="true">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+						<div class="modal-header">
+								<h5 class="modal-title">Are you sure you want to delete <span id="modalTickerSymbol"></span>?</h5>
+							</div>
+							<div class="modal-body">
+								<button type="button" class="btn btn-secondary"
+									data-dismiss="modal">Cancel</button>
+								<button type="button" id="deleteStock" class="btn btn-primary">Delete Stock</button>
+							</div>
+						</div>
+					</div>
+				</div>			
+				
+			</div>
+			
+			<div class="col-sm-3">
+				<h3>Historical Trends</h3>
 				<div class="container" id="positions">
 				</div>
 				<button id="addStockModalButton" type="button" class="btn btn-primary">Add Stock</button>

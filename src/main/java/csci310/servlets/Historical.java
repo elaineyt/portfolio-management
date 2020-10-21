@@ -18,7 +18,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/Historical")
+/**
+ * Servlet implementation class Profile
+ */
+@WebServlet(name="Historical",urlPatterns={"/historical"})
 public class Historical extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static Connection conn = null;

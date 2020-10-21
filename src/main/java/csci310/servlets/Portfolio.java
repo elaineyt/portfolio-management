@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Servlet implementation class Profile
  */
-@WebServlet("/Portfolio")
+@WebServlet(name="Portfolio",urlPatterns={"/portfolio"})
 public class Portfolio extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static Connection conn = null;
