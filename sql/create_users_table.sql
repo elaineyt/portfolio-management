@@ -1,5 +1,3 @@
-CREATE TABLE Users (
-    username VARCHAR(255) NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    PRIMARY KEY (username)
+ALTER TABLE Users(
+    ADD failed_login_attempts INT DEFAULT 0;
 );

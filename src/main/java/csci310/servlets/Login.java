@@ -81,6 +81,7 @@ public class Login extends HttpServlet {
         		if(jsonStr == "{\"Success\": \"Successfully logged in.\"}") {
         	        session.setAttribute("username", username);
         		}
+ 
         		out.print(jsonStr);
         		out.flush();
         	} 
