@@ -25,6 +25,10 @@
 	height: 275px;
 	overflow-y: scroll;
 }
+#historicalPositions {
+	height: 275px;
+	overflow-y: scroll;
+}
 .errorMessage {
 	color: red;
 }
@@ -179,11 +183,11 @@ canvas{
 			
 			<div class="col-sm-3">
 				<h3>Historical Trends</h3>
-				<div class="container" id="positions">
+				<div class="container" id="historicalPositions">
 				</div>
-				<button id="addStockModalButton" type="button" class="btn btn-primary">Add Stock</button>
+				<button id="addHistoricalStockModalButton" type="button" class="btn btn-primary">Add Stock</button>
 
-				<div class="modal fade" id="addStockModal" tabindex="-1"
+				<div class="modal fade" id="addHistoricalStockModal" tabindex="-1"
 					role="dialog" aria-hidden="true">
 					<div class="modal-dialog" role="document">
 						<div class="modal-content">
@@ -197,24 +201,24 @@ canvas{
 							<div class="modal-body">
 								<form>
 									<div class="form-group">
-										<label>Ticker Symbol</label> <input id="addStockTicker"
+										<label>Ticker Symbol</label> <input id="addHistoricalStockTicker"
 											class="form-control">
-										<div id="addStockErrorTS" class="errorMessage"></div>
+										<div id="addHistoricalStockErrorTS" class="errorMessage"></div>
 									</div>
 									<div class="form-group">
-										<label>Shares</label> <input id="addStockShares"
+										<label>Shares</label> <input id="addHistoricalStockShares"
 											class="form-control">
-										<div id="addStockErrorShares" class="errorMessage"></div>
+										<div id="addHistoricalStockErrorShares" class="errorMessage"></div>
 									</div>
 									<div class="form-group">
-										<label>Buy Date</label> <input id="addStockBuyDate"
+										<label>Buy Date</label> <input id="addHistoricalStockBuyDate"
 											class="form-control">
-										<div id="addStockErrorBuy" class="errorMessage"></div>
+										<div id="addHistoricalStockErrorBuy" class="errorMessage"></div>
 									</div>
 									<div class="form-group">
-										<label>Sell Date</label> <input id="addStockSellDate"
+										<label>Sell Date</label> <input id="addHistoricalStockSellDate"
 											class="form-control">
-										<div id="addStockErrorSell" class="errorMessage"></div>
+										<div id="addHistoricalStockErrorSell" class="errorMessage"></div>
 									</div>
 
 								</form>
@@ -222,7 +226,23 @@ canvas{
 							<div class="modal-footer">
 								<button type="button" class="btn btn-secondary"
 									data-dismiss="modal">Close</button>
-								<button type="button" id="addStock" class="btn btn-primary">Add</button>
+								<button type="button" id="addHistoricalStock" class="btn btn-primary">Add</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="modal fade" id="deleteHistoricalStockModal" tabindex="-1"
+					role="dialog" aria-hidden="true">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+						<div class="modal-header">
+								<h5 class="modal-title">Are you sure you want to delete <span id="historicalModalTickerSymbol"></span>?</h5>
+							</div>
+							<div class="modal-body">
+								<button type="button" class="btn btn-secondary"
+									data-dismiss="modal">Cancel</button>
+								<button type="button" id="deleteHistoricalStock" class="btn btn-primary">Delete Stock</button>
 							</div>
 						</div>
 					</div>
@@ -263,11 +283,13 @@ canvas{
 	}
 	
 	var positions = new Map();
+	var historicalPositions = new Map();
 	
 		$(document).ready(
 			function(){
 				
 				getPositions();
+				getHistoricalPositions();
 				
 				const idleDurationSecs = 120;    // X number of seconds
 			    const redirectUrl = 'http://localhost:8080/index.jsp';  // Redirect idle users to this URL
@@ -296,6 +318,14 @@ canvas{
 				});
 				
 				$('#addStockSellDate').datepicker({
+					autoclose: true
+				});
+				
+				$('#addHistoricalStockBuyDate').datepicker({
+					autoclose: true
+				});
+				
+				$('#addHistoricalStockSellDate').datepicker({
 					autoclose: true
 				});
 				
@@ -328,6 +358,24 @@ canvas{
 					}
 				);
 				
+				$('#addHistoricalStock').click(
+						function(e) {
+							var tickerSymbol = $('#addHistoricalStockTicker').val();
+							var numShares = $('#addHistoricalStockShares').val();
+							var buyDate = $('#addHistoricalStockBuyDate').val();
+							var sellDate = $('#addHistoricalStockSellDate').val();
+							$('#addHistoricalStockError').html("");
+							
+							addHistoricalStock(tickerSymbol, numShares, buyDate, sellDate);		
+						}
+					);
+				
+				$('#deleteHistoricalStock').click(
+						function(e) {
+							deleteHistoricalStock();
+						}
+					);
+				
 				$('#deleteStock').click(
 					function(e) {
 						deleteStock();
@@ -340,6 +388,13 @@ canvas{
 						$("#addStockModal").modal('show');
 					}
 				);
+				
+				$('#addHistoricalStockModalButton').click(
+						function(e) {
+							$('#addHistoricalStockError').html("");
+							$("#addHistoricalStockModal").modal('show');
+						}
+					);
 				
 				$('#logoutButton').click(
 					function(e) {
@@ -460,9 +515,50 @@ canvas{
         }
     }
 	
+	// Populate historical trends
+	function getHistoricalPositions() {
+        var username = '<%= session.getAttribute("username")%>'
+        let HTTP = new XMLHttpRequest();
+        var d = new Date();
+        var n = d.getTime();
+        const url = "http://localhost:8080/historical?username=" + username.toString() + "&t=" + n;
+        HTTP.open("GET", url);
+        HTTP.send();
+        
+        $("#historicalPositions").html("");
+        
+        HTTP.onreadystatechange = (e) => {
+        	if(HTTP.readyState == 4 && HTTP.status == 200){
+        		var response = JSON.parse(HTTP.responseText);
+        		for(var i = 0; i < response.positions.length; i++){
+        			var tickerSymbol = response.positions[i].position;
+        			var shareCount = response.positions[i].share_count;
+        			var dateBought = response.positions[i].date_bought;
+        			var dateSold = response.positions[i].date_sold;
+        			var today = new Date();
+        			if(Date.parse(dateBought) <= today && today <= Date.parse(dateSold)){
+        				var row = "<div class='row' id='r-historical-" + tickerSymbol + "'><div class='col-sm-2 position-padding'><input type='checkbox' onclick='stockChecked(\"Historical-" + tickerSymbol + "\", this)'/></div><div class='col-sm-8 position-padding'>" + tickerSymbol + 
+        				"</div><div class='col-sm-2'><button type='button' class='btn' onclick=deleteHistoricalStockModal('" + tickerSymbol + "')>X</button></div></div>";
+                		$("#historicalPositions").append(row);
+                		historicalPositions.set(tickerSymbol, new Position(tickerSymbol, shareCount, formatDate(dateBought), formatDate(dateSold)));
+        			}	
+        		}
+        		setDefaultGraphDates();
+        		stockHistoryLabels.push("Total Portfolio Value");
+        		getPortfolioValueHistory("D", 0);
+				getCurrentPortfolioValue();
+        	}   
+        }
+    }
+	
 	function deleteStockModal(tickerSymbol) {
 		$("#modalTickerSymbol").html(tickerSymbol);
 		$("#deleteStockModal").modal('show');
+	}
+	
+	function deleteHistoricalStockModal(tickerSymbol) {
+		$("#historicalModalTickerSymbol").html(tickerSymbol);
+		$("#deleteHistoricalStockModal").modal('show');
 	}
 	
 	function deleteStock() {
@@ -489,6 +585,120 @@ canvas{
         		positions.delete(tickerSymbol);
        		}   
        	}
+	}
+	
+	function deleteHistoricalStock() {
+		var tickerSymbol = $("#modalHistoricalTickerSymbol").text();
+		var username = '<%= session.getAttribute("username")%>'
+		
+		const HTTP = new XMLHttpRequest();
+       	const url = "http://localhost:8080/historical?username=" + username.toString() + "&position=" + tickerSymbol.toString();
+       	HTTP.open("DELETE", url);
+       	HTTP.send();
+       
+       	HTTP.onreadystatechange = (e) => {
+       		if(HTTP.readyState == 4 && HTTP.status == 200){
+       			$("#deleteHistoricalStockModal").modal('hide');	
+				$("#r-historical-" + tickerSymbol).remove();
+				var index = stockHistoryLabels.indexOf('Historical-' + tickerSymbol);
+        		if(index >= 0){
+					config.data.datasets.splice(index, 1);
+    				window.myLine.update();
+        			stockHistory.splice(index, 1);
+        			stockHistoryLabels.splice(index, 1);
+        		}
+        		historicalPositions.delete(tickerSymbol);
+       		}   
+       	}
+	}
+	
+	function addHistoricalStock(tickerSymbol, numShares, buyDate, sellDate){
+		$('#addHistoricalStockErrorTS').html("");
+		$('#addHistoricalStockErrorShares').html("");
+		$('#addHistoricalStockErrorBuy').html("");
+		$('#addHistoricalStockErrorSell').html("");
+		
+		const HTTP = new XMLHttpRequest();
+	    const url = "https://finnhub.io/api/v1/quote?symbol=" + tickerSymbol.toString() + "&token=" + finnhub_token;
+	    HTTP.open("GET", url);
+	    HTTP.send();
+
+    	HTTP.onreadystatechange = (e) => {
+       		if(HTTP.readyState == 4 && HTTP.status == 200){
+       			var error = false;
+       			// invalid ticker symbol
+       			if(HTTP.responseText.toString() == "{\"c\":0,\"h\":0,\"l\":0,\"o\":0,\"pc\":0,\"t\":0}"){
+       				$('#addHistoricalStockErrorTS').html("Invalid ticker symbol.");
+       				error = true;
+       			}
+       			else if(historicalPositions.has(tickerSymbol)){
+       				$('#addHistoricalStockErrorTS').html("Portfolio already contains this stock.");
+       				error = true;
+       			}
+    			// number of shares is left blank
+    			if(numShares == ""){
+    				$('#addHistoricalStockErrorShares').html("Please enter number of shares.");
+    				error = true;
+    			}
+    			// number of shares is not an integer
+    			else if(!Number.isInteger(Number(numShares))){
+    				$('#addHistoricalStockErrorShares').html("Please enter a whole number of shares.");
+    				error = true;
+    			}
+    			// number of shares is less than or equal to 0
+    			else if(numShares <= 0){
+    				$('#addHistoricalStockErrorShares').html("Number of shares must be greater than zero.");
+    				error = true;
+    			}
+    			// both buy and sell date empty
+    			if(!buyDate && !sellDate){
+    				$('#addHistoricalStockErrorBuy').html("Purchase date is required.");
+    				error = true;
+    			}
+    			// buy date is empty, sell date is not
+    			else if(!buyDate){
+    				$('#addHistoricalStockErrorBuy').html("Sold date without purchase date.");
+    				error = true;
+    			}
+    			// sell date is empty, set to far date into the future to be shown "indefinitely"
+    			else if(!sellDate){
+    				sellDate = addDaysAndFormat(new Date(), 10000);
+    			}
+    			// sell date is before buy date
+    			else if(sellDate < buyDate){
+    				$('#addHistoricalStockErrorSell').html("Sold date is prior to purchase date.");
+    				error = true;
+    			}	
+       				
+
+       			// Get session attribute here 
+       			var username = '<%= session.getAttribute("username")%>';
+
+       	
+       			
+       			if(error == false){
+       	            const HTTP = new XMLHttpRequest();
+       	            const url = "http://localhost:8080/historical?username=" + username.toString() + "&position=" + tickerSymbol.toString() + "&share_count=" + 
+       	            	numShares.toString() + "&date_bought=" + buyDate.toString() + "&date_sold=" + sellDate.toString();
+       	            HTTP.open("POST", url);
+       	            HTTP.send();
+       	            
+       	            HTTP.onreadystatechange = (e) => {
+       	            	if(HTTP.readyState == 4 && HTTP.status == 200){
+       	        			$("#addHistoricalStockModal").modal('hide');
+       	        			var today = new Date();
+       	            		if(Date.parse(buyDate.toString()) <= today && today <= Date.parse(sellDate.toString())){
+       	            			var row = "<div class='row' id='r-historical-" + tickerSymbol + "'><div class='col-sm-2 position-padding'><input type='checkbox' onclick='stockChecked(\"Historical-" + tickerSymbol + "\", this)'/></div><div class='col-sm-8 position-padding'>" + tickerSymbol + 
+       	        				"</div><div class='col-sm-2'><button type='button' class='btn' onclick=deleteHistoricalStockModal('" + tickerSymbol + "')>X</button></div></div>";
+       	                		$("#historicalPositions").append(row);
+       	                		historicalPositions.set(tickerSymbol, new Position(tickerSymbol, numShares, buyDate, sellDate));
+       	                		createNewLine(tickerSymbol, numShares);
+       	            		}        		
+       	            	}   
+       	            }	
+       			}	
+       		}
+    	}
 	}
 	
 	function addStock(tickerSymbol, numShares, buyDate, sellDate){
@@ -707,6 +917,36 @@ canvas{
     			stockHistory.push(newPortfolioData);
     			stockHistoryLabels.push("Total Portfolio Value");
     			drawGraph("Total Portfolio Value", stockHistory.length-1);
+    		}
+    	}
+    }
+    
+    function createNewLine(tickerSymbol, numShares){
+    	var startDate = Date.parse($('#graphStartDate').val())/1000;
+		var endDate = Date.parse($('#graphEndDate').val())/1000;
+		
+		var index = stockHistoryLabels.indexOf(tickerSymbol);
+		config.data.datasets.splice(index, 1);
+		window.myLine.update();
+		var newPortfolioData = stockHistory[index];
+		stockHistory.splice(index, 1);
+		stockHistoryLabels.splice(index, 1);
+		
+		const HTTP = new XMLHttpRequest();
+    	const url = "https://finnhub.io/api/v1/stock/candle?symbol=" + tickerSymbol + "&resolution=" + graphUnit + "&from=" + startDate + "&to=" + endDate + "&token=" + finnhub_token;
+    	HTTP.open("GET", url);
+    	HTTP.send();
+
+    	HTTP.onreadystatechange = (e) => {
+    		if(HTTP.readyState == 4 && HTTP.status == 200){
+    			var response = JSON.parse(HTTP.responseText);
+    			var rawData = response.c;
+    			for(var i = 0; i < rawData.length; i++){	
+    				newPortfolioData[i] += rawData[i]*numShares;
+    			}
+    			stockHistory.push(newPortfolioData);
+    			stockHistoryLabels.push('Historical-' + tickerSymbol);
+    			drawGraph(tickerSymbol, stockHistory.length-1);
     		}
     	}
     }
