@@ -207,8 +207,7 @@
 		       				window.location.href = 'http://localhost:8080/MainPage.jsp';
 		       			}
 		       			else{	
-		       				count++;
-		       				alert(count);
+		       				count++; 
 		       				if(response == "{\"Error\": \"Failed to log in user. No username provided.\"}"){
 		       					$('#loginError').html("Please provide a username.");
 		       				}
