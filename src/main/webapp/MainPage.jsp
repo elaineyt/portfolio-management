@@ -137,7 +137,7 @@ canvas{
 										<div id="addStockErrorTS" class="errorMessage"></div>
 									</div>
 									<div class="form-group">
-										<label>Shares</label> <input id="addStockShares"
+										<label>Quantity</label> <input id="addStockShares"
 											class="form-control">
 										<div id="addStockErrorShares" class="errorMessage"></div>
 									</div>
@@ -206,7 +206,7 @@ canvas{
 										<div id="addHistoricalStockErrorTS" class="errorMessage"></div>
 									</div>
 									<div class="form-group">
-										<label>Shares</label> <input id="addHistoricalStockShares"
+										<label>Quantity</label> <input id="addHistoricalStockShares"
 											class="form-control">
 										<div id="addHistoricalStockErrorShares" class="errorMessage"></div>
 									</div>
@@ -446,8 +446,8 @@ canvas{
 		// pulls data from 5 days in case dates have limited values
 		var todayMinus5 = Date.parse(addDaysAndFormat(new Date(), -5))/1000;
 		var today = Date.parse(addDaysAndFormat(new Date(), 0))/1000;
-			
-		for(let [key, value] of positions){
+		
+		positions.forEach((value, key) => {
 			const HTTP = new XMLHttpRequest();
         	const url = "https://finnhub.io/api/v1/stock/candle?symbol=" + key + "&resolution=D&from=" + todayMinus5 + "&to=" + today + "&token=" + finnhub_token;
         	HTTP.open("GET", url);
@@ -476,7 +476,7 @@ canvas{
         			}
         		}
         	}
-		}	
+		});
 	}
 		
 	// Populate portfolio list
@@ -924,7 +924,6 @@ canvas{
 	    		stockHistory.splice(index, 1);
 	    		stockHistoryLabels.splice(index, 1);    			
     		}
-    		// console.log(config.data.datasets);
     	}
     	else {
     		if(tickerSymbol === "Select-All") {
@@ -963,7 +962,6 @@ canvas{
 	    		stockHistory.splice(index, 1);
 	    		stockHistoryLabels.splice(index, 1);    			
     		}
-    		// console.log(config.data.datasets);
     	}
     	else {
     		if(tickerSymbol === "Select-All") {
