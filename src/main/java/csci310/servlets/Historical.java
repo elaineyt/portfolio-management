@@ -145,7 +145,7 @@ public class Historical extends HttpServlet {
         		
         		// * Only update profile if user exists
         		if(rs.next()) {
-        			// * Create Portfolio Position
+        			// * Create Historical Position
         			ps = conn.prepareStatement("INSERT INTO Historical (username, position, share_count, date_bought, date_sold) VALUES ('" + username + "', '" + position + "', '" + share_count + "', STR_TO_DATE('" + date_bought.replace('/', '-') + "', '%m-%d-%Y'), STR_TO_DATE('" + date_sold.replace('/', '-') + "', '%m-%d-%Y'));");
         			ps.executeUpdate();
         			
