@@ -837,7 +837,7 @@ canvas{
         		var index = stockHistory.length-1;
         		stockHistoryLabels.push(tickerSymbol);
         		for(var i = 0; i < rawData.length; i++){
-        			stockHistory[index].push(rawData[i]);
+        			stockHistory[index].push(rawData[i]*positions.get(tickerSymbol).shares);
         		}
         		drawGraph(tickerSymbol, index);
         	}
@@ -861,7 +861,7 @@ canvas{
         		var index = stockHistory.length-1;
         		stockHistoryLabels.push('Historical-' + tickerSymbol);
         		for(var i = 0; i < rawData.length; i++){
-        			stockHistory[index].push(rawData[i]);
+        			stockHistory[index].push(rawData[i]*historicalPositions.get(tickerSymbol).shares);
         		}
         		drawGraph(tickerSymbol, index);
         	}
@@ -893,7 +893,7 @@ canvas{
 							config.data.labels.push(addDaysAndFormat($('#graphStartDate').val(), i*increment));
 						}
         			}
-        			stockHistory[index].push(rawData[i]);
+        			stockHistory[index].push(rawData[i]*positions.get(tickerSymbol).shares);
         		}
         		
         		drawGraph(tickerSymbol, index);
