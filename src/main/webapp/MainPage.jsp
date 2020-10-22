@@ -1144,6 +1144,7 @@ canvas{
     	}
     	else{
     		graphEndDate = $('#graphEndDate').val();
+    		$('#graphDateError').html('');
     	}
     	switchUnits();
     }
