@@ -88,9 +88,12 @@ public class User extends HttpServlet {
         			//hash password
         			String hash_password = MD5.hash(password);
         			
+        			int failed_login_attempts = 0;
+        			
         			// * Create User       			
-        			ps = conn.prepareStatement("INSERT INTO Users (username, password) VALUES ('" + username + "', '" + hash_password + "' );");
+        			ps = conn.prepareStatement("INSERT INTO Users (username, password) VALUES ('" + username + "', '" + hash_password + "');");
 					ps.executeUpdate();
+					System.out.println("success");
 					jsonStr = "{\"Success\": \"Successfully created user.\"}";
         		}
         		
