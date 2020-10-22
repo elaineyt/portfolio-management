@@ -22,7 +22,7 @@ import java.sql.Timestamp;
 /**
  * Servlet implementation class Profile
  */
-@WebServlet("/Login")
+@WebServlet(name="Login",urlPatterns={"/login"})
 public class Login extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static Connection conn = null;
@@ -191,7 +191,15 @@ public class Login extends HttpServlet {
         		out.flush();
         	} 
         	catch (SQLException sqle) { /* Ignore */ } 
-        	finally { }
+        	finally {
+        		try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+        		
+        	}
         }
     }
 }

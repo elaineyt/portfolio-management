@@ -11,6 +11,7 @@ import org.junit.runner.RunWith;
  */
 @RunWith(Cucumber.class)
 //@CucumberOptions(strict = true, features = {"src/test/resources/cucumber/LoginAttempt.feature"})
+@CucumberOptions(strict = true, features = {"src/test/resources/cucumber/graph.feature"})
 public class RunCucumberTests {
 
 	@BeforeClass
