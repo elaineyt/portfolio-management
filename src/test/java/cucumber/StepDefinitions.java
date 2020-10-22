@@ -85,6 +85,7 @@ public class StepDefinitions {
 		WebElement button = driver.findElement(By.id("logoutButton"));
 		button.click();
 	}
+	
 	@Then("I should be on index.jsp")
 	public void i_should_be_on_index_jsp() {
 		try {
