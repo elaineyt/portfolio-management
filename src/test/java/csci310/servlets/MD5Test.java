@@ -7,7 +7,7 @@ import org.mockito.Mockito;
 
 public class MD5Test extends Mockito{
 
-	
+	//tests the hash function
 	@Test
 	public void testHash() {
 		String test = "Hello";
