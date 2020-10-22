@@ -563,11 +563,43 @@ canvas{
         		}
         		setDefaultGraphDates();
         		stockHistoryLabels.push("Total Portfolio Value");
-        		getPortfolioValueHistory("D", 0);
+        		initTotalPortfolioGraph("D", 0);
 				getCurrentPortfolioValue();
         	}   
         }
     }
+	
+	function initTotalPortfolioGraph(unit, iteration){
+		var startDate = Date.parse($('#graphStartDate').val())/1000;
+		var endDate = Date.parse($('#graphEndDate').val())/1000;
+		
+		stockHistory.push([]);
+		var index = stockHistory.length-1;
+		
+		//Grab dummy values to populate graph with correct number of points, initially all zero
+		const HTTP = new XMLHttpRequest();
+        const url = "https://finnhub.io/api/v1/stock/candle?symbol=MSFT&resolution=" + unit + "&from=" + startDate + "&to=" + endDate + "&token=" + finnhub_token;
+        HTTP.open("GET", url);
+        HTTP.send();
+        
+        HTTP.onreadystatechange = (e) => {
+    		if(HTTP.readyState == 4 && HTTP.status == 200){
+    			var response = JSON.parse(HTTP.responseText);
+    			var rawData = response.c;
+    			var increment = DaysBetween($('#graphStartDate').val(), $('#graphEndDate').val())/rawData.length;
+    			stockHistory[index] = rawData;
+				for(var i = 0; i < stockHistory[0].length; i++){
+					stockHistory[index][i] = 0;
+					if(iteration == 0){
+						config.data.labels.push(addDaysAndFormat($('#graphStartDate').val(), Math.round(i*increment)));
+					}
+				}
+				getPortfolioValueHistory(unit, iteration);
+    		}
+        }
+		
+		
+	}
 	
 	// Populate historical trends
 	function getHistoricalPositions() {
@@ -1091,13 +1123,10 @@ canvas{
     function getPortfolioValueHistory(unit, iteration){
     	var startDate = Date.parse($('#graphStartDate').val())/1000;
 		var endDate = Date.parse($('#graphEndDate').val())/1000;
-		
-		stockHistory.push([]);
-		var index = stockHistory.length-1;
-		//stockHistoryLabels.push("Total Portfolio Value");
-		
-		var firstIt = true;
 		counter = 0;
+		if(positions.size == 0){
+			drawGraph("Total Portfolio Value", stockHistory.length-1);
+		}
 		for(let [key, value] of positions){
 			const HTTP = new XMLHttpRequest();
         	const url = "https://finnhub.io/api/v1/stock/candle?symbol=" + key + "&resolution=" + unit + "&from=" + startDate + "&to=" + endDate + "&token=" + finnhub_token;
@@ -1109,27 +1138,10 @@ canvas{
         			var response = JSON.parse(HTTP.responseText);
         			var rawData = response.c;
         			var increment = DaysBetween($('#graphStartDate').val(), $('#graphEndDate').val())/rawData.length;
-        			if(firstIt){
-        				stockHistory[index] = rawData;
-        				for(var i = 0; i < stockHistory[index].length; i++){
-        					if(iteration == 0){
-        						//config.data.labels.push(i);
-        						if(unit == "D"){
-        							config.data.labels.push(addDaysAndFormat($('#graphStartDate').val(), Math.round(i*increment)));
-        						}
-        						else{
-        							config.data.labels.push(addDaysAndFormat($('#graphStartDate').val(), Math.round(i*increment)));
-        						}
-        					}
-        					stockHistory[index][i] *= value.shares;
-        				}
-        				firstIt = false;
+        			for(var i = 0; i < stockHistory[stockHistory.length-1].length; i++){	
+        				stockHistory[stockHistory.length-1][i] += rawData[i]*value.shares;
         			}
-        			else{
-        				for(var i = 0; i < stockHistory[index].length; i++){	
-        					stockHistory[index][i] += rawData[i]*value.shares;
-        				}
-        			}
+        			
         			portfolioHistoryComplete();
         		}
         	}
@@ -1183,7 +1195,7 @@ canvas{
     }
     
     function setDefaultGraphDates(){
-    	$('#graphStartDate').datepicker("update", getEarliestBuyDate());
+    	$('#graphStartDate').datepicker("update", addDaysAndFormat(new Date(), -92));
 		$('#graphEndDate').datepicker("update", addDaysAndFormat(new Date(), 0));
     }
     
@@ -1211,7 +1223,8 @@ canvas{
     				//stockHistory.push([]);
     				//config.data.datasets.push([]); //temporary
     				//window.myLine.update();
-    				getPortfolioValueHistory(graphUnit, i);
+    				//getPortfolioValueHistory(graphUnit, i);
+    				initTotalPortfolioGraph(graphUnit, i);
     				await sleep(200);
     			}
     			else{
