@@ -76,6 +76,10 @@ canvas{
   							<option value="days">Days</option>
   							<option value="weeks">Weeks</option>
 							</select>
+							<div class="row" style='margin:auto;padding-top:10px;'>
+								<button id="zoomIn" type="button" class="btn btn-primary" style='margin-right:5px;'>+</button>
+								<button id="zoomOut" type="button" class="btn btn-primary">-</button>
+                    		</div>
                     	</div>
                     </div>
                 <div id="graph" style="height:300px; width:auto;">
@@ -345,6 +349,53 @@ canvas{
 					validateGraphDates();
 				});
 				
+				$('#zoomIn').click(
+						function(e) {
+							if($('#graphUnits').val() == "weeks"){
+								var end_date_new = $('#graphEndDate').datepicker('getDate'); 
+							    end_date_new.setDate(end_date_new.getDate () - 7); 
+							    $('#graphEndDate').datepicker ('setDate', end_date_new);
+							    
+							    var start_date_new = $('#graphStartDate').datepicker('getDate'); 
+							    start_date_new.setDate(start_date_new.getDate () + 7); 
+							    $('#graphStartDate').datepicker ('setDate', start_date_new);
+							} else {
+								var end_date_new = $('#graphEndDate').datepicker('getDate'); 
+							    end_date_new.setDate(end_date_new.getDate () - 1); 
+							    $('#graphEndDate').datepicker ('setDate', end_date_new);
+							    
+							    var start_date_new = $('#graphStartDate').datepicker('getDate'); 
+							    start_date_new.setDate(start_date_new.getDate () + 1); 
+							    $('#graphStartDate').datepicker ('setDate', start_date_new);
+							}
+						}
+					);
+				
+				$('#zoomOut').click(
+						function(e) {
+							if($('#graphUnits').val() == "weeks"){
+								var end_date_new = $('#graphEndDate').datepicker('getDate'); 
+								if(end_date_new.getDate() + 7 <= new Date().getDate()) {
+								    end_date_new.setDate(end_date_new.getDate() + 7); 
+								    $('#graphEndDate').datepicker('setDate', end_date_new);	
+								}
+
+							    var start_date_new = $('#graphStartDate').datepicker('getDate'); 
+							    start_date_new.setDate(start_date_new.getDate () - 7); 
+							    $('#graphStartDate').datepicker ('setDate', start_date_new);
+							} else {
+								var end_date_new = $('#graphEndDate').datepicker('getDate'); 
+								if(end_date_new.getDate() + 1 <= new Date().getDate()) {
+								    end_date_new.setDate(end_date_new.getDate() + 1); 
+								    $('#graphEndDate').datepicker ('setDate', end_date_new);	
+								}
+								
+							    var start_date_new = $('#graphStartDate').datepicker('getDate'); 
+							    start_date_new.setDate(start_date_new.getDate () - 1); 
+							    $('#graphStartDate').datepicker ('setDate', start_date_new);
+							}	
+						}
+					);
 				
 				$('#addStock').click(
 					function(e) {
@@ -1093,7 +1144,6 @@ canvas{
     		drawGraph("Total Portfolio Value", stockHistory.length-1);
     	}
     }
-    
     
     function getEarliestBuyDate(){
     	var earliestBuyDate = addDaysAndFormat(new Date(), 0);
