@@ -578,23 +578,22 @@ canvas{
 		
 		//Grab dummy values to populate graph with correct number of points, initially all zero
 		const HTTP = new XMLHttpRequest();
-        const url = "https://finnhub.io/api/v1/stock/candle?symbol=MSFT&resolution=" + unit + "&from=" + startDate + "&to=" + endDate + "&token=" + finnhub_token;
+        const url = "https://finnhub.io/api/v1/stock/candle?symbol=GOOGL&resolution=" + unit + "&from=" + startDate + "&to=" + endDate + "&token=" + finnhub_token;
         HTTP.open("GET", url);
         HTTP.send();
-        
         HTTP.onreadystatechange = (e) => {
     		if(HTTP.readyState == 4 && HTTP.status == 200){
     			var response = JSON.parse(HTTP.responseText);
     			var rawData = response.c;
     			var increment = DaysBetween($('#graphStartDate').val(), $('#graphEndDate').val())/rawData.length;
     			stockHistory[index] = rawData;
-				for(var i = 0; i < stockHistory[0].length; i++){
+				for(var i = 0; i < stockHistory[index].length; i++){
 					stockHistory[index][i] = 0;
 					if(iteration == 0){
 						config.data.labels.push(addDaysAndFormat($('#graphStartDate').val(), Math.round(i*increment)));
 					}
 				}
-				getPortfolioValueHistory(unit, iteration);
+				getPortfolioValueHistory(unit, index);
     		}
         }
 		
@@ -666,7 +665,7 @@ canvas{
         			stockHistory.splice(index, 1);
         			stockHistoryLabels.splice(index, 1);
         		}
-        		deleteFromTotalPortfolio(tickerSymbol, positions.get(tickerSymbol).shares);
+        		//deleteFromTotalPortfolio(tickerSymbol, positions.get(tickerSymbol).shares);
         		positions.delete(tickerSymbol);
        		}   
        	}
@@ -865,7 +864,7 @@ canvas{
        	        				"</div><div class='col-sm-2'><button type='button' class='btn' onclick=deleteStockModal('" + tickerSymbol + "')>X</button></div></div>";
        	                		$("#positions").append(row);
        	                		positions.set(tickerSymbol, new Position(tickerSymbol, numShares, buyDate, sellDate));
-       	                		addToTotalPortfolio(tickerSymbol, numShares);
+       	                		//addToTotalPortfolio(tickerSymbol, numShares);
        	            		}        		
        	            	}   
        	            }	
@@ -1005,7 +1004,8 @@ canvas{
 	    		config.data.datasets.splice(index, 1);
 				window.myLine.update();
 	    		stockHistory.splice(index, 1);
-	    		stockHistoryLabels.splice(index, 1);    			
+	    		stockHistoryLabels.splice(index, 1); 
+	    		deleteFromTotalPortfolio(tickerSymbol, positions.get(tickerSymbol).shares);
     		}
     	}
     	else {
@@ -1017,7 +1017,8 @@ canvas{
     				}
     			});
     		} else {
-	    		populateStockHistory(tickerSymbol, graphUnit);    			
+	    		populateStockHistory(tickerSymbol, graphUnit);
+	    		addToTotalPortfolio(tickerSymbol, positions.get(tickerSymbol).shares);
     		}
     	}
     }
@@ -1120,40 +1121,45 @@ canvas{
     	}
     }
     
-    function getPortfolioValueHistory(unit, iteration){
+    function getPortfolioValueHistory(unit, index){
     	var startDate = Date.parse($('#graphStartDate').val())/1000;
 		var endDate = Date.parse($('#graphEndDate').val())/1000;
 		counter = 0;
 		if(positions.size == 0){
 			drawGraph("Total Portfolio Value", stockHistory.length-1);
 		}
-		for(let [key, value] of positions){
-			const HTTP = new XMLHttpRequest();
-        	const url = "https://finnhub.io/api/v1/stock/candle?symbol=" + key + "&resolution=" + unit + "&from=" + startDate + "&to=" + endDate + "&token=" + finnhub_token;
-        	HTTP.open("GET", url);
-        	HTTP.send();
 
-        	HTTP.onreadystatechange = (e) => {
-        		if(HTTP.readyState == 4 && HTTP.status == 200){
-        			var response = JSON.parse(HTTP.responseText);
-        			var rawData = response.c;
-        			var increment = DaysBetween($('#graphStartDate').val(), $('#graphEndDate').val())/rawData.length;
-        			for(var i = 0; i < stockHistory[stockHistory.length-1].length; i++){	
-        				stockHistory[stockHistory.length-1][i] += rawData[i]*value.shares;
+		for(let [key, value] of positions){
+			var checked = $("[id=cb-portfolio-"+key+"]:checked").length;
+			if(checked == 1){
+				const HTTP = new XMLHttpRequest();
+        		const url = "https://finnhub.io/api/v1/stock/candle?symbol=" + key + "&resolution=" + unit + "&from=" + startDate + "&to=" + endDate + "&token=" + finnhub_token;
+        		HTTP.open("GET", url);
+        		HTTP.send();
+        		//alert(stockHistory[stockHistory.length-1]);
+        		HTTP.onreadystatechange = (e) => {
+        			if(HTTP.readyState == 4 && HTTP.status == 200){
+        				var response = JSON.parse(HTTP.responseText);
+        				var rawData = response.c;
+        				var increment = DaysBetween($('#graphStartDate').val(), $('#graphEndDate').val())/rawData.length;
+        				for(var i = 0; i < stockHistory[index].length; i++){	
+        					stockHistory[index][i] += rawData[i]*value.shares;
+        				}
+        			//alert(stockHistory[stockHistory.length-1]);
+        				portfolioHistoryComplete(index);
         			}
-        			
-        			portfolioHistoryComplete();
         		}
-        	}
+			}
 		}
 		
     }
     
     var counter = 0;
-    function portfolioHistoryComplete(){
+    function portfolioHistoryComplete(index){
     	counter++;
-    	if(counter == positions.size){	
-    		drawGraph("Total Portfolio Value", stockHistory.length-1);
+    	var numChecked = $("[id^=cb-portfolio]:checked").length;
+    	if(counter == numChecked){	
+    		drawGraph("Total Portfolio Value", index);
     	}
     }
     
