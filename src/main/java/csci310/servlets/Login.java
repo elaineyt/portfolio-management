@@ -19,7 +19,7 @@ import javax.servlet.http.HttpSession;
 /**
  * Servlet implementation class Profile
  */
-@WebServlet("/Login")
+@WebServlet(name="Login",urlPatterns={"/login"})
 public class Login extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static Connection conn = null;

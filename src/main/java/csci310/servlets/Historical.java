@@ -21,8 +21,8 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Servlet implementation class Profile
  */
-@WebServlet(name="Portfolio",urlPatterns={"/portfolio"})
-public class Portfolio extends HttpServlet {
+@WebServlet(name="Historical",urlPatterns={"/historical"})
+public class Historical extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static Connection conn = null;
 	private static PreparedStatement ps = null;
@@ -32,7 +32,7 @@ public class Portfolio extends HttpServlet {
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public Portfolio() {
+    public Historical() {
         super();
     }
 
@@ -53,7 +53,7 @@ public class Portfolio extends HttpServlet {
 			
 			if(rs.next()) {
 				// * User successfully found
-				ps = conn.prepareStatement("SELECT * from Portfolio where username='" + username + "';");
+				ps = conn.prepareStatement("SELECT * from Historical where username='" + username + "';");
         		rs2 = ps.executeQuery();
         		
         		jsonStr = "{\"positions\": [ ";
@@ -104,7 +104,7 @@ public class Portfolio extends HttpServlet {
         String date_sold = request.getParameter("date_sold");
         
         // * Set default JSON to failed login
-     	String jsonStr = "{\"Error\": \"Creating Portfolio Position Failed.\"}";
+     	String jsonStr = "{\"Error\": \"Creating Historical Position Failed.\"}";
      	
      	// * Send JSON Object as a response
 		response.setContentType("application/json");
@@ -114,23 +114,23 @@ public class Portfolio extends HttpServlet {
 		
 		boolean invalid_request = false;
 		if(username == null || username.length() == 0 || username.length() > 50) {
-			jsonStr = "{\"Error\": \"Creating Portfolio Position Failed. Invalid username.\"}";
+			jsonStr = "{\"Error\": \"Creating Historical Position Failed. Invalid username.\"}";
 			invalid_request = true;
         }
         if(position == null || position.length() > 50) {
-        	jsonStr = "{\"Error\": \"Creating Portfolio Position Failed. Invalid position.\"}";
+        	jsonStr = "{\"Error\": \"Creating Historical Position Failed. Invalid position.\"}";
 			invalid_request = true;
         }
         if(share_count == null) {
-        	jsonStr = "{\"Error\": \"Creating Portfolio Position Failed. Invalid share count.\"}";
+        	jsonStr = "{\"Error\": \"Creating Historical Position Failed. Invalid share count.\"}";
 			invalid_request = true;
         }
         if(date_bought == null || date_bought.length() == 0 || date_bought.length() > 200) {
-        	jsonStr = "{\"Error\": \"Creating Portfolio Position Failed. Invalid date bought.\"}";
+        	jsonStr = "{\"Error\": \"Creating Historical Position Failed. Invalid date bought.\"}";
 			invalid_request = true;
         }
         if(date_sold == null || date_sold.length() == 0 || date_sold.length() > 200) {
-        	jsonStr = "{\"Error\": \"Creating Portfolio Position Failed. Invalid date sold.\"}";
+        	jsonStr = "{\"Error\": \"Creating Historical Position Failed. Invalid date sold.\"}";
 			invalid_request = true;
         }
         
@@ -148,13 +148,13 @@ public class Portfolio extends HttpServlet {
         		
         		// * Only update profile if user exists
         		if(rs.next()) {
-        			// * Create Portfolio Position
-        			ps = conn.prepareStatement("INSERT INTO Portfolio (username, position, share_count, date_bought, date_sold) VALUES ('" + username + "', '" + position + "', '" + share_count + "', STR_TO_DATE('" + date_bought.replace('/', '-') + "', '%m-%d-%Y'), STR_TO_DATE('" + date_sold.replace('/', '-') + "', '%m-%d-%Y'));");
+        			// * Create Historical Position
+        			ps = conn.prepareStatement("INSERT INTO Historical (username, position, share_count, date_bought, date_sold) VALUES ('" + username + "', '" + position + "', '" + share_count + "', STR_TO_DATE('" + date_bought.replace('/', '-') + "', '%m-%d-%Y'), STR_TO_DATE('" + date_sold.replace('/', '-') + "', '%m-%d-%Y'));");
         			ps.executeUpdate();
         			
-					jsonStr = "{\"Success\": \"Successfully added portfolio position.\"}";
+					jsonStr = "{\"Success\": \"Successfully added historical position.\"}";
         		} else {
-        			jsonStr = "{\"Error\": \"Creating Portfolio Position Failed. No user found.\"}";
+        			jsonStr = "{\"Error\": \"Creating Historical Position Failed. No user found.\"}";
         		}
         		
         		// * Send Result
@@ -178,7 +178,7 @@ public class Portfolio extends HttpServlet {
         String position = request.getParameter("position");
         
         // * Set default JSON to failed login
-     	String jsonStr = "{\"Error\": \"Deleting Position Failed.\"}";
+     	String jsonStr = "{\"Error\": \"Deleting Historical Position Failed.\"}";
      	
      	// * Send JSON Object as a response
 		response.setContentType("application/json");
@@ -188,11 +188,11 @@ public class Portfolio extends HttpServlet {
 		
 		boolean invalid_request = false;
 		if(username == null || username.length() == 0 || username.length() > 50) {
-			jsonStr = "{\"Error\": \"Deleting Position Failed. Invalid username.\"}";
+			jsonStr = "{\"Error\": \"Deleting Historical Position Failed. Invalid username.\"}";
 			invalid_request = true;
         }
         if(position == null || position.length() > 50) {
-        	jsonStr = "{\"Error\": \"Deleting Position Failed. Invalid position.\"}";
+        	jsonStr = "{\"Error\": \"Deleting Historical Position Failed. Invalid position.\"}";
 			invalid_request = true;
         }
         
@@ -210,13 +210,13 @@ public class Portfolio extends HttpServlet {
         		
         		// * Only update profile if user exists
         		if(rs.next()) {
-        			// * Delete Portfolio Position
-        			ps = conn.prepareStatement("DELETE FROM Portfolio WHERE username='" + username + "' AND position='" + position + "';");
+        			// * Delete Historical Position
+        			ps = conn.prepareStatement("DELETE FROM Historical WHERE username='" + username + "' AND position='" + position + "';");
             		ps.executeUpdate();
         			
-					jsonStr = "{\"Success\": \"Successfully deleted portfolio position.\"}";
+					jsonStr = "{\"Success\": \"Successfully deleted historical position.\"}";
         		} else {
-        			jsonStr = "{\"Error\": \"Deleting Position Failed. No user found.\"}";
+        			jsonStr = "{\"Error\": \"Deleting Historical Position Failed. No user found.\"}";
         		}
         		
         		// * Send Result
