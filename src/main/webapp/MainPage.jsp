@@ -189,14 +189,14 @@ canvas{
 				<h3>Historical Trends</h3>
 				<div class="container" id="historicalPositions">
 				</div>
-				<button id="addHistoricalStockModalButton" type="button" class="btn btn-primary">Add Stock</button>
+				<button id="addHistoricalStockModalButton" type="button" class="btn btn-primary">View Stock</button>
 
 				<div class="modal fade" id="addHistoricalStockModal" tabindex="-1"
 					role="dialog" aria-hidden="true">
 					<div class="modal-dialog" role="document">
 						<div class="modal-content">
 							<div class="modal-header">
-								<h5 class="modal-title">Add Stock</h5>
+								<h5 class="modal-title">View Stock</h5>
 								<button type="button" class="close" data-dismiss="modal"
 									aria-label="Close">
 									<span aria-hidden="true">&times;</span>
