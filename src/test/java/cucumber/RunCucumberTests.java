@@ -10,7 +10,7 @@ import org.junit.runner.RunWith;
  * Run all the cucumber tests in the current package.
  */
 @RunWith(Cucumber.class)
-@CucumberOptions(strict = true, features = {"src/test/resources/cucumber/historical.feature"})
+@CucumberOptions(strict = true, features = {"src/test/resources/cucumber/graph.feature"})
 public class RunCucumberTests {
 
 	@BeforeClass

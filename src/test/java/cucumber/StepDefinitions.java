@@ -17,6 +17,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * Step definitions for Cucumber tests.
  */
@@ -1231,6 +1233,74 @@ public class StepDefinitions {
 		boolean exist = driver.findElements(By.id("r-historical-TSLA")).size() != 0;
 		
 		assertTrue(exist == false);
+	}
+	
+	//graph.feature 
+	//
+	//
+	//
+	//graph.feature
+	@Given("I enter a start date that is before my end date")
+	public void i_enter_a_start_date_that_is_before_my_end_date() {
+		driver.get(ROOT_URL);  
+		//login first
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		driver.findElement(By.id("login-username")).sendKeys("test_user");
+		driver.findElement(By.id("login-password")).sendKeys("test_password");
+		WebElement loginButton = driver.findElement(By.id("login-submit"));
+		loginButton.click();
+		
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		driver.findElement(By.id("graphStartDate")).clear();
+		driver.findElement(By.id("graphStartDate")).sendKeys("10/31/2020");
+		
+		//click the select all button just to toggle off of the start date text box. this will allow the test case to pass
+		WebElement button1 = driver.findElement(By.xpath("//*[@id=\"select-all-portfolio\"]/div[1]/input"));
+		button1.click();
+		
+	
+	}
+
+	@Then("the date error symbol should say {string}")
+	public void the_date_error_symbol_should_say(String string) {
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    String error = driver.findElement(By.id("graphDateError")).getText();
+	    assertTrue(string.equals(error));
+	}
+	
+	@Given("I am idle for one hundred and twenty seconds")
+	public void i_am_idle_for_one_hundred_and_twenty_seconds() {
+		driver.get(ROOT_URL);  
+		//login first
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		driver.findElement(By.id("login-username")).sendKeys("test_user");
+		driver.findElement(By.id("login-password")).sendKeys("test_password");
+		WebElement loginButton = driver.findElement(By.id("login-submit"));
+		loginButton.click();
+		WebDriverWait wait = new WebDriverWait(driver, 5);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
+		
+		driver.manage().timeouts().implicitlyWait(120, TimeUnit.SECONDS);
 	}
 
 
