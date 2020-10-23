@@ -16,6 +16,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import csci310.servlets.*;
+
+
 /**
  * Servlet implementation class Profile
  */
@@ -24,7 +27,7 @@ public class User extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static Connection conn = null;
 	private static PreparedStatement ps = null;
-	private static ResultSet rs = null;
+	private static ResultSet rs = null;  
 	
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
@@ -81,8 +84,14 @@ public class User extends HttpServlet {
         		if(rs.next()) {
         			jsonStr = "{\"Error\": \"User already exists.\"}";
         		} else {
-        			// * Create User
-        			ps = conn.prepareStatement("INSERT INTO Users (username, password) VALUES ('" + username + "', '" + password + "' );");
+        			
+        			//hash password
+        			String hash_password = MD5.hash(password);
+        			
+        			int failed_login_attempts = 0;
+        			
+        			// * Create User    
+        			ps = conn.prepareStatement("INSERT INTO Users (username, password) VALUES ('" + username + "', '" + hash_password + "');");
 					ps.executeUpdate();
 					jsonStr = "{\"Success\": \"Successfully created user.\"}";
         		}

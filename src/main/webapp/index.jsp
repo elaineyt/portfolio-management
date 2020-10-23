@@ -94,6 +94,7 @@
 	
    	  	
  	   	<script type="text/javascript">
+ 	   	
 		   	 $(function() {
 		
 		   	    $('#login-form-link').click(function(e) {
@@ -204,7 +205,7 @@
 		       			if(response == "{\"Success\": \"Successfully logged in.\"}"){
 		       				window.location.href = 'http://localhost:8080/MainPage.jsp';
 		       			}
-		       			else{
+		       			else{	
 		       				if(response == "{\"Error\": \"Failed to log in user. No username provided.\"}"){
 		       					$('#loginError').html("Please provide a username.");
 		       				}
@@ -216,6 +217,12 @@
 		       				}
 		       				else if(response == "{\"Error\": \"Failed to log in user. User doesn't exist.\"}"){
 		       					$('#loginError').html("Username doesn't exist.");
+		       				}
+		       				else if(response ==  "{\"Error\": \"Exceeded number of login attempts.\"}") {
+		       					$('#loginError').html("Exceeded login attempts wait 1 minute.");
+		       				}
+		       				else if(response == "{\"Error\": \"Have not waited full minute since lockout.\"}") {
+		       					$('#loginError').html("Please wait full minute.");
 		       				}
 		       			}
 		       		}

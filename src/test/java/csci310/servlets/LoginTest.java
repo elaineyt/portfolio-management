@@ -15,14 +15,17 @@ import org.junit.Test;
 
 public class LoginTest extends Mockito {
 
+	String username = "cs310_test_user";
+	String password = "test_password";
+			
 	@Test
     public void testDoPost() throws Exception {
         HttpServletRequest request = mock(HttpServletRequest.class);       
         HttpServletResponse response = mock(HttpServletResponse.class); 
         HttpSession session = mock(HttpSession.class);
 
-        when(request.getParameter("username")).thenReturn("test_user");
-        when(request.getParameter("password")).thenReturn("test_password");
+        when(request.getParameter("username")).thenReturn(username);
+        when(request.getParameter("password")).thenReturn(password);
         when(request.getSession()).thenReturn(session);
 
         StringWriter stringWriter = new StringWriter();
@@ -42,7 +45,7 @@ public class LoginTest extends Mockito {
         HttpServletResponse response = mock(HttpServletResponse.class);
         HttpSession session = mock(HttpSession.class);
 
-        when(request.getParameter("password")).thenReturn("test_password");
+        when(request.getParameter("password")).thenReturn(password);
         when(request.getSession()).thenReturn(session);
 
         StringWriter stringWriter = new StringWriter();
@@ -84,9 +87,9 @@ public class LoginTest extends Mockito {
         HttpServletResponse response = mock(HttpServletResponse.class);
         HttpSession session = mock(HttpSession.class);
 
-        UUID username = UUID.randomUUID();
-        when(request.getParameter("username")).thenReturn(username.toString());
-        when(request.getParameter("password")).thenReturn(username.toString());
+        UUID temp_username = UUID.randomUUID();
+        when(request.getParameter("username")).thenReturn(temp_username.toString());
+        when(request.getParameter("password")).thenReturn(temp_username.toString());
         when(request.getSession()).thenReturn(session);
         
         StringWriter stringWriter = new StringWriter();
@@ -106,9 +109,9 @@ public class LoginTest extends Mockito {
         HttpServletResponse response = mock(HttpServletResponse.class);
         HttpSession session = mock(HttpSession.class);
 
-        UUID username = UUID.randomUUID();
-        when(request.getParameter("username")).thenReturn("test_user");
-        when(request.getParameter("password")).thenReturn(username.toString()); // * Should be "test_password"
+        UUID temp_username = UUID.randomUUID();
+        when(request.getParameter("username")).thenReturn(username);
+        when(request.getParameter("password")).thenReturn(temp_username.toString()); // * Should be "test_password"
         when(request.getSession()).thenReturn(session);
         
         StringWriter stringWriter = new StringWriter();
@@ -129,7 +132,7 @@ public class LoginTest extends Mockito {
         HttpSession session = mock(HttpSession.class);
 
         when(request.getParameter("username")).thenReturn("test'; SELECT * from Users; SELECT * from Users where username='");
-        when(request.getParameter("password")).thenReturn("test_password");
+        when(request.getParameter("password")).thenReturn(password);
         when(request.getSession()).thenReturn(session);
 
         StringWriter stringWriter = new StringWriter();
