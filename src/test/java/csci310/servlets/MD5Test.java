@@ -24,9 +24,10 @@ public class MD5Test extends Mockito{
 	public void testFunc() throws Exception { 
 		 
 		 MessageDigest mock = org.mockito.Mockito.mock(MessageDigest.class);
-		 when(mock.getInstance("MD5")).thenThrow(new NoSuchAlgorithmException());
+		 
+		 when(mock.digest("in".getBytes())).thenReturn(null);
 
-	     assertEquals("*", MD5.hash("in"));
+	     assertEquals("*", MD5.hash(null));
 	} 
 	
 }
