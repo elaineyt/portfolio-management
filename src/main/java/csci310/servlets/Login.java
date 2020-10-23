@@ -30,6 +30,12 @@ public class Login extends HttpServlet {
 	private static ResultSet rs = null;
 	
 	
+	 /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public Login() {
+        super();
+    }
 	
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
@@ -80,112 +86,114 @@ public class Login extends HttpServlet {
         			//hash password
         			String hash_password = MD5.hash(password);
         			
-        			
         			// * Check if user's passwords match
         			if(!rs.getString("Password").equals(hash_password)) {
         				jsonStr = "{\"Error\": \"Failed to log in user. Incorrect password.\"}";
         			}
+        			
+        			//check not locked out
+            		
+            		//get curr time 
+        			Timestamp curr = new Timestamp(System.currentTimeMillis());
+        			Timestamp lockout_time = rs.getTimestamp("lockout_time");
+        			
+        			if(lockout_time != null) {
+    	    			long lockout_diff = curr.getTime() - lockout_time.getTime();
+    	    			int lockout_time_diff = (int) lockout_diff;
+    	    			
+    	    			//if they haven't waited a minute
+    	    			if(lockout_time_diff < 60000) {
+    	    				locked_out = true;
+    	    				jsonStr = "{\"Error\": \"Have not waited full minute since lockout.\"}";
+    	    			}
+    	    			else {
+    	    				locked_out = false;
+    	    			}
+    	    			
+        			}
+        			
+            		// * Send Result
+            		if(jsonStr == "{\"Success\": \"Successfully logged in.\"}") {
+            	        session.setAttribute("username", username);
+        				
+            	        String sqlUpdate = "UPDATE Users " 
+            	        		+ "SET failed_login_attempts = ? "
+            	                + "WHERE username = ?";
+    		 	        ps = conn.prepareStatement(sqlUpdate);
+    		 	        ps.setInt(1, 0);
+    		 	        ps.setString(2, username);
+    		 	        ps.executeUpdate();
+            		}
+            		//increment failed login attempts
+            		else if(locked_out != true){
+            			
+            			int failed_attempts = rs.getInt("failed_login_attempts");
+            			Timestamp time_now = new Timestamp(System.currentTimeMillis());
+            			Timestamp first_fail_time = rs.getTimestamp("first_fail_time");
+            			
+            			//lock out for a minute
+            			long diff = 0;
+            			int timeDiff = 0;
+            			if(first_fail_time != null) {
+            				diff = time_now.getTime() - first_fail_time.getTime();
+            				timeDiff = (int) diff;
+            			}
+            			
+            			if(failed_attempts >= 2 && timeDiff < 60000) {
+            				
+            				//set fails back to 0
+            				jsonStr = "{\"Error\": \"Exceeded number of login attempts.\"}";
+            				String sqlUpdate = "UPDATE Users " 
+    		        	        		+ "SET failed_login_attempts = ? "
+    		        	                + "WHERE username = ?";
+    			 	        ps = conn.prepareStatement(sqlUpdate);
+    			 	        ps.setInt(1, 0);
+    			 	        ps.setString(2, username);
+    			 	        ps.executeUpdate();
+    			 	        
+    			 	        //set lockout start time
+    			 	       java.util.Date utilDate = new Date();
+           				 	  sqlUpdate = "UPDATE Users " 
+    	        	        		+ "SET lockout_time  = ?"
+    	        	                + "WHERE username = ?";
+    	 			 	      ps = conn.prepareStatement(sqlUpdate);
+    	 			 	      ps.setTimestamp(1, new Timestamp(System.currentTimeMillis()));
+    	 			 	      ps.setString(2, username);
+    	 			 	      ps.executeUpdate();
+    			 	        
+            			}
+            			else {
+            				
+            				//increment failed login attempts
+            				failed_attempts = failed_attempts + 1;
+            				
+            				//add date time if first fail here
+            				if(failed_attempts==1) {
+            					
+            					 java.util.Date utilDate = new Date();
+                 				 String sqlUpdate = "UPDATE Users " 
+     		        	        		+ "SET first_fail_time = ?"
+     		        	                + "WHERE username = ?";
+    		 			 	      ps = conn.prepareStatement(sqlUpdate);
+    		 			 	      ps.setTimestamp(1, new Timestamp(System.currentTimeMillis()));
+    		 			 	      ps.setString(2, username);
+    		 			 	      ps.executeUpdate();
+            				}
+            				
+            				//update number of fails
+            				String sqlUpdate = "UPDATE Users " 
+    	        	        		+ "SET failed_login_attempts = ? "
+    	        	                + "WHERE username = ?";
+    				        ps = conn.prepareStatement(sqlUpdate);
+    				        ps.setInt(1, failed_attempts);
+    				        ps.setString(2, username);
+    				        ps.executeUpdate();
+    				        
+            			}	
+            		}
         		} else {
         			jsonStr = "{\"Error\": \"Failed to log in user. User doesn't exist.\"}";
         		}
-        		
-        		//check not locked out
-        		
-        		//get curr time 
-    			Timestamp curr = new Timestamp(System.currentTimeMillis());
-    			Timestamp lockout_time = rs.getTimestamp("lockout_time");
-    			
-    			if(lockout_time != null) {
-	    			long lockout_diff = curr.getTime() - lockout_time.getTime();
-	    			int lockout_time_diff = (int) lockout_diff;
-	    			
-	    			//if they haven't waited a minute
-	    			if(lockout_time_diff < 60000) {
-	    				locked_out = true;
-	    				jsonStr = "{\"Error\": \"Have not waited full minute since lockout.\"}";
-	    			}
-	    			else {
-	    				locked_out = false;
-	    			}
-	    			
-    			}
-    			
-        		// * Send Result
-        		if(jsonStr == "{\"Success\": \"Successfully logged in.\"}") {
-        	        session.setAttribute("username", username);
-    				
-        	        String sqlUpdate = "UPDATE Users " 
-        	        		+ "SET failed_login_attempts = ? "
-        	                + "WHERE username = ?";
-		 	        ps = conn.prepareStatement(sqlUpdate);
-		 	        ps.setInt(1, 0);
-		 	        ps.setString(2, username);
-		 	        ps.executeUpdate();
-        		}
-        		//increment failed login attempts
-        		else if(locked_out != true){
-        			
-        			int failed_attempts = rs.getInt("failed_login_attempts");
-        			Timestamp time_now = new Timestamp(System.currentTimeMillis());
-        			Timestamp first_fail_time = rs.getTimestamp("first_fail_time");
-        			
-//        			//lock out for a minute
-        			long diff = time_now.getTime() - first_fail_time.getTime();
-        			int timeDiff = (int) diff;
-        			
-        			if(failed_attempts >= 2 && timeDiff < 60000) {
-        				
-        				//set fails back to 0
-        				jsonStr = "{\"Error\": \"Exceeded number of login attempts.\"}";
-        				String sqlUpdate = "UPDATE Users " 
-		        	        		+ "SET failed_login_attempts = ? "
-		        	                + "WHERE username = ?";
-			 	        ps = conn.prepareStatement(sqlUpdate);
-			 	        ps.setInt(1, 0);
-			 	        ps.setString(2, username);
-			 	        ps.executeUpdate();
-			 	        
-			 	        //set lockout start time
-			 	       java.util.Date utilDate = new Date();
-       				 	  sqlUpdate = "UPDATE Users " 
-	        	        		+ "SET lockout_time  = ?"
-	        	                + "WHERE username = ?";
-	 			 	      ps = conn.prepareStatement(sqlUpdate);
-	 			 	      ps.setTimestamp(1, new Timestamp(System.currentTimeMillis()));
-	 			 	      ps.setString(2, username);
-	 			 	      ps.executeUpdate();
-			 	        
-        			}
-        			else {
-        				
-        				//increment failed login attempts
-        				failed_attempts = failed_attempts + 1;
-        				
-        				//add date time if first fail here
-        				if(failed_attempts==1) {
-        					
-        					 java.util.Date utilDate = new Date();
-             				 String sqlUpdate = "UPDATE Users " 
- 		        	        		+ "SET first_fail_time = ?"
- 		        	                + "WHERE username = ?";
-		 			 	      ps = conn.prepareStatement(sqlUpdate);
-		 			 	      ps.setTimestamp(1, new Timestamp(System.currentTimeMillis()));
-		 			 	      ps.setString(2, username);
-		 			 	      ps.executeUpdate();
-        				}
-        				
-        				//update number of fails
-        				String sqlUpdate = "UPDATE Users " 
-	        	        		+ "SET failed_login_attempts = ? "
-	        	                + "WHERE username = ?";
-				        ps = conn.prepareStatement(sqlUpdate);
-				        ps.setInt(1, failed_attempts);
-				        ps.setString(2, username);
-				        ps.executeUpdate();
-				        
-        			}	
-        		}
-        		
         		
         		out.print(jsonStr);
         		out.flush();
@@ -194,10 +202,7 @@ public class Login extends HttpServlet {
         	finally {
         		try {
 					conn.close();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				} catch (SQLException e) {}
         		
         	}
         }

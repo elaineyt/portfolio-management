@@ -90,10 +90,9 @@ public class User extends HttpServlet {
         			
         			int failed_login_attempts = 0;
         			
-        			// * Create User       			
+        			// * Create User    
         			ps = conn.prepareStatement("INSERT INTO Users (username, password) VALUES ('" + username + "', '" + hash_password + "');");
 					ps.executeUpdate();
-					System.out.println("success");
 					jsonStr = "{\"Success\": \"Successfully created user.\"}";
         		}
         		
