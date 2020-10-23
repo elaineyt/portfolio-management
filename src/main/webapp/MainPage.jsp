@@ -968,12 +968,7 @@ canvas{
         		var index = stockHistory.length-1;
         		for(var i = 0; i < rawData.length; i++){
         			if(iteration == 0){
-        				if(unit == "D"){
 							config.data.labels.push(addDaysAndFormat($('#graphStartDate').val(), i*increment));
-						}
-						else{
-							config.data.labels.push(addDaysAndFormat($('#graphStartDate').val(), i*increment));
-						}
         			}
         			stockHistory[index].push(rawData[i]*positions.get(tickerSymbol).shares);
         		}
