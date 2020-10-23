@@ -9,4 +9,3 @@ Feature: 3 Login Attempt Limit for One Minute
 		When I enter the username "test_user" and incorrect password "incorrect"
 		And I click login
 	    Then there should be the login error "Exceeded login attempts wait 1 minute."
-
