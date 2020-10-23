@@ -44,8 +44,9 @@ public class StepDefinitions {
 		WebElement button = driver.findElement(By.id("login-submit"));
 	}
 	
-	@When("I enter the username {string} and incorrect password {string}")
+	@When("I enter the username {string} and incorrect password {string} 3 times")
 	public void i_enter_the_username_and_incorrect_password(String string, String string2) {
+		
 		try {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {
@@ -54,8 +55,45 @@ public class StepDefinitions {
 		}
 		driver.findElement(By.id("login-username")).sendKeys(string);
 		driver.findElement(By.id("login-password")).sendKeys(string2);
-		WebElement button = driver.findElement(By.id("login-submit"));
-		button.click();
+		
+		//enter incorrectly 3 times
+		for( int i = 0; i<3; i++) {	
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			WebElement button = driver.findElement(By.id("login-submit"));
+			button.click();
+		}
+	
+		
+	}
+	
+	@When("I enter the username {string} and password {string}")
+	public void i_enter_the_username_and_password(String string, String string2) {
+
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			driver.findElement(By.id("login-username")).sendKeys(string);
+			driver.findElement(By.id("login-password")).sendKeys(string2);
+			WebElement button = driver.findElement(By.id("login-submit"));
+			button.click();
+	}
+	
+	@When("I wait a minute")
+	public void i_wait_a_minute() {
+		try {
+			Thread.sleep(60000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	@Then("there should be the login error {string}")

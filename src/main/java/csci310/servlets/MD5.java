@@ -22,15 +22,14 @@ public class MD5 {
   
             // Convert message digest into hex value 
             String hashtext = no.toString(16); 
-            while (hashtext.length() < 32) { 
-                hashtext = "0" + hashtext; 
-            } 
+                    
             return hashtext; 
         }  
   
         // For specifying wrong message digest algorithms 
         catch (NoSuchAlgorithmException e) { 
-            throw new RuntimeException(e); 
+//            throw new RuntimeException(e);
+        		return "*";
         } 
     } 
 }
