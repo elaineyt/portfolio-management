@@ -32,7 +32,7 @@ Acceptance tests
 
 Other
 Mobile
-SSL (going to Halfonds OH on 10/27 at 3:30 PM)
+SSL
 Acceptance tests
 
 Why these task were chosen:
