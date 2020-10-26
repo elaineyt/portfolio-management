@@ -1,0 +1,34 @@
+10/26/20
+Sprint #3 Retrospective
+
+Meeting Participants:
+Adam Dillard
+Tyler Jensen
+Elaine Tran
+Andreas Bigger
+Henry Cikanek
+
+Changes to be made to Process:
+Change “Create Account” to “Create User” on homepage 
+Reintroduce background picture to main page
+Add table layout to portfolio and historical trends + background to make it neat
+Fix Coverage to encompass compound conditions
+Test driven development was faulty since we ported over our old group30 repository and added complex hashing functionality
+We need to prevent outlying commits for sustainable pace (had one large commit day)
+Make sure we reflect on previous retrospective in the product backlog
+
+Based on feedback from our demo, we need to fix a few UI changes (the first three bullet points). The next four bullet points are based on our sprint 2 grades. We need to fix coverage, test driven development, prevent extraneous commits for sustainable pace, and reflect on the retrospective in our product backlog.
+
+Tasks that will be added to product backlog
+Complete UI requirements
+Change “Create Account” to “Create User” on homepage 
+Add background picture to main page
+Add table layout to portfolio and historical trends + background to make it neat
+Making sure app presents well on mobile
+Fix total portfolio value to reflect when a position is added or deleted
+Change select all checkbox to two buttons “Select All” and “Deselect All”
+Finish implementing the bulk upload
+Graph start date can’t be further than a year back
+
+
+
