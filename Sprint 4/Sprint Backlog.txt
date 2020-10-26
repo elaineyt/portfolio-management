@@ -1,0 +1,40 @@
+Meeting Participants:
+Adam Dillard
+Tyler Jensen
+Elaine Tran
+Andreas Bigger
+Henry Cikanek
+
+Login/Register
+Change button from “Create Account” to “Create User”
+Add background image that Henry used in Sprint 1
+
+Main Page
+Make sure total portfolio value display updates correctly with add/delete stock
+Acceptance tests
+
+Portfolio List
+Acceptance tests
+Add table layout to portfolio and historical trends + background to make it neat
+
+Bulk Upload Button
+Correctly add stocks to the portfolio from CSV file
+Fix pathing for file upload button
+Acceptance tests
+
+Graph
+Make sure delete stock removes from graph and changes total portfolio value
+When adding stock, total portfolio value should be populated
+If no start date - start date is earliest date of a stock purchase
+Debug how positions and historical stocks are added to graph
+Start date no more than one year ago
+Acceptance tests
+
+Other
+Mobile
+SSL (going to Halfonds OH on 10/27 at 3:30 PM)
+Acceptance tests
+
+Why these task were chosen:
+Since sprint 5 is only a few days long, we are aiming to fully implement our application this sprint so our sprint backlog is a mirror image of our product backlog. Our main focus for this sprint is acceptance tests (listed among each of the major features above) with a few additional components to each. 
+
