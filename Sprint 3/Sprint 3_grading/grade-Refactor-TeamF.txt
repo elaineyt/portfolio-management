@@ -1,0 +1,19 @@
+Best Practice Refactor Report
+Owner: TeamF
+Grade: 6.6/10
+Comments: 
+Issue 64
+	henrycikanek satisfied 7 of 7 requirements for this issue.
+Issue 57
+	Issue was not closed by assignee
+	Mittens34 satisfied 6 of 7 requirements for this issue.
+Issue 43
+	The issue was not assigned
+	The comment is empty
+	Issue was not closed by assignee
+	elaineyt satisfied 4 of 7 requirements for this issue.
+Issue 42
+	Issue was not closed by assignee
+	abigger87 satisfied 6 of 7 requirements for this issue.
+
+The following students did not create an issue: {'17adillard'}
