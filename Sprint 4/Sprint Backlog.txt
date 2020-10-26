@@ -16,6 +16,7 @@ Acceptance tests
 Portfolio List
 Acceptance tests
 Add table layout to portfolio and historical trends + background to make it neat
+Select All/deselect all button
 
 Bulk Upload Button
 Correctly add stocks to the portfolio from CSV file
