@@ -1,0 +1,15 @@
+Best Practice TDD Report
+Owner: TeamF
+Grade: 6.0/10
+Comments: 
+	Test method was not created before method : portfolio.doget
+		Method commit: https://github.com/CSCI310/project-20203b-groupf-20203/commit/7241ada4c6c369b0fecdb61a24a8d54a04a33783
+	Test method was not created before method : portfolio.dopost
+		Method commit: https://github.com/CSCI310/project-20203b-groupf-20203/commit/7241ada4c6c369b0fecdb61a24a8d54a04a33783
+	Test method was not created before method : portfolio.dodelete
+		Method commit: https://github.com/CSCI310/project-20203b-groupf-20203/commit/7241ada4c6c369b0fecdb61a24a8d54a04a33783
+	Test method was not created before method : md5.hash
+		Method commit: https://github.com/CSCI310/project-20203b-groupf-20203/commit/e0e6119f55e95568b808cdd0a43f01afea13dc9f
+Correct TDD methods: 6
+Incorrect TDD methods: 4
+Total methods evaluated for TDD: 10
