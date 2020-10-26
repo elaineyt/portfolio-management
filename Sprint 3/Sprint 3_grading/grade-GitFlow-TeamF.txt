@@ -1,0 +1,6 @@
+Best Practice GitFlow Report
+Owner: TeamF
+Grade: 9.5/10
+Comments: 
+
+	Pull did not follow base/head branch rules (-1) [develop<-fix-redirection]: https://github.com/CSCI310/project-20203b-groupf-20203/pull/24
