@@ -545,8 +545,10 @@ canvas{
         HTTP.onreadystatechange = (e) => {
         	if(HTTP.readyState == 4 && HTTP.status == 200){
         		var response = JSON.parse(HTTP.responseText);
-        		var row = "<div class='row' id='select-all-portfolio'><div class='col-sm-2 position-padding'><input type='checkbox' onclick='stockChecked(\"Select-All\", this)'/></div><div class='col-sm-8 position-padding'>" + "Select All" +
-				"</div></div>";
+        		var row = "<div class='row' id='select-all-portfolio'>" +
+        		"<button id=\"selectAllPortfolioButton\" style='margin:5px;' type=\"button\" onclick='stockChecked(\"Select-All\", { checked: true})' class=\"btn btn-primary\">Select All</button>" +
+        		"<button id=\"deselectAllPortfolioButton\" style='margin:5px;' type=\"button\" onclick='stockChecked(\"Select-All\", { checked: false})' class=\"btn btn-primary\">DeSelect All</button>" +
+				"</div>";
         		$("#positions").append(row);
         		for(var i = 0; i < response.positions.length; i++){
         			var tickerSymbol = response.positions[i].position;
@@ -559,6 +561,7 @@ canvas{
         				"</div><div class='col-sm-2'><button type='button' class='btn' onclick=deleteStockModal('" + tickerSymbol + "')>X</button></div></div>";
                 		$("#positions").append(row);
                 		positions.set(tickerSymbol, new Position(tickerSymbol, shareCount, formatDate(dateBought), formatDate(dateSold)));
+                		addToTotalPortfolio(tickerSymbol, shareCount);
         			}	
         		}
         		setDefaultGraphDates();
@@ -615,8 +618,10 @@ canvas{
         HTTP.onreadystatechange = (e) => {
         	if(HTTP.readyState == 4 && HTTP.status == 200){
         		var response = JSON.parse(HTTP.responseText);
-        		var row = "<div class='row' id='select-all-historical'><div class='col-sm-2 position-padding'><input type='checkbox' onclick='historicalStockChecked(\"Select-All\", this)'/></div><div class='col-sm-8 position-padding'>" + "Select All" +
-				"</div></div>";
+        		var row = "<div class='row' id='select-all-historical'>" +
+        		"<button id=\"selectAllHistoricalButton\" style='margin:5px;' type=\"button\" onclick='historicalStockChecked(\"Select-All\", { checked: true})' class=\"btn btn-primary\">Select All</button>" +
+        		"<button id=\"deselectAllHistoricalButton\" style='margin:5px;' type=\"button\" onclick='historicalStockChecked(\"Select-All\", { checked: false})' class=\"btn btn-primary\">DeSelect All</button>" +
+				"</div>";
         		$("#historicalPositions").append(row);
         		for(var i = 0; i < response.positions.length; i++){
         			var tickerSymbol = response.positions[i].position;
@@ -665,8 +670,9 @@ canvas{
         			stockHistory.splice(index, 1);
         			stockHistoryLabels.splice(index, 1);
         		}
-        		//deleteFromTotalPortfolio(tickerSymbol, positions.get(tickerSymbol).shares);
+        		deleteFromTotalPortfolio(tickerSymbol, positions.get(tickerSymbol).shares);
         		positions.delete(tickerSymbol);
+        		getCurrentPortfolioValue();
        		}   
        	}
 	}
@@ -864,7 +870,8 @@ canvas{
        	        				"</div><div class='col-sm-2'><button type='button' class='btn' onclick=deleteStockModal('" + tickerSymbol + "')>X</button></div></div>";
        	                		$("#positions").append(row);
        	                		positions.set(tickerSymbol, new Position(tickerSymbol, numShares, buyDate, sellDate));
-       	                		//addToTotalPortfolio(tickerSymbol, numShares);
+       	                		addToTotalPortfolio(tickerSymbol, numShares);
+       	                		getCurrentPortfolioValue();
        	            		}        		
        	            	}   
        	            }	
@@ -1007,13 +1014,19 @@ canvas{
     		if(tickerSymbol === "Select-All") {
     			positions.forEach((pos, key) => {
     				if(key !== "Total Portfolio Value" && key.indexOf("Historical-") === -1) {
-    					$("#cb-portfolio-" + key)[0].checked = true;
-	    				populateStockHistory(key, graphUnit);    					
+    					var i = stockHistoryLabels.indexOf(key);
+    					if(i == -1){
+	    					$("#cb-portfolio-" + key)[0].checked = true;
+		    				populateStockHistory(key, graphUnit);    					    						
+    					}
     				}
     			});
     		} else {
-	    		populateStockHistory(tickerSymbol, graphUnit);
-	    		addToTotalPortfolio(tickerSymbol, positions.get(tickerSymbol).shares);
+    			var i = stockHistoryLabels.indexOf(tickerSymbol);
+				if(i == -1){
+	    			populateStockHistory(tickerSymbol, graphUnit);
+	    			addToTotalPortfolio(tickerSymbol, positions.get(tickerSymbol).shares);
+				}
     		}
     	}
     }
@@ -1046,12 +1059,18 @@ canvas{
     		if(tickerSymbol === "Select-All") {
     			historicalPositions.forEach((pos, key) => {
     				if(key !== "Total Portfolio Value") {
-    					$("#cb-historical-" + key)[0].checked = true;
-	    				populateHistoricalStockHistory(key, graphUnit);    					
+    					var i = stockHistoryLabels.indexOf('Historical-' + key);
+    					if(i == -1){
+    						$("#cb-historical-" + key)[0].checked = true;
+	    					populateHistoricalStockHistory(key, graphUnit); 
+    					}
     				}
     			});
     		} else {
-	    		populateHistoricalStockHistory(tickerSymbol, graphUnit);    			
+    			var i = stockHistoryLabels.indexOf('Historical-' + tickerSymbol);
+				if(i == -1){
+	    			populateHistoricalStockHistory(tickerSymbol, graphUnit);
+				}
     		}
     	}
     }
@@ -1076,7 +1095,8 @@ canvas{
     		if(HTTP.readyState == 4 && HTTP.status == 200){
     			var response = JSON.parse(HTTP.responseText);
     			var rawData = response.c;
-    			for(var i = 0; i < rawData.length; i++){	
+    			var temp_length = rawData ? rawData.length : 0;
+    			for(var i = 0; i < temp_length; i++){	
     				newPortfolioData[i] += rawData[i]*numShares;
     			}
     			stockHistory.push(newPortfolioData);
@@ -1221,10 +1241,10 @@ canvas{
     	const loop = async () => {
     		for(var i = 0; i < stockHistoryLabels.length; i++){
     			if(stockHistoryLabels[i] == "Total Portfolio Value"){
-    				//stockHistory.push([]);
-    				//config.data.datasets.push([]); //temporary
-    				//window.myLine.update();
-    				//getPortfolioValueHistory(graphUnit, i);
+    				stockHistory.push([]);
+    				config.data.datasets.push([]); //temporary
+    				window.myLine.update();
+    				getPortfolioValueHistory(graphUnit, i);
     				initTotalPortfolioGraph(graphUnit, i);
     				await sleep(200);
     			}
