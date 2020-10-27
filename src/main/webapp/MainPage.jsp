@@ -297,9 +297,10 @@ canvas{
 			function(){
 				
 				setDefaultGraphDates();
-				
+        
 				$('#graphStartDate').datepicker({
-					autoclose: true	
+					autoclose: true,
+          startDate: new Date(new Date().setFullYear(new Date().getFullYear() - 1))
 				})
 				.on("change", function() {
 					validateGraphDates('start-date');
