@@ -524,25 +524,21 @@ canvas{
 	        		if(HTTP.readyState == 4 && HTTP.status == 200){
 	        			var response = JSON.parse(HTTP.responseText);
 	        			var rawData = response.c;
-	        			console.log("stockHistor")
 	        			currentPortfolioValue += rawData[rawData.length-1]*value.shares;
 	        			yesterdayPortfolioValue += rawData[rawData.length-2]*value.shares;
 	        			currentPortfolioValueCounter++;
-	        			console.log(currentPortfolioValueCounter)
-	        			//if(currentPortfolioValueCounter == positions.size) {
-	        				$("#currentPortfolioValue").html("$" + currentPortfolioValue.toFixed(2));
-	        				var percentChange = (currentPortfolioValue-yesterdayPortfolioValue)/yesterdayPortfolioValue*100;
-	        				if(percentChange >= 0){
-	        					$("#currentPortfolioValueChange").html("+" + percentChange.toFixed(2) + "%");
-	        					$("#redDownTriangle").css('display', 'none');
-	        					$("#greenUpTriangle").css('display', 'inline');
-	        				}
-	        				else{
-	        					$("#currentPortfolioValueChange").html(percentChange.toFixed(2) + "%");
-	        					$("#redDownTriangle").css('display', 'inline');
-	        					$("#greenUpTriangle").css('display', 'none');
-	        				}
-	        			//}
+        				$("#currentPortfolioValue").html("$" + currentPortfolioValue.toFixed(2));
+        				var percentChange = (currentPortfolioValue-yesterdayPortfolioValue)/yesterdayPortfolioValue*100;
+        				if(percentChange >= 0){
+        					$("#currentPortfolioValueChange").html("+" + percentChange.toFixed(2) + "%");
+        					$("#redDownTriangle").css('display', 'none');
+        					$("#greenUpTriangle").css('display', 'inline');
+        				}
+        				else{
+        					$("#currentPortfolioValueChange").html(percentChange.toFixed(2) + "%");
+        					$("#redDownTriangle").css('display', 'inline');
+        					$("#greenUpTriangle").css('display', 'none');
+        				}
 	        		}
 	        	}
 			}
@@ -620,10 +616,6 @@ canvas{
 		    			var increment = DaysBetween($('#graphStartDate').val(), $('#graphEndDate').val())/rawData.length;
 		    			stockHistory[index] = rawData;
 		    			
-		    			// Reset Graph 
-		    			//config.data.labels= []
-		    			//config.data.datasets = []
-		    			
 		    			// * Set default data
 						for(var i = 0; i < stockHistory[index].length; i++){
 							stockHistory[index][i] = 0;
@@ -642,19 +634,12 @@ canvas{
 		        				"</div><div class='col-sm-2'><button type='button' class='btn' onclick=deleteStockModal('" + tickerSymbol + "')>X</button></div></div>";
 		                		$("#positions").append(row);
 		                		positions.set(tickerSymbol, new Position(tickerSymbol, shareCount, formatDate(dateBought), formatDate(dateSold)));
-		                		console.log(prev_checked_positions)
-		                		console.log(tickerSymbol)
 		                		if(prev_checked_positions.indexOf(tickerSymbol) !== -1) {
 		                			stockChecked(tickerSymbol, {checked: true})
 		                		}
-		                		//addToTotalPortfolio(tickerSymbol, shareCount);
 		        			}
 		        		}
-						
-						//if(Array.from(positions.keys()).length === 0) {
-							// Try to remove Total Portfolio Value from graph and redraw
-			    			
-						//}
+
 						if(prev_checked_positions.length === 0) {
 							removeFromConfigDataSets("Total Portfolio Value");
 			    			drawGraph("Total Portfolio Value", index);
@@ -836,12 +821,9 @@ canvas{
     				error = true;
     			}	
        				
-
        			// Get session attribute here 
        			var username = '<%= session.getAttribute("username")%>';
 
-       	
-       			
        			if(error == false){
        	            const HTTP = new XMLHttpRequest();
        	            const url = "http://localhost:8080/historical?username=" + username.toString() + "&position=" + tickerSymbol.toString() + "&share_count=" + 
@@ -944,8 +926,6 @@ canvas{
        	        				"</div><div class='col-sm-2'><button type='button' class='btn' onclick=deleteStockModal('" + tickerSymbol + "')>X</button></div></div>";
        	                		$("#positions").append(row);
        	                		positions.set(tickerSymbol, new Position(tickerSymbol, numShares, buyDate, sellDate));
-       	                		//addToTotalPortfolio(tickerSymbol, numShares);
-       	                		//getCurrentPortfolioValue();
        	            		}        		
        	            	}   
        	            }	
@@ -1075,26 +1055,14 @@ canvas{
     function stockChecked(tickerSymbol, checkBox){
     	// if unchecked, remove from stock history and redraw
     	if(!checkBox.checked){
-    		console.log(tickerSymbol)
     		if(tickerSymbol === "Select-All") {
     			positions.forEach((pos, key) => {
     				if(key !== "Total Portfolio Value" && key.indexOf("Historical-") === -1) {
-    					/* var i = stockHistoryLabels.indexOf(key);
-	    				removeFromConfigDataSets(key)
-    					if(i !== -1) {
-	    		    		stockHistory.splice(i, 1);
-	    		    		stockHistoryLabels.splice(i, 1); 
-	    		    		$("#cb-portfolio-" + key)[0].checked = false;
-    					} */
     					$("#cb-portfolio-" + key)[0].checked = false;
 	    		    	deleteFromTotalPortfolio(key, positions.get(key).shares);
     				}
     			});
     		} else {
-	    		//var index = stockHistoryLabels.indexOf(tickerSymbol);
-	    		//removeFromConfigDataSets(tickerSymbol);
-	    		//stockHistory.splice(index, 1);
-	    		//stockHistoryLabels.splice(index, 1); 
 	    		deleteFromTotalPortfolio(tickerSymbol, positions.get(tickerSymbol).shares);
     		}
     	}
@@ -1102,19 +1070,14 @@ canvas{
     		if(tickerSymbol === "Select-All") {
     			positions.forEach((pos, key) => {
     				if(key !== "Total Portfolio Value" && key.indexOf("Historical-") === -1) {
-    					/* var i = stockHistoryLabels.indexOf(key);
-    					if(i == -1){ */
-	    					$("#cb-portfolio-" + key)[0].checked = true;
-		    				//populateStockHistory(key, graphUnit); 
-		    				addToTotalPortfolio(key, positions.get(key).shares);
-    					//}
+    					$("#cb-portfolio-" + key)[0].checked = true;
+		    			addToTotalPortfolio(key, positions.get(key).shares);
     				}
     			});
     		} else {
 				$("#cb-portfolio-" + tickerSymbol)[0].checked = true;
 				addToTotalPortfolio(tickerSymbol, positions.get(tickerSymbol).shares);
-	    		//populateStockHistory(tickerSymbol, graphUnit);
-    		}
+	    	}
     	}
     }
     
@@ -1166,8 +1129,6 @@ canvas{
 		
 		var index = stockHistoryLabels.indexOf("Total Portfolio Value");
 		
-		console.log(stockHistoryLabels)
-		console.log(tickerSymbol)
 		const HTTP = new XMLHttpRequest();
     	const url = "https://finnhub.io/api/v1/stock/candle?symbol=" + tickerSymbol + "&resolution=" + graphUnit + "&from=" + startDate + "&to=" + endDate + "&token=" + finnhub_token;
     	HTTP.open("GET", url);
@@ -1200,14 +1161,6 @@ canvas{
     	var startDate = Date.parse($('#graphStartDate').val())/1000;
 		var endDate = Date.parse($('#graphEndDate').val())/1000;
 		
-		console.log(stockHistoryLabels)
-		console.log(stockHistory)
-		/* var index = stockHistoryLabels.indexOf("Total Portfolio Value");
-		removeFromConfigDataSets("Total Portfolio Value");
-		var newPortfolioData = stockHistory[index]; */
-		//stockHistory.splice(index, 1);
-		//stockHistoryLabels.splice(index, 1);
-		
 		const HTTP = new XMLHttpRequest();
     	const url = "https://finnhub.io/api/v1/stock/candle?symbol=" + tickerSymbol + "&resolution=" + graphUnit + "&from=" + startDate + "&to=" + endDate + "&token=" + finnhub_token;
     	HTTP.open("GET", url);
@@ -1218,13 +1171,9 @@ canvas{
     			var response = JSON.parse(HTTP.responseText);
     			var rawData = response.c;
     			
-    			console.log(stockHistoryLabels)
-    			console.log(stockHistory)
     			var index = stockHistoryLabels.indexOf("Total Portfolio Value");
     			removeFromConfigDataSets("Total Portfolio Value");
     			var newPortfolioData = stockHistory[index];
-    			console.log(index);
-    			console.log(newPortfolioData)
     			
     			for(var i = 0; i < rawData.length; i++){	
     				if(newPortfolioData[i] - rawData[i]*numShares < 0.1 && newPortfolioData[i] - rawData[i]*numShares > -0.1) {
@@ -1234,8 +1183,6 @@ canvas{
     				}
     			}
     			stockHistory[index] = newPortfolioData;
-    			//stockHistory.push(newPortfolioData);
-    			//stockHistoryLabels.push("Total Portfolio Value");
     			removeFromConfigDataSets("Total Portfolio Value");
     			drawGraph("Total Portfolio Value", index);
     			getCurrentPortfolioValue();
