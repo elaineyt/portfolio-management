@@ -683,6 +683,20 @@ canvas{
         		"<button id=\"deselectAllHistoricalButton\" style='margin:5px;' type=\"button\" onclick='historicalStockChecked(\"Select-All\", { checked: false})' class=\"btn btn-primary\">DeSelect All</button>" +
 				"</div>";
         		$("#historicalPositions").append(row);
+        		
+        		// * Append S&P Row
+        		var s_p_ticker = "spy";
+        		var s_p_row = "<div class='row' style='border-width:thin;border:solid;border-radius:5px;margin-top:5px;padding-right:10px;' id='r" + s_p_ticker + "'><div class='col-sm-2 position-padding'><input type='checkbox' id='cb-historical-" + s_p_ticker + "' onclick='historicalStockChecked(\"" + s_p_ticker + "\", this)'/></div><div class='col-sm-8 position-padding'>S&P" + 
+				"</div><div class='col-sm-2'><button type='button' class='btn' onclick=deleteHistoricalStockModal('" + s_p_ticker + "')>X</button></div></div>";
+        		$("#historicalPositions").append(s_p_row);
+        		
+        		// * Init Portfolio Graph
+        		var startDate = Date.parse($('#graphStartDate').val())/1000;
+				var endDate = Date.parse($('#graphEndDate').val())/1000;
+				
+        		historicalPositions.set(s_p_ticker, new Position(s_p_ticker, 1, startDate, endDate));
+        		historicalStockChecked(s_p_ticker, {checked: true});
+        		
         		for(var i = 0; i < response.positions.length; i++){
         			var tickerSymbol = response.positions[i].position;
         			var shareCount = response.positions[i].share_count;
