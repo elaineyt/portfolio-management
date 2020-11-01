@@ -17,6 +17,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -26,6 +28,8 @@ public class StepDefinitions {
 	private static final String ROOT_URL = "http://localhost:8080/";
 
 	private final WebDriver driver = new ChromeDriver();
+	
+	
 	
 	//LimitedLoginAttemps.feature
 	//
@@ -1379,6 +1383,39 @@ public class StepDefinitions {
 		
 		driver.manage().timeouts().implicitlyWait(120, TimeUnit.SECONDS);
 	}
+	
+	@Given("I login on a mobile device")
+	public void i_login_on_a_mobile_device(){
+		Map<String, String> mobileEmulation = new HashMap<>();
+		mobileEmulation.put("deviceName", "iPhone X");
+
+
+		ChromeOptions chromeOptions = new ChromeOptions();
+		chromeOptions.setExperimentalOption("mobileEmulation", mobileEmulation);
+
+		WebDriver mobileDriver = new ChromeDriver(chromeOptions);
+		
+		mobileDriver.get(ROOT_URL);
+		
+		WebDriverWait wait = new WebDriverWait(mobileDriver, 5);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("login-submit")));
+		mobileDriver.findElement(By.id("login-username")).sendKeys("test_user");
+		mobileDriver.findElement(By.id("login-password")).sendKeys("test_password");
+		WebElement button = mobileDriver.findElement(By.id("login-submit"));
+		button.click();
+		
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String element = mobileDriver.findElement(By.xpath("/html/body/div[1]/h1")).getText();
+		assertTrue(element.equals("USC CS310 Stock Portfolio Management"));  
+		
+	}
+	
+	
 
 
 	@After()
