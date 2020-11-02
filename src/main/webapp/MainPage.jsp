@@ -295,22 +295,24 @@ canvas{
 	
 		$(document).ready(
 			function(){
-				
-				setDefaultGraphDates();
-        
+
 				$('#graphStartDate').datepicker({
 					autoclose: true,
-          			startDate: new Date(new Date().setFullYear(new Date().getFullYear() - 1))
-				})
-				.on("change", function() {
-					validateGraphDates('start-date');
+          			startDate: addDaysAndFormat(new Date().setFullYear(new Date().getFullYear() - 1), 0)
 				});
 				
 				$('#graphEndDate').datepicker({
 					autoclose: true,
 					endDate: addDaysAndFormat(new Date(), 0),
-				})
-				.on("change", function() {
+				});
+				
+				setDefaultGraphDates();
+				
+				$('#graphStartDate').on("change", function() {
+					validateGraphDates('start-date');
+				});
+				
+				$('#graphEndDate').on("change", function() {
 					validateGraphDates('end-date');
 				});
 				
@@ -383,16 +385,20 @@ canvas{
 				
 				$('#zoomOut').click(
 						function(e) {
+							let earliest_start_date = new Date().setFullYear(new Date().getFullYear() - 1);
+							
 							if($('#graphUnits').val() == "weeks"){
 								var end_date_new = $('#graphEndDate').datepicker('getDate'); 
 								if(end_date_new.getDate() + 7 <= new Date().getDate()) {
 								    end_date_new.setDate(end_date_new.getDate() + 7); 
 								    $('#graphEndDate').datepicker('setDate', end_date_new);	
 								}
-
+								
 							    var start_date_new = $('#graphStartDate').datepicker('getDate'); 
-							    start_date_new.setDate(start_date_new.getDate () - 7); 
-							    $('#graphStartDate').datepicker ('setDate', start_date_new);
+								if(start_date_new.getDate() - 7 >= earliest_start_date) {
+								    start_date_new.setDate(start_date_new.getDate () - 7); 
+							    	$('#graphStartDate').datepicker ('setDate', start_date_new);
+								}
 							} else {
 								var end_date_new = $('#graphEndDate').datepicker('getDate'); 
 								if(end_date_new.getDate() + 1 <= new Date().getDate()) {
@@ -401,8 +407,10 @@ canvas{
 								}
 								
 							    var start_date_new = $('#graphStartDate').datepicker('getDate'); 
-							    start_date_new.setDate(start_date_new.getDate () - 1); 
-							    $('#graphStartDate').datepicker ('setDate', start_date_new);
+							    if(start_date_new.getDate() - 1 >= earliest_start_date) {
+								    start_date_new.setDate(start_date_new.getDate () - 1); 
+							    	$('#graphStartDate').datepicker ('setDate', start_date_new);
+								}
 							}	
 						}
 					);

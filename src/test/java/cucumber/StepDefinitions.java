@@ -17,6 +17,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -1379,8 +1382,217 @@ public class StepDefinitions {
 		
 		driver.manage().timeouts().implicitlyWait(120, TimeUnit.SECONDS);
 	}
+	
+	//zoom.feature 
+	//
+	//
+	//
+	//zoom.feature
+	@Given("I click the zoom out button the graph units are in days the start date is not the furthest date in the past the end date is not todays date")
+	public void i_click_the_zoom_out_button_the_graph_units_are_in_days_the_start_date_is_not_the_furthest_date_in_the_past_the_end_date_is_not_todays_date() {
+		driver.get(ROOT_URL);  
+		//login first
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		driver.findElement(By.id("login-username")).sendKeys("test_user");
+		driver.findElement(By.id("login-password")).sendKeys("test_password");
+		WebElement loginButton = driver.findElement(By.id("login-submit"));
+		loginButton.click();
+		WebDriverWait wait = new WebDriverWait(driver, 5);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
+		
+		// * First zoom in to make sure the end date isn't max
+		WebElement zoomIn = driver.findElement(By.id("zoomIn"));
+		zoomIn.click();
+	}
 
+	@Then("the start date should decrease by one day and the end date should increase by a day")
+	public void the_start_date_should_decrease_by_one_day_and_the_end_date_should_increase_by_a_day() {
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("Finding start and end date...");
+		
+		// * Get updated dates
+		WebElement graphStartDate = driver.findElement(By.id("graphStartDate"));
+		WebElement graphEndDate = driver.findElement(By.id("graphEndDate"));
+		try {
+			Date original_start_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphStartDate.getAttribute("value"));
+			Date original_end_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphEndDate.getAttribute("value"));
+			
+			WebElement zoomOut = driver.findElement(By.id("zoomOut"));
+			zoomOut.click();
+			WebDriverWait wait = new WebDriverWait(driver, 5);
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
+			
+			// * Check that the new dates are updated
+			Date new_start_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphStartDate.getAttribute("value"));
+			Date new_end_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphEndDate.getAttribute("value"));
+			
+			assertTrue(original_start_date.compareTo(new_start_date) == 1);
+			assertTrue(new_end_date.compareTo(original_end_date) == 1);
+			
+		} catch (ParseException e) {
+			System.out.println("Failed to parse dates... Try again");
+		}  
+		
+	}
 
+	@Given("I click the zoom out button the graph units are in days the start date is not the furthest date in the past the end date is todays date")
+	public void i_click_the_zoom_out_button_the_graph_units_are_in_days_the_start_date_is_not_the_furthest_date_in_the_past_the_end_date_is_todays_date() {
+		driver.get(ROOT_URL);  
+		//login first
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		driver.findElement(By.id("login-username")).sendKeys("test_user");
+		driver.findElement(By.id("login-password")).sendKeys("test_password");
+		WebElement loginButton = driver.findElement(By.id("login-submit"));
+		loginButton.click();
+		WebDriverWait wait = new WebDriverWait(driver, 5);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
+	}
+
+	@Then("the start date should decrease by one day and the end date should stay the same")
+	public void the_start_date_should_decrease_by_one_day_and_the_end_date_should_stay_the_same() {
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("Finding start and end date...");
+		
+		// * Get updated dates
+		WebElement graphStartDate = driver.findElement(By.id("graphStartDate"));
+		WebElement graphEndDate = driver.findElement(By.id("graphEndDate"));
+		try {
+			Date original_start_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphStartDate.getAttribute("value"));
+			Date original_end_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphEndDate.getAttribute("value"));
+			
+			WebElement zoomOut = driver.findElement(By.id("zoomOut"));
+			zoomOut.click();
+			WebDriverWait wait = new WebDriverWait(driver, 5);
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
+			
+			// * Check that the new dates are updated
+			Date new_start_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphStartDate.getAttribute("value"));
+			Date new_end_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphEndDate.getAttribute("value"));
+			
+			assertTrue(original_start_date.compareTo(new_start_date) == 1);
+			assertTrue(new_end_date.compareTo(original_end_date) == 0);
+			
+		} catch (ParseException e) {
+			System.out.println("Failed to parse dates... Try again");
+		}  
+	}
+
+	@Given("I click the zoom out button the graph units are in days the start date is the furthest date in the past the end date is todays date")
+	public void i_click_the_zoom_out_button_the_graph_units_are_in_days_the_start_date_is_the_furthest_date_in_the_past_the_end_date_is_todays_date() {
+	    // Write code here that turns the phrase above into concrete actions
+	    throw new io.cucumber.java.PendingException();
+	}
+
+	@Then("the start date and end date should remain the same")
+	public void the_start_date_and_end_date_should_remain_the_same() {
+	    // Write code here that turns the phrase above into concrete actions
+	    throw new io.cucumber.java.PendingException();
+	}
+
+	@Given("I click the zoom out button the graph units are in weeks the start date is not the furthest date in the past the end date is not todays date")
+	public void i_click_the_zoom_out_button_the_graph_units_are_in_weeks_the_start_date_is_not_the_furthest_date_in_the_past_the_end_date_is_not_todays_date() {
+	    // Write code here that turns the phrase above into concrete actions
+	    throw new io.cucumber.java.PendingException();
+	}
+
+	@Then("the start date should decrease by one week and the end date should increase by one day")
+	public void the_start_date_should_decrease_by_one_week_and_the_end_date_should_increase_by_one_day() {
+	    // Write code here that turns the phrase above into concrete actions
+	    throw new io.cucumber.java.PendingException();
+	}
+
+	@Given("I click the zoom out button the graph units are in weeks the start date is not the furthest date in the past the end date is todays date")
+	public void i_click_the_zoom_out_button_the_graph_units_are_in_weeks_the_start_date_is_not_the_furthest_date_in_the_past_the_end_date_is_todays_date() {
+	    // Write code here that turns the phrase above into concrete actions
+	    throw new io.cucumber.java.PendingException();
+	}
+
+	@Then("the start date should decrease by one week and the end date should stay the same")
+	public void the_start_date_should_decrease_by_one_week_and_the_end_date_should_stay_the_same() {
+	    // Write code here that turns the phrase above into concrete actions
+	    throw new io.cucumber.java.PendingException();
+	}
+
+	@Given("I click the zoom out button the graph units are in weeks the start date is the furthest date in the past the end date is todays date")
+	public void i_click_the_zoom_out_button_the_graph_units_are_in_weeks_the_start_date_is_the_furthest_date_in_the_past_the_end_date_is_todays_date() {
+	    // Write code here that turns the phrase above into concrete actions
+	    throw new io.cucumber.java.PendingException();
+	}
+
+	@Then("the start date and end date should be the same")
+	public void the_start_date_and_end_date_should_be_the_same() {
+	    // Write code here that turns the phrase above into concrete actions
+	    throw new io.cucumber.java.PendingException();
+	}
+
+	@Given("I click the zoom in button the graph units are in days the start date is not the same as the end date")
+	public void i_click_the_zoom_in_button_the_graph_units_are_in_days_the_start_date_is_not_the_same_as_the_end_date() {
+	    // Write code here that turns the phrase above into concrete actions
+	    throw new io.cucumber.java.PendingException();
+	}
+
+	@Then("the start date should increase by one day and the end date should decrease by a day")
+	public void the_start_date_should_increase_by_one_day_and_the_end_date_should_decrease_by_a_day() {
+	    // Write code here that turns the phrase above into concrete actions
+	    throw new io.cucumber.java.PendingException();
+	}
+
+	@Given("I click the zoom in button the graph units are in days the start date is equal to the end date")
+	public void i_click_the_zoom_in_button_the_graph_units_are_in_days_the_start_date_is_equal_to_the_end_date() {
+	    // Write code here that turns the phrase above into concrete actions
+	    throw new io.cucumber.java.PendingException();
+	}
+
+	@Then("the start date and end date should be equal")
+	public void the_start_date_and_end_date_should_be_equal() {
+	    // Write code here that turns the phrase above into concrete actions
+	    throw new io.cucumber.java.PendingException();
+	}
+
+	@Given("I click the zoom in button the graph units are in weeks the start date is not the same as the end date")
+	public void i_click_the_zoom_in_button_the_graph_units_are_in_weeks_the_start_date_is_not_the_same_as_the_end_date() {
+	    // Write code here that turns the phrase above into concrete actions
+	    throw new io.cucumber.java.PendingException();
+	}
+
+	@Then("the start date should increase by one day and the end date should decrease by one day")
+	public void the_start_date_should_increase_by_one_day_and_the_end_date_should_decrease_by_one_day() {
+	    // Write code here that turns the phrase above into concrete actions
+	    throw new io.cucumber.java.PendingException();
+	}
+
+	@Given("I click the zoom in button the graph units are in weeks the start date is equal to the end date")
+	public void i_click_the_zoom_in_button_the_graph_units_are_in_weeks_the_start_date_is_equal_to_the_end_date() {
+	    // Write code here that turns the phrase above into concrete actions
+	    throw new io.cucumber.java.PendingException();
+	}
+
+	@Then("the start date and end date should stay the same")
+	public void the_start_date_and_end_date_should_stay_the_same() {
+	    // Write code here that turns the phrase above into concrete actions
+	    throw new io.cucumber.java.PendingException();
+	}
+	
 	@After()
 	public void after() {
 		driver.quit();
