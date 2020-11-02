@@ -59,14 +59,22 @@ public class Login extends HttpServlet {
 		boolean locked_out = false;
 		
 		boolean invalid_request = false;
-		if(username == null || username.equals("")) {
+		if(username == null) {
 			jsonStr = "{\"Error\": \"Failed to log in user. No username provided.\"}";
 			invalid_request = true;
         }
-		else if(password == null || password.equals("")) {
+		else if(username.equals("")) {
+			jsonStr = "{\"Error\": \"Failed to log in user. No username provided.\"}";
+			invalid_request = true;
+		}
+		else if(password == null) {
         	jsonStr = "{\"Error\": \"Failed to log in user. No password provided.\"}";
 			invalid_request = true;
         }
+		else if(password.equals("")) {
+			jsonStr = "{\"Error\": \"Failed to log in user. No password provided.\"}";
+			invalid_request = true;
+		}
         
         // ! Returns JSON Object in a String format due to bad request
         if(invalid_request) {

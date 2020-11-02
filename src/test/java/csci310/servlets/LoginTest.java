@@ -60,6 +60,27 @@ public class LoginTest extends Mockito {
     }
 	
 	@Test
+    public void testEmptyUsernamePost() throws Exception {
+        HttpServletRequest request = mock(HttpServletRequest.class);       
+        HttpServletResponse response = mock(HttpServletResponse.class);
+        HttpSession session = mock(HttpSession.class);
+
+        when(request.getParameter("username")).thenReturn("");
+        when(request.getParameter("password")).thenReturn(password);
+        when(request.getSession()).thenReturn(session);
+
+        StringWriter stringWriter = new StringWriter();
+        PrintWriter writer = new PrintWriter(stringWriter);
+        when(response.getWriter()).thenReturn(writer);
+
+        new Login().doPost(request, response);
+        
+        writer.flush();
+        
+        assertTrue(stringWriter.toString().contains("Failed to log in user. No username provided."));
+    }
+	
+	@Test
     public void testNoPasswordPost() throws Exception {
         HttpServletRequest request = mock(HttpServletRequest.class);       
         HttpServletResponse response = mock(HttpServletResponse.class);
@@ -67,6 +88,29 @@ public class LoginTest extends Mockito {
 
         UUID username = UUID.randomUUID();
         when(request.getParameter("username")).thenReturn(username.toString());
+        
+        when(request.getSession()).thenReturn(session);
+
+        StringWriter stringWriter = new StringWriter();
+        PrintWriter writer = new PrintWriter(stringWriter);
+        when(response.getWriter()).thenReturn(writer);
+
+        new Login().doPost(request, response);
+        
+        writer.flush();
+        
+        assertTrue(stringWriter.toString().contains("Failed to log in user. No password provided."));
+    }
+	
+	@Test
+    public void testEmptyPasswordPost() throws Exception {
+        HttpServletRequest request = mock(HttpServletRequest.class);       
+        HttpServletResponse response = mock(HttpServletResponse.class);
+        HttpSession session = mock(HttpSession.class);
+
+        UUID username = UUID.randomUUID();
+        when(request.getParameter("username")).thenReturn(username.toString());
+        when(request.getParameter("password")).thenReturn("");
         
         when(request.getSession()).thenReturn(session);
 
