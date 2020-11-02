@@ -50,15 +50,27 @@ public class User extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		
 		boolean invalid_request = false;
-		if(username == null || username.equals("")) {
+		if(username == null) {
 			jsonStr = "{\"Error\": \"Creating User. Invalid username.\"}";
 			invalid_request = true;
         }
-		else if(password == null || password.equals("")) {
+		else if(username.equals("")) {
+			jsonStr = "{\"Error\": \"Creating User. Invalid username.\"}";
+			invalid_request = true;
+		}
+		else if(password == null) {
         	jsonStr = "{\"Error\": \"Creating User. Invalid password.\"}";
 			invalid_request = true;
         }
-        else if(confirm == null || confirm.equals("")) {
+		else if (password.equals("")) {
+			jsonStr = "{\"Error\": \"Creating User. Invalid password.\"}";
+			invalid_request = true;
+		}
+        else if(confirm == null) {
+        	jsonStr = "{\"Error\": \"Creating User. Invalid confirm password.\"}";
+			invalid_request = true;
+        }
+        else if(confirm.equals("")) {
         	jsonStr = "{\"Error\": \"Creating User. Invalid confirm password.\"}";
 			invalid_request = true;
         }

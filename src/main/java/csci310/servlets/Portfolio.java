@@ -80,8 +80,6 @@ public class Portfolio extends HttpServlet {
 			// Returns JSON Object in a String format
 			out.print(jsonStr);
 			out.flush();
-		} catch (SQLException sqle) {
-			System.out.println ("SQLException: " + sqle.getMessage());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -161,9 +159,9 @@ public class Portfolio extends HttpServlet {
         		out.print(jsonStr);
         		out.flush();
         		
-        	} catch (SQLException sqle) {
-        		System.out.println ("SQLException: " + sqle.getMessage());
-        	} catch (ClassNotFoundException cnf) { /* Ignore - invalid project setup */ } 
+        	} catch (Exception e) {
+        		System.out.println (e.getMessage());
+        	} 
         	finally { }
         }
 	}
@@ -223,9 +221,10 @@ public class Portfolio extends HttpServlet {
         		out.print(jsonStr);
         		out.flush();
         		
-        	} catch (SQLException sqle) {
-        		System.out.println ("SQLException: " + sqle.getMessage());
-        	} catch (ClassNotFoundException cnf) { /* Ignore - invalid project setup */ } 
+        	} catch (Exception e) {
+        		//System.out.println ("SQLException: " + sqle.getMessage());
+        		System.out.println (e.getMessage());
+        	}
         	finally { }
         }
 	}
