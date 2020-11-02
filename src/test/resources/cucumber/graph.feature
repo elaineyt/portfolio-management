@@ -6,3 +6,4 @@ Feature: Graph
  	Scenario: Inactivity leads to logout
  		Given I am idle for one hundred and twenty seconds
  		Then I should be on index.jsp
+ 		
