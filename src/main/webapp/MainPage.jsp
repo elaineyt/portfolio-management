@@ -170,6 +170,31 @@ canvas{
 					</div>
 				</div>
 				
+				<button id="bulkEditModalButton" type="button" class="btn btn-primary">Bulk Edit</button>
+				<div class="modal fade" id="bulkEditModal" tabindex="-1"
+					role="dialog" aria-hidden="true">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title">Bulk Edit</h5>
+								<button type="button" class="close" data-dismiss="modal"
+									aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div class="modal-body">
+  								<form action="/parser">
+    								<p>CSV File</p>
+    								<input type="file" id="myFile" name="filename2">
+  
+    								<div class="mt-3">
+      									<button type="submit" class="btn btn-primary">Submit</button>
+    								</div>
+  								</form>
+							</div>
+						</div>
+					</div>
+				</div>
 				<div class="modal fade" id="deleteStockModal" tabindex="-1"
 					role="dialog" aria-hidden="true">
 					<div class="modal-dialog" role="document">
@@ -438,6 +463,25 @@ canvas{
 						$('#addStockError').html("");
 						
 						addStock(tickerSymbol, numShares, buyDate, sellDate);		
+					}
+				);
+				
+				$('#uploadStock').click(
+					function(e) {
+						var tickerSymbol = $('#addStockTicker').val();
+						var numShares = $('#addStockShares').val();
+						var buyDate = $('#addStockBuyDate').val();
+						var sellDate = $('#addStockSellDate').val();
+						$('#addStockError').html("");
+							
+						addStock(tickerSymbol, numShares, buyDate, sellDate);		
+					}
+				);
+				
+				$('#bulkEditModalButton').click(
+					function(e) {
+						$('#bulkEditError').html("");
+						$("#bulkEditModal").modal('show');
 					}
 				);
 				

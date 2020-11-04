@@ -28,9 +28,26 @@ import java.util.concurrent.TimeUnit;
  * Step definitions for Cucumber tests.
  */
 public class StepDefinitions {
-	private static final String ROOT_URL = "http://localhost:8080/";
+	private static final String ROOT_URL = "https://localhost:8443/";
 
 	private final WebDriver driver = new ChromeDriver();
+	
+	//SSL.feature
+	//
+	//
+	//
+	//SSL.feature
+	@Then("the url has https")
+	public void the_url_has_https() {
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String url = ROOT_URL;
+		assertTrue(url.contains("https"));	
+	}
 	
 	//LimitedLoginAttemps.feature
 	//

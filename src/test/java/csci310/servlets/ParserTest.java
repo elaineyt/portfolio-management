@@ -1,16 +1,12 @@
 package csci310.servlets;
-
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 import org.mockito.Mockito;
 
 import java.io.*;
 import javax.servlet.http.*;
-import org.apache.commons.io.FileUtils;
 import org.junit.Test;
-import org.mockito.Mockito;
 
-public class HistoricalTest extends Mockito {
+public class ParserTest extends Mockito {
 	String long_string = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
 	String longer_string = long_string + long_string + long_string + long_string;
 	
@@ -31,12 +27,12 @@ public class HistoricalTest extends Mockito {
         PrintWriter writer = new PrintWriter(stringWriter);
         when(response.getWriter()).thenReturn(writer);
 
-        new Historical().doPost(request, response);
+        new Portfolio().doPost(request, response);
 
         verify(request, atLeast(1)).getParameter("username"); // only if you want to verify username was called...
         writer.flush(); // it may not have been flushed yet...
         
-        assertTrue(stringWriter.toString().contains("Creating Historical Position Failed. Invalid username."));
+        assertTrue(stringWriter.toString().contains("Creating Portfolio Position Failed. Invalid username."));
     }
 	 
 	@Test
@@ -54,12 +50,12 @@ public class HistoricalTest extends Mockito {
         PrintWriter writer = new PrintWriter(stringWriter);
         when(response.getWriter()).thenReturn(writer);
 
-        new Historical().doPost(request, response);
+        new Portfolio().doPost(request, response);
 
         verify(request, atLeast(1)).getParameter("username"); // only if you want to verify username was called...
         writer.flush(); // it may not have been flushed yet...
         
-        assertTrue(stringWriter.toString().contains("Creating Historical Position Failed. Invalid username."));
+        assertTrue(stringWriter.toString().contains("Creating Portfolio Position Failed. Invalid username."));
     }
 	
 	@Test
@@ -76,12 +72,12 @@ public class HistoricalTest extends Mockito {
         PrintWriter writer = new PrintWriter(stringWriter);
         when(response.getWriter()).thenReturn(writer);
 
-        new Historical().doPost(request, response);
+        new Portfolio().doPost(request, response);
 
         verify(request, atLeast(1)).getParameter("username"); // only if you want to verify username was called...
         writer.flush(); // it may not have been flushed yet...
         
-        assertTrue(stringWriter.toString().contains("Creating Historical Position Failed. Invalid username."));
+        assertTrue(stringWriter.toString().contains("Creating Portfolio Position Failed. Invalid username."));
     }
 	
 	@Test
@@ -99,11 +95,11 @@ public class HistoricalTest extends Mockito {
         PrintWriter writer = new PrintWriter(stringWriter);
         when(response.getWriter()).thenReturn(writer);
 
-        new Historical().doPost(request, response);
+        new Portfolio().doPost(request, response);
 
         writer.flush(); // it may not have been flushed yet...
         
-        assertTrue(stringWriter.toString().contains("Creating Historical Position Failed. Invalid position."));
+        assertTrue(stringWriter.toString().contains("Creating Portfolio Position Failed. Invalid position."));
     }
 	
 	@Test
@@ -120,12 +116,12 @@ public class HistoricalTest extends Mockito {
         PrintWriter writer = new PrintWriter(stringWriter);
         when(response.getWriter()).thenReturn(writer);
 
-        new Historical().doPost(request, response);
+        new Portfolio().doPost(request, response);
 
         verify(request, atLeast(1)).getParameter("position"); // only if you want to verify username was called...
         writer.flush(); // it may not have been flushed yet...
         
-        assertTrue(stringWriter.toString().contains("Creating Historical Position Failed. Invalid position."));
+        assertTrue(stringWriter.toString().contains("Creating Portfolio Position Failed. Invalid position."));
     }
 	
 	@Test
@@ -142,11 +138,11 @@ public class HistoricalTest extends Mockito {
         PrintWriter writer = new PrintWriter(stringWriter);
         when(response.getWriter()).thenReturn(writer);
 
-        new Historical().doPost(request, response);
+        new Portfolio().doPost(request, response);
 
         writer.flush();
         
-        assertTrue(stringWriter.toString().contains("Creating Historical Position Failed. Invalid share count."));
+        assertTrue(stringWriter.toString().contains("Creating Portfolio Position Failed. Invalid share count."));
     }
 	
 	@Test
@@ -164,11 +160,11 @@ public class HistoricalTest extends Mockito {
         PrintWriter writer = new PrintWriter(stringWriter);
         when(response.getWriter()).thenReturn(writer);
 
-        new Historical().doPost(request, response);
+        new Portfolio().doPost(request, response);
 
         writer.flush(); // it may not have been flushed yet...
         
-        assertTrue(stringWriter.toString().contains("Creating Historical Position Failed. Invalid date bought."));
+        assertTrue(stringWriter.toString().contains("Creating Portfolio Position Failed. Invalid date bought."));
     }
 	
 	@Test
@@ -186,11 +182,11 @@ public class HistoricalTest extends Mockito {
         PrintWriter writer = new PrintWriter(stringWriter);
         when(response.getWriter()).thenReturn(writer);
 
-        new Historical().doPost(request, response);
+        new Portfolio().doPost(request, response);
 
         writer.flush(); // it may not have been flushed yet...
         
-        assertTrue(stringWriter.toString().contains("Creating Historical Position Failed. Invalid date bought."));
+        assertTrue(stringWriter.toString().contains("Creating Portfolio Position Failed. Invalid date bought."));
     }
 	
 	@Test
@@ -207,11 +203,11 @@ public class HistoricalTest extends Mockito {
         PrintWriter writer = new PrintWriter(stringWriter);
         when(response.getWriter()).thenReturn(writer);
 
-        new Historical().doPost(request, response);
+        new Portfolio().doPost(request, response);
 
         writer.flush(); // it may not have been flushed yet...
         
-        assertTrue(stringWriter.toString().contains("Creating Historical Position Failed. Invalid date bought."));
+        assertTrue(stringWriter.toString().contains("Creating Portfolio Position Failed. Invalid date bought."));
     }
 	
 	@Test
@@ -229,11 +225,11 @@ public class HistoricalTest extends Mockito {
         PrintWriter writer = new PrintWriter(stringWriter);
         when(response.getWriter()).thenReturn(writer);
 
-        new Historical().doPost(request, response);
+        new Portfolio().doPost(request, response);
 
         writer.flush(); // it may not have been flushed yet...
         
-        assertTrue(stringWriter.toString().contains("Creating Historical Position Failed. Invalid date sold."));
+        assertTrue(stringWriter.toString().contains("Creating Portfolio Position Failed. Invalid date sold."));
     }
 	
 	@Test
@@ -251,11 +247,11 @@ public class HistoricalTest extends Mockito {
         PrintWriter writer = new PrintWriter(stringWriter);
         when(response.getWriter()).thenReturn(writer);
 
-        new Historical().doPost(request, response);
+        new Portfolio().doPost(request, response);
 
         writer.flush(); // it may not have been flushed yet...
         
-        assertTrue(stringWriter.toString().contains("Creating Historical Position Failed. Invalid date sold."));
+        assertTrue(stringWriter.toString().contains("Creating Portfolio Position Failed. Invalid date sold."));
     }
 	
 	@Test
@@ -272,11 +268,11 @@ public class HistoricalTest extends Mockito {
         PrintWriter writer = new PrintWriter(stringWriter);
         when(response.getWriter()).thenReturn(writer);
 
-        new Historical().doPost(request, response);
+        new Portfolio().doPost(request, response);
 
         writer.flush(); // it may not have been flushed yet...
         
-        assertTrue(stringWriter.toString().contains("Creating Historical Position Failed. Invalid date sold."));
+        assertTrue(stringWriter.toString().contains("Creating Portfolio Position Failed. Invalid date sold."));
     }
 	
 	@Test
@@ -294,11 +290,11 @@ public class HistoricalTest extends Mockito {
         PrintWriter writer = new PrintWriter(stringWriter);
         when(response.getWriter()).thenReturn(writer);
 
-        new Historical().doPost(request, response);
+        new Portfolio().doPost(request, response);
 
         writer.flush(); // it may not have been flushed yet...
         
-        assertTrue(stringWriter.toString().contains("Creating Historical Position Failed. No user found."));
+        assertTrue(stringWriter.toString().contains("Creating Portfolio Position Failed. No user found."));
     }
 	
 	@Test
@@ -316,11 +312,11 @@ public class HistoricalTest extends Mockito {
         PrintWriter writer = new PrintWriter(stringWriter);
         when(response.getWriter()).thenReturn(writer);
 
-        new Historical().doPost(request, response);
+        new Portfolio().doPost(request, response);
 
         writer.flush(); // it may not have been flushed yet...
         
-        assertTrue(stringWriter.toString().contains("Creating Historical Position Failed. No user found."));
+        assertTrue(stringWriter.toString().contains("Creating Portfolio Position Failed. No user found."));
     }
 	
 	@Test
@@ -338,260 +334,10 @@ public class HistoricalTest extends Mockito {
         PrintWriter writer = new PrintWriter(stringWriter);
         when(response.getWriter()).thenReturn(writer);
 
-        new Historical().doPost(request, response);
+        new Portfolio().doPost(request, response);
 
         writer.flush();
         
-        assertTrue(stringWriter.toString().contains("Successfully added historical position."));
+        assertTrue(stringWriter.toString().contains("Successfully added portfolio position."));
     }
-	
-	@Test
-    public void testBadSQLPost() throws Exception {
-        HttpServletRequest request = mock(HttpServletRequest.class);       
-        HttpServletResponse response = mock(HttpServletResponse.class);    
-
-        when(request.getParameter("username")).thenReturn("test'; SELECT * from Users where username='");
-        when(request.getParameter("position")).thenReturn("aapl");
-        when(request.getParameter("share_count")).thenReturn("10");
-        when(request.getParameter("date_bought")).thenReturn("10/1/2019");
-        when(request.getParameter("date_sold")).thenReturn("10/1/2020");
-
-        StringWriter stringWriter = new StringWriter();
-        PrintWriter writer = new PrintWriter(stringWriter);
-        when(response.getWriter()).thenReturn(writer);
-
-        new Historical().doPost(request, response);
-        
-        writer.flush();
-        
-        assertTrue(stringWriter.toString().equals(""));
-    }
-	
-	
-	// ----------------- doGet Method Testing ---------------------
-	
-	@Test
-    public void testLongUsernameGet() throws Exception {
-        HttpServletRequest request = mock(HttpServletRequest.class);       
-        HttpServletResponse response = mock(HttpServletResponse.class);    
-
-        StringWriter stringWriter = new StringWriter();
-        PrintWriter writer = new PrintWriter(stringWriter);
-        when(response.getWriter()).thenReturn(writer);
-
-        new Historical().doGet(request, response);
-
-        writer.flush();
-        
-        assertTrue(stringWriter.toString().contains("Profile Fetch Failed. Could not find user with provided username."));
-    }
-	
-	@Test
-    public void testMissingUsernameGet() throws Exception {
-        HttpServletRequest request = mock(HttpServletRequest.class);       
-        HttpServletResponse response = mock(HttpServletResponse.class);    
-
-        when(request.getParameter("username")).thenReturn("test_Us3R_9236523129asc87b43ifew");
-
-        StringWriter stringWriter = new StringWriter();
-        PrintWriter writer = new PrintWriter(stringWriter);
-        when(response.getWriter()).thenReturn(writer);
-
-        new Historical().doGet(request, response);
-
-        writer.flush();
-       
-        assertTrue(stringWriter.toString().contains("Profile Fetch Failed. Could not find user with provided username."));
-    }
-	
-	@Test
-    public void testBadSQLGet() throws Exception {
-        HttpServletRequest request = mock(HttpServletRequest.class);       
-        HttpServletResponse response = mock(HttpServletResponse.class);    
-
-        when(request.getParameter("username")).thenReturn("test'; SELECT * from Users; SELECT * from Users where username='");
-
-        StringWriter stringWriter = new StringWriter();
-        PrintWriter writer = new PrintWriter(stringWriter);
-        when(response.getWriter()).thenReturn(writer);
-
-        new Historical().doGet(request, response);
-        
-        writer.flush();
-        
-        assertTrue(stringWriter.toString().equals(""));
-    }
-	
-	@Test
-    public void testDoGet() throws Exception {
-        HttpServletRequest request = mock(HttpServletRequest.class);       
-        HttpServletResponse response = mock(HttpServletResponse.class);    
-
-        when(request.getParameter("username")).thenReturn("test_user");
-
-        StringWriter stringWriter = new StringWriter();
-        PrintWriter writer = new PrintWriter(stringWriter);
-        when(response.getWriter()).thenReturn(writer);
-
-        new Historical().doGet(request, response);
-
-        writer.flush();
-       
-        assertTrue(stringWriter.toString().contains("positions"));
-    }
-	
-	
-	// ------------------ doDelete Method Testing ------------------
-	
-	@Test
-    public void testLongUsernameDoDelete() throws Exception {
-        HttpServletRequest request = mock(HttpServletRequest.class);       
-        HttpServletResponse response = mock(HttpServletResponse.class);    
-
-        when(request.getParameter("username")).thenReturn(long_string);
-        when(request.getParameter("position")).thenReturn("aapl");
-
-        StringWriter stringWriter = new StringWriter();
-        PrintWriter writer = new PrintWriter(stringWriter);
-        when(response.getWriter()).thenReturn(writer);
-
-        new Historical().doDelete(request, response);
-
-        writer.flush(); 
-        
-        assertTrue(stringWriter.toString().contains("Deleting Historical Position Failed. Invalid username."));
-    }
-	 
-	@Test
-    public void testZeroUsernameDoDelete() throws Exception {
-        HttpServletRequest request = mock(HttpServletRequest.class);       
-        HttpServletResponse response = mock(HttpServletResponse.class);    
-
-        when(request.getParameter("username")).thenReturn("");
-        when(request.getParameter("position")).thenReturn("aapl");
-
-        StringWriter stringWriter = new StringWriter();
-        PrintWriter writer = new PrintWriter(stringWriter);
-        when(response.getWriter()).thenReturn(writer);
-
-        new Historical().doDelete(request, response);
-
-        writer.flush();
-        
-        assertTrue(stringWriter.toString().contains("Deleting Historical Position Failed. Invalid username."));
-    }
-	
-	@Test
-    public void testNoUsernameDoDelete() throws Exception {
-        HttpServletRequest request = mock(HttpServletRequest.class);       
-        HttpServletResponse response = mock(HttpServletResponse.class);    
-
-        when(request.getParameter("position")).thenReturn("aapl");
-
-        StringWriter stringWriter = new StringWriter();
-        PrintWriter writer = new PrintWriter(stringWriter);
-        when(response.getWriter()).thenReturn(writer);
-
-        new Historical().doDelete(request, response);
-
-        writer.flush();
-        
-        assertTrue(stringWriter.toString().contains("Deleting Historical Position Failed. Invalid username."));
-    }
-	
-	@Test
-    public void testLongPositionDoDelete() throws Exception {
-        HttpServletRequest request = mock(HttpServletRequest.class);       
-        HttpServletResponse response = mock(HttpServletResponse.class);    
-
-        when(request.getParameter("username")).thenReturn("test_user");
-        when(request.getParameter("position")).thenReturn(long_string);
-
-        StringWriter stringWriter = new StringWriter();
-        PrintWriter writer = new PrintWriter(stringWriter);
-        when(response.getWriter()).thenReturn(writer);
-
-        new Historical().doDelete(request, response);
-
-        writer.flush();
-        
-        assertTrue(stringWriter.toString().contains("Deleting Historical Position Failed. Invalid position."));
-    }
-	
-	@Test
-    public void testNoPositionDoDelete() throws Exception {
-        HttpServletRequest request = mock(HttpServletRequest.class);       
-        HttpServletResponse response = mock(HttpServletResponse.class);    
-
-        when(request.getParameter("username")).thenReturn("test_user");
-        
-        StringWriter stringWriter = new StringWriter();
-        PrintWriter writer = new PrintWriter(stringWriter);
-        when(response.getWriter()).thenReturn(writer);
-
-        new Historical().doDelete(request, response);
-
-        writer.flush();
-        
-        assertTrue(stringWriter.toString().contains("Deleting Historical Position Failed. Invalid position."));
-    }
-	
-	@Test
-    public void testMissingUsernameDoDelete() throws Exception {
-        HttpServletRequest request = mock(HttpServletRequest.class);       
-        HttpServletResponse response = mock(HttpServletResponse.class);    
-
-        when(request.getParameter("username")).thenReturn("test_Us3R_9236523129asc87b43ifew");
-        when(request.getParameter("position")).thenReturn("aapl");
-        
-        StringWriter stringWriter = new StringWriter();
-        PrintWriter writer = new PrintWriter(stringWriter);
-        when(response.getWriter()).thenReturn(writer);
-
-        new Historical().doDelete(request, response);
-
-        writer.flush();
-       
-        assertTrue(stringWriter.toString().contains("Deleting Historical Position Failed. No user found."));
-    }
-	
-	@Test
-    public void testBadSQLDoDelete() throws Exception {
-        HttpServletRequest request = mock(HttpServletRequest.class);       
-        HttpServletResponse response = mock(HttpServletResponse.class);    
-
-        when(request.getParameter("username")).thenReturn("test'; SELECT * from Users;");
-        when(request.getParameter("position")).thenReturn("aapl");
-        
-        StringWriter stringWriter = new StringWriter();
-        PrintWriter writer = new PrintWriter(stringWriter);
-        when(response.getWriter()).thenReturn(writer);
-
-        new Historical().doDelete(request, response);
-        
-        writer.flush();
-        
-        assertTrue(stringWriter.toString().equals(""));
-    }
-	
-	@Test
-    public void testDoDelete() throws Exception {
-		HttpServletRequest request = mock(HttpServletRequest.class);
-        HttpServletResponse response = mock(HttpServletResponse.class);
-
-        when(request.getParameter("username")).thenReturn("test_user");
-        when(request.getParameter("position")).thenReturn("aapl");
-
-        StringWriter stringWriter = new StringWriter();
-        PrintWriter writer = new PrintWriter(stringWriter);
-        when(response.getWriter()).thenReturn(writer);
-
-        new Historical().doDelete(request, response);
-
-        writer.flush();
-        
-        assertTrue(stringWriter.toString().contains("Successfully deleted historical position."));
-    }
-	
-	
 }

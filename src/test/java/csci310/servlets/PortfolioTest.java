@@ -345,6 +345,28 @@ public class PortfolioTest extends Mockito {
         assertTrue(stringWriter.toString().contains("Successfully added portfolio position."));
     }
 	
+	@Test
+    public void testBadSQLPost() throws Exception {
+        HttpServletRequest request = mock(HttpServletRequest.class);       
+        HttpServletResponse response = mock(HttpServletResponse.class);    
+
+        when(request.getParameter("username")).thenReturn("test'; SELECT * from Users where username='");
+        when(request.getParameter("position")).thenReturn("aapl");
+        when(request.getParameter("share_count")).thenReturn("10");
+        when(request.getParameter("date_bought")).thenReturn("10/1/2019");
+        when(request.getParameter("date_sold")).thenReturn("10/1/2020");
+
+        StringWriter stringWriter = new StringWriter();
+        PrintWriter writer = new PrintWriter(stringWriter);
+        when(response.getWriter()).thenReturn(writer);
+
+        new Portfolio().doPost(request, response);
+        
+        writer.flush();
+        
+        assertTrue(stringWriter.toString().equals(""));
+    }
+	
 	
 	// ----------------- doGet Method Testing ---------------------
 	

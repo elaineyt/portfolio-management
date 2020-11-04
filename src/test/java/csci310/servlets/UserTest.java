@@ -55,12 +55,52 @@ public class UserTest extends Mockito {
     }
 	
 	@Test
+    public void testEmptyUsernamePost() throws Exception {
+        HttpServletRequest request = mock(HttpServletRequest.class);       
+        HttpServletResponse response = mock(HttpServletResponse.class);    
+
+        when(request.getParameter("username")).thenReturn("");
+        when(request.getParameter("password")).thenReturn("test_password");
+        when(request.getParameter("confirm")).thenReturn("test_password");
+
+        StringWriter stringWriter = new StringWriter();
+        PrintWriter writer = new PrintWriter(stringWriter);
+        when(response.getWriter()).thenReturn(writer);
+
+        new User().doPost(request, response);
+        
+        writer.flush();
+        
+        assertTrue(stringWriter.toString().contains("Creating User. Invalid username."));
+    }
+	
+	@Test
     public void testNoPasswordPost() throws Exception {
         HttpServletRequest request = mock(HttpServletRequest.class);       
         HttpServletResponse response = mock(HttpServletResponse.class);    
 
         UUID username = UUID.randomUUID();
         when(request.getParameter("username")).thenReturn(username.toString());
+
+        StringWriter stringWriter = new StringWriter();
+        PrintWriter writer = new PrintWriter(stringWriter);
+        when(response.getWriter()).thenReturn(writer);
+
+        new User().doPost(request, response);
+        
+        writer.flush();
+        
+        assertTrue(stringWriter.toString().contains("Creating User. Invalid password."));
+    }
+	
+	@Test
+    public void testEmptyPasswordPost() throws Exception {
+        HttpServletRequest request = mock(HttpServletRequest.class);       
+        HttpServletResponse response = mock(HttpServletResponse.class);    
+
+        UUID username = UUID.randomUUID();
+        when(request.getParameter("username")).thenReturn(username.toString());
+        when(request.getParameter("password")).thenReturn("");
 
         StringWriter stringWriter = new StringWriter();
         PrintWriter writer = new PrintWriter(stringWriter);
@@ -81,6 +121,27 @@ public class UserTest extends Mockito {
         UUID username = UUID.randomUUID();
         when(request.getParameter("username")).thenReturn(username.toString());
         when(request.getParameter("password")).thenReturn("test-password");
+
+        StringWriter stringWriter = new StringWriter();
+        PrintWriter writer = new PrintWriter(stringWriter);
+        when(response.getWriter()).thenReturn(writer);
+
+        new User().doPost(request, response);
+        
+        writer.flush();
+        
+        assertTrue(stringWriter.toString().contains("Creating User. Invalid confirm password."));
+    }
+	
+	@Test
+    public void testEmptyConfirmPasswordPost() throws Exception {
+        HttpServletRequest request = mock(HttpServletRequest.class);       
+        HttpServletResponse response = mock(HttpServletResponse.class);    
+
+        UUID username = UUID.randomUUID();
+        when(request.getParameter("username")).thenReturn(username.toString());
+        when(request.getParameter("password")).thenReturn("test-password");
+        when(request.getParameter("confirm")).thenReturn("");
 
         StringWriter stringWriter = new StringWriter();
         PrintWriter writer = new PrintWriter(stringWriter);
