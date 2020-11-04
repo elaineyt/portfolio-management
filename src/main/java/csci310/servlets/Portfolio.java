@@ -83,7 +83,11 @@ public class Portfolio extends HttpServlet {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} finally { }
+		} finally {
+			try {
+				conn.close();
+			} catch (SQLException e) {}
+		}
 	}
 
 	/**

@@ -158,7 +158,6 @@ public class Historical extends HttpServlet {
         		// * Send Result
         		out.print(jsonStr);
         		out.flush();
-        		
         	} catch (Exception e) {
         		System.out.println ("SQLException: " + e.getMessage());
         	} 

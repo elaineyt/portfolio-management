@@ -12,11 +12,16 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.Color;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -1396,8 +1401,680 @@ public class StepDefinitions {
 		
 		driver.manage().timeouts().implicitlyWait(120, TimeUnit.SECONDS);
 	}
+	
+	//zoom.feature 
+	//
+	//
+	//
+	//zoom.feature
+	@Given("I click the zoom out button the graph units are in days the start date is not the furthest date in the past the end date is not todays date")
+	public void i_click_the_zoom_out_button_the_graph_units_are_in_days_the_start_date_is_not_the_furthest_date_in_the_past_the_end_date_is_not_todays_date() {
+		driver.get(ROOT_URL);  
+		//login first
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		driver.findElement(By.id("login-username")).sendKeys("test_user");
+		driver.findElement(By.id("login-password")).sendKeys("test_password");
+		WebElement loginButton = driver.findElement(By.id("login-submit"));
+		loginButton.click();
+		WebDriverWait wait = new WebDriverWait(driver, 10);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
+		
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// * First zoom in to make sure the end date isn't max
+		WebElement zoomIn = driver.findElement(By.id("zoomIn"));
+		zoomIn.click();
+		
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
+	@Then("the start date should decrease by one day and the end date should increase by a day")
+	public void the_start_date_should_decrease_by_one_day_and_the_end_date_should_increase_by_a_day() {
+		try {
+			Thread.sleep(6000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		WebDriverWait wait = new WebDriverWait(driver, 5);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
+		
+		// * Get updated dates
+		WebElement graphStartDate = driver.findElement(By.id("graphStartDate"));
+		WebElement graphEndDate = driver.findElement(By.id("graphEndDate"));
+		try {
+			Date original_start_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphStartDate.getAttribute("value"));
+			Date original_end_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphEndDate.getAttribute("value"));
+			
+			WebElement zoomOut = driver.findElement(By.id("zoomOut"));
+			zoomOut.click();
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			wait = new WebDriverWait(driver, 5);
+			
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
+			
+			graphStartDate = driver.findElement(By.id("graphStartDate"));
+			graphEndDate = driver.findElement(By.id("graphEndDate"));
+			
+			// * Check that the new dates are updated
+			Date new_start_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphStartDate.getAttribute("value"));
+			Date new_end_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphEndDate.getAttribute("value"));
+			
+			System.out.println("Updated graph start date: " + new_start_date.toString());
+			System.out.println("Original graph start date: " + original_start_date.toString());
+			
+			assertTrue(original_start_date.compareTo(new_start_date) == 1);
+			assertTrue(new_end_date.compareTo(original_end_date) == 1);
+			
+		} catch (ParseException e) {
+			System.out.println("Failed to parse dates... Try again");
+		}  
+		
+		driver.close();
+		
+	}
 
+	@Given("I click the zoom out button the graph units are in days the start date is not the furthest date in the past the end date is todays date")
+	public void i_click_the_zoom_out_button_the_graph_units_are_in_days_the_start_date_is_not_the_furthest_date_in_the_past_the_end_date_is_todays_date() {
+		driver.get(ROOT_URL);  
+		//login first
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		driver.findElement(By.id("login-username")).sendKeys("test_user");
+		driver.findElement(By.id("login-password")).sendKeys("test_password");
+		WebElement loginButton = driver.findElement(By.id("login-submit"));
+		loginButton.click();
+		WebDriverWait wait = new WebDriverWait(driver, 5);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
+	}
+
+	@Then("the start date should decrease by one day and the end date should stay the same")
+	public void the_start_date_should_decrease_by_one_day_and_the_end_date_should_stay_the_same() {
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		WebDriverWait wait = new WebDriverWait(driver, 5);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
+		
+		// * Get updated dates
+		WebElement graphStartDate = driver.findElement(By.id("graphStartDate"));
+		WebElement graphEndDate = driver.findElement(By.id("graphEndDate"));
+		try {
+			Date original_start_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphStartDate.getAttribute("value"));
+			Date original_end_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphEndDate.getAttribute("value"));
+			
+			WebElement zoomOut = driver.findElement(By.id("zoomOut"));
+			zoomOut.click();
+			wait = new WebDriverWait(driver, 5);
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
+			
+			graphStartDate = driver.findElement(By.id("graphStartDate"));
+			graphEndDate = driver.findElement(By.id("graphEndDate"));
+			
+			// * Check that the new dates are updated
+			Date new_start_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphStartDate.getAttribute("value"));
+			Date new_end_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphEndDate.getAttribute("value"));
+			
+			assertTrue(original_start_date.compareTo(new_start_date) == 1);
+			assertTrue(new_end_date.compareTo(original_end_date) == 0);
+			
+		} catch (ParseException e) {
+			System.out.println("Failed to parse dates... Try again");
+		}  
+		
+		driver.close();
+	}
+
+	@Given("I click the zoom out button the graph units are in days the start date is the furthest date in the past the end date is todays date")
+	public void i_click_the_zoom_out_button_the_graph_units_are_in_days_the_start_date_is_the_furthest_date_in_the_past_the_end_date_is_todays_date() {
+		driver.get(ROOT_URL);  
+		//login first
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		driver.findElement(By.id("login-username")).sendKeys("test_user");
+		driver.findElement(By.id("login-password")).sendKeys("test_password");
+		WebElement loginButton = driver.findElement(By.id("login-submit"));
+		loginButton.click();
+		WebDriverWait wait = new WebDriverWait(driver, 5);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
+		
+		// * Set the earliest start date
+		driver.findElement(By.id("graphStartDate")).clear();
+		Calendar instance = Calendar.getInstance();
+		instance.setTime(new Date());
+		instance.add(Calendar.YEAR, -1);
+		driver.findElement(By.id("graphStartDate")).sendKeys(new SimpleDateFormat("MM/dd/yyyy").format(instance.getTime()));
+		
+	}
+
+	@Then("the start date and end date should remain the same")
+	public void the_start_date_and_end_date_should_remain_the_same() {
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		WebDriverWait wait = new WebDriverWait(driver, 5);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
+		
+		// * Get updated dates
+		WebElement graphStartDate = driver.findElement(By.id("graphStartDate"));
+		WebElement graphEndDate = driver.findElement(By.id("graphEndDate"));
+		try {
+			Date original_start_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphStartDate.getAttribute("value"));
+			Date original_end_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphEndDate.getAttribute("value"));
+			
+			WebElement zoomOut = driver.findElement(By.id("zoomOut"));
+			zoomOut.click();
+			wait = new WebDriverWait(driver, 5);
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
+			
+			graphStartDate = driver.findElement(By.id("graphStartDate"));
+			graphEndDate = driver.findElement(By.id("graphEndDate"));
+			
+			// * Check that the new dates are updated
+			Date new_start_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphStartDate.getAttribute("value"));
+			Date new_end_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphEndDate.getAttribute("value"));
+			
+			assertTrue(original_start_date.compareTo(new_start_date) == 0);
+			assertTrue(new_end_date.compareTo(original_end_date) == 0);
+			
+		} catch (ParseException e) {
+			System.out.println("Failed to parse dates... Try again");
+		}  
+		
+		driver.close();
+	}
+
+	// Zoom Out Weeks
+	@Given("I click the zoom out button the graph units are in weeks the start date is not the furthest date in the past the end date is not todays date")
+	public void i_click_the_zoom_out_button_the_graph_units_are_in_weeks_the_start_date_is_not_the_furthest_date_in_the_past_the_end_date_is_not_todays_date() {
+		driver.get(ROOT_URL);  
+		//login first
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		driver.findElement(By.id("login-username")).sendKeys("test_user");
+		driver.findElement(By.id("login-password")).sendKeys("test_password");
+		WebElement loginButton = driver.findElement(By.id("login-submit"));
+		loginButton.click();
+		WebDriverWait wait = new WebDriverWait(driver, 5);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
+		
+		// * First zoom in to make sure the end date isn't max
+		WebElement zoomIn = driver.findElement(By.id("zoomIn"));
+		zoomIn.click();
+		
+		// * Then Select Weeks
+		Select graphUnit = new Select(driver.findElement(By.id("graphUnits")));
+		graphUnit.selectByValue("weeks");
+	}
+
+	@Then("the start date should decrease by one week and the end date should increase by one day")
+	public void the_start_date_should_decrease_by_one_week_and_the_end_date_should_increase_by_one_day() {
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		WebDriverWait wait = new WebDriverWait(driver, 5);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
+		
+		// * Get updated dates
+		WebElement graphStartDate = driver.findElement(By.id("graphStartDate"));
+		WebElement graphEndDate = driver.findElement(By.id("graphEndDate"));
+		try {
+			Date original_start_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphStartDate.getAttribute("value"));
+			Date original_end_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphEndDate.getAttribute("value"));
+			
+			WebElement zoomOut = driver.findElement(By.id("zoomOut"));
+			zoomOut.click();
+			wait = new WebDriverWait(driver, 5);
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
+			
+			graphStartDate = driver.findElement(By.id("graphStartDate"));
+			graphEndDate = driver.findElement(By.id("graphEndDate"));
+			
+			// * Check that the new dates are updated
+			Date new_start_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphStartDate.getAttribute("value"));
+			Date new_end_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphEndDate.getAttribute("value"));
+			
+			assertTrue(original_start_date.compareTo(new_start_date) == 1);
+			assertTrue(new_end_date.compareTo(original_end_date) == 1);
+			
+		} catch (ParseException e) {
+			System.out.println("Failed to parse dates... Try again");
+		}  
+		
+		driver.close();
+	}
+
+	@Given("I click the zoom out button the graph units are in weeks the start date is not the furthest date in the past the end date is todays date")
+	public void i_click_the_zoom_out_button_the_graph_units_are_in_weeks_the_start_date_is_not_the_furthest_date_in_the_past_the_end_date_is_todays_date() {
+		driver.get(ROOT_URL);  
+		//login first
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		driver.findElement(By.id("login-username")).sendKeys("test_user");
+		driver.findElement(By.id("login-password")).sendKeys("test_password");
+		WebElement loginButton = driver.findElement(By.id("login-submit"));
+		loginButton.click();
+		WebDriverWait wait = new WebDriverWait(driver, 5);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
+		
+		// * Then Select Weeks
+		Select graphUnit = new Select(driver.findElement(By.id("graphUnits")));
+		graphUnit.selectByValue("weeks");
+	}
+
+	@Then("the start date should decrease by one week and the end date should stay the same")
+	public void the_start_date_should_decrease_by_one_week_and_the_end_date_should_stay_the_same() {
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		WebDriverWait wait = new WebDriverWait(driver, 5);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
+		
+		// * Get updated dates
+		WebElement graphStartDate = driver.findElement(By.id("graphStartDate"));
+		WebElement graphEndDate = driver.findElement(By.id("graphEndDate"));
+		try {
+			Date original_start_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphStartDate.getAttribute("value"));
+			Date original_end_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphEndDate.getAttribute("value"));
+			
+			WebElement zoomOut = driver.findElement(By.id("zoomOut"));
+			zoomOut.click();
+			wait = new WebDriverWait(driver, 5);
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
+			
+			graphStartDate = driver.findElement(By.id("graphStartDate"));
+			graphEndDate = driver.findElement(By.id("graphEndDate"));
+			
+			// * Check that the new dates are updated
+			Date new_start_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphStartDate.getAttribute("value"));
+			Date new_end_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphEndDate.getAttribute("value"));
+			
+			assertTrue(original_start_date.compareTo(new_start_date) == 1);
+			assertTrue(new_end_date.compareTo(original_end_date) == 0);
+			
+		} catch (ParseException e) {
+			System.out.println("Failed to parse dates... Try again");
+		}  
+		
+		driver.close();
+	}
+
+	@Given("I click the zoom out button the graph units are in weeks the start date is the furthest date in the past the end date is todays date")
+	public void i_click_the_zoom_out_button_the_graph_units_are_in_weeks_the_start_date_is_the_furthest_date_in_the_past_the_end_date_is_todays_date() {
+		driver.get(ROOT_URL);  
+		//login first
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		driver.findElement(By.id("login-username")).sendKeys("test_user");
+		driver.findElement(By.id("login-password")).sendKeys("test_password");
+		WebElement loginButton = driver.findElement(By.id("login-submit"));
+		loginButton.click();
+		WebDriverWait wait = new WebDriverWait(driver, 5);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
+		
+		// * Set the earliest start date
+		driver.findElement(By.id("graphStartDate")).clear();
+		Calendar instance = Calendar.getInstance();
+		instance.setTime(new Date());
+		instance.add(Calendar.YEAR, -1);
+		driver.findElement(By.id("graphStartDate")).sendKeys(new SimpleDateFormat("MM/dd/yyyy").format(instance.getTime()));
+		
+		// * Then Select Weeks
+		Select graphUnit = new Select(driver.findElement(By.id("graphUnits")));
+		graphUnit.selectByValue("weeks");
+	}
+
+	@Then("the start date and end date should be the same")
+	public void the_start_date_and_end_date_should_be_the_same() {
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		WebDriverWait wait = new WebDriverWait(driver, 5);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
+		
+		// * Get updated dates
+		WebElement graphStartDate = driver.findElement(By.id("graphStartDate"));
+		WebElement graphEndDate = driver.findElement(By.id("graphEndDate"));
+		try {
+			Date original_start_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphStartDate.getAttribute("value"));
+			Date original_end_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphEndDate.getAttribute("value"));
+			
+			WebElement zoomOut = driver.findElement(By.id("zoomOut"));
+			zoomOut.click();
+			wait = new WebDriverWait(driver, 5);
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
+			
+			graphStartDate = driver.findElement(By.id("graphStartDate"));
+			graphEndDate = driver.findElement(By.id("graphEndDate"));
+			
+			// * Check that the new dates are updated
+			Date new_start_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphStartDate.getAttribute("value"));
+			Date new_end_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphEndDate.getAttribute("value"));
+			
+			assertTrue(original_start_date.compareTo(new_start_date) == 0);
+			assertTrue(new_end_date.compareTo(original_end_date) == 0);
+			
+		} catch (ParseException e) {
+			System.out.println("Failed to parse dates... Try again");
+		} 
+		
+		driver.close();
+	}
+
+	// Zoom In Days
+	@Given("I click the zoom in button the graph units are in days the start date is not the same as the end date")
+	public void i_click_the_zoom_in_button_the_graph_units_are_in_days_the_start_date_is_not_the_same_as_the_end_date() {
+		driver.get(ROOT_URL);  
+		//login first
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		driver.findElement(By.id("login-username")).sendKeys("test_user");
+		driver.findElement(By.id("login-password")).sendKeys("test_password");
+		WebElement loginButton = driver.findElement(By.id("login-submit"));
+		loginButton.click();
+		WebDriverWait wait = new WebDriverWait(driver, 5);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
+	}
+
+	@Then("the start date should increase by one day and the end date should decrease by a day")
+	public void the_start_date_should_increase_by_one_day_and_the_end_date_should_decrease_by_a_day() {
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		WebDriverWait wait = new WebDriverWait(driver, 5);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
+		
+		// * Get updated dates
+		WebElement graphStartDate = driver.findElement(By.id("graphStartDate"));
+		WebElement graphEndDate = driver.findElement(By.id("graphEndDate"));
+		try {
+			Date original_start_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphStartDate.getAttribute("value"));
+			Date original_end_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphEndDate.getAttribute("value"));
+			
+			WebElement zoomIn = driver.findElement(By.id("zoomIn"));
+			zoomIn.click();
+			wait = new WebDriverWait(driver, 5);
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
+			
+			// * Check that the new dates are updated
+			Date new_start_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphStartDate.getAttribute("value"));
+			Date new_end_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphEndDate.getAttribute("value"));
+			
+			assertTrue(new_start_date.compareTo(original_start_date) == 1);
+			assertTrue(original_end_date.compareTo(new_end_date) == 1);
+			
+		} catch (ParseException e) {
+			System.out.println("Failed to parse dates... Try again");
+		} 
+		
+		driver.close();
+	}
+
+	@Given("I click the zoom in button the graph units are in days the start date is equal to the end date")
+	public void i_click_the_zoom_in_button_the_graph_units_are_in_days_the_start_date_is_equal_to_the_end_date() {
+		driver.get(ROOT_URL);  
+		//login first
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		driver.findElement(By.id("login-username")).sendKeys("test_user");
+		driver.findElement(By.id("login-password")).sendKeys("test_password");
+		WebElement loginButton = driver.findElement(By.id("login-submit"));
+		loginButton.click();
+		WebDriverWait wait = new WebDriverWait(driver, 5);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
+		
+		// * Set the earliest start date
+		driver.findElement(By.id("graphStartDate")).clear();
+		driver.findElement(By.id("graphStartDate")).sendKeys(new SimpleDateFormat("MM/dd/yyyy").format(new Date()));
+				
+	}
+
+	@Then("the start date and end date should be equal")
+	public void the_start_date_and_end_date_should_be_equal() {
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		WebDriverWait wait = new WebDriverWait(driver, 5);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
+		
+		// * Get updated dates
+		WebElement graphStartDate = driver.findElement(By.id("graphStartDate"));
+		WebElement graphEndDate = driver.findElement(By.id("graphEndDate"));
+		try {
+			Date original_start_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphStartDate.getAttribute("value"));
+			Date original_end_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphEndDate.getAttribute("value"));
+			
+			WebElement zoomIn = driver.findElement(By.id("zoomIn"));
+			zoomIn.click();
+			wait = new WebDriverWait(driver, 5);
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
+			
+			graphStartDate = driver.findElement(By.id("graphStartDate"));
+			graphEndDate = driver.findElement(By.id("graphEndDate"));
+			
+			// * Check that the new dates are updated
+			Date new_start_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphStartDate.getAttribute("value"));
+			Date new_end_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphEndDate.getAttribute("value"));
+			
+			assertTrue(new_start_date.compareTo(original_start_date) == 1);
+			assertTrue(original_end_date.compareTo(new_end_date) == 1);
+			
+		} catch (ParseException e) {
+			System.out.println("Failed to parse dates... Try again");
+		} 
+		
+		driver.close();
+	}
+
+	// Zoom In Weeks
+	@Given("I click the zoom in button the graph units are in weeks the start date is not the same as the end date")
+	public void i_click_the_zoom_in_button_the_graph_units_are_in_weeks_the_start_date_is_not_the_same_as_the_end_date() {
+		driver.get(ROOT_URL);  
+		//login first
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		driver.findElement(By.id("login-username")).sendKeys("test_user");
+		driver.findElement(By.id("login-password")).sendKeys("test_password");
+		WebElement loginButton = driver.findElement(By.id("login-submit"));
+		loginButton.click();
+		WebDriverWait wait = new WebDriverWait(driver, 5);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
+		
+		// * Then Select Weeks
+		Select graphUnit = new Select(driver.findElement(By.id("graphUnits")));
+		graphUnit.selectByValue("weeks");
+	}
+
+	@Then("the start date should increase by one day and the end date should decrease by one day")
+	public void the_start_date_should_increase_by_one_day_and_the_end_date_should_decrease_by_one_day() {
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		WebDriverWait wait = new WebDriverWait(driver, 5);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
+		
+		// * Get updated dates
+		WebElement graphStartDate = driver.findElement(By.id("graphStartDate"));
+		WebElement graphEndDate = driver.findElement(By.id("graphEndDate"));
+		try {
+			Date original_start_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphStartDate.getAttribute("value"));
+			Date original_end_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphEndDate.getAttribute("value"));
+			
+			WebElement zoomIn = driver.findElement(By.id("zoomIn"));
+			zoomIn.click();
+			wait = new WebDriverWait(driver, 5);
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
+			
+			// * Check that the new dates are updated
+			Date new_start_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphStartDate.getAttribute("value"));
+			Date new_end_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphEndDate.getAttribute("value"));
+			
+			assertTrue(new_start_date.compareTo(original_start_date) == 1);
+			assertTrue(original_end_date.compareTo(new_end_date) == 1);
+			
+		} catch (ParseException e) {
+			System.out.println("Failed to parse dates... Try again");
+		} 
+		
+		driver.close();
+	}
+
+	@Given("I click the zoom in button the graph units are in weeks the start date is equal to the end date")
+	public void i_click_the_zoom_in_button_the_graph_units_are_in_weeks_the_start_date_is_equal_to_the_end_date() {
+		driver.get(ROOT_URL);  
+		//login first
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		driver.findElement(By.id("login-username")).sendKeys("test_user");
+		driver.findElement(By.id("login-password")).sendKeys("test_password");
+		WebElement loginButton = driver.findElement(By.id("login-submit"));
+		loginButton.click();
+		WebDriverWait wait = new WebDriverWait(driver, 5);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
+		
+		// * Set the earliest start date
+		driver.findElement(By.id("graphStartDate")).clear();
+		driver.findElement(By.id("graphStartDate")).sendKeys(new SimpleDateFormat("MM/dd/yyyy").format(new Date()));
+			
+		// * Then Select Weeks
+		Select graphUnit = new Select(driver.findElement(By.id("graphUnits")));
+		graphUnit.selectByValue("weeks");
+	}
+
+	@Then("the start date and end date should stay the same")
+	public void the_start_date_and_end_date_should_stay_the_same() {
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		WebDriverWait wait = new WebDriverWait(driver, 5);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
+		
+		// * Get updated dates
+		WebElement graphStartDate = driver.findElement(By.id("graphStartDate"));
+		WebElement graphEndDate = driver.findElement(By.id("graphEndDate"));
+		try {
+			Date original_start_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphStartDate.getAttribute("value"));
+			Date original_end_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphEndDate.getAttribute("value"));
+			
+			WebElement zoomIn = driver.findElement(By.id("zoomIn"));
+			zoomIn.click();
+			wait = new WebDriverWait(driver, 5);
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
+			
+			System.out.println("Finding new dates");
+			graphStartDate = driver.findElement(By.id("graphStartDate"));
+			graphEndDate = driver.findElement(By.id("graphEndDate"));
+			
+			System.out.println("Updated graph start date: " + graphStartDate.getAttribute("value"));
+			System.out.println("Updated graph end date: " + graphEndDate.getAttribute("value"));
+			
+			// * Check that the new dates are updated
+			Date new_start_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphStartDate.getAttribute("value"));
+			Date new_end_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphEndDate.getAttribute("value"));
+			
+			assertTrue(new_start_date.compareTo(original_start_date) == 1);
+			assertTrue(original_end_date.compareTo(new_end_date) == 1);
+			
+		} catch (ParseException e) {
+			System.out.println("Failed to parse dates... Try again");
+		} 
+		
+		driver.close();
+	}
+	
 	@After()
 	public void after() {
 		driver.quit();
