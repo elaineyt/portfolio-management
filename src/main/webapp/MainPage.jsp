@@ -183,12 +183,18 @@ canvas{
 								</button>
 							</div>
 							<div class="modal-body">
-  								<form action="/parser">
+  								<form action="/parser" method="post" enctype = "multipart/form-data"
+  								>
+  								
     								<p>CSV File</p>
-    								<input type="file" id="myFile" name="filename2">
+    								
+    								<input type="file" id="myFile" name="file" accept=".txt, .csv">
   
     								<div class="mt-3">
-      									<button type="submit" class="btn btn-primary">Submit</button>
+    									<button type="button" class="btn btn-secondary"
+											data-dismiss="modal">Exit</button>
+      									<button type="submit" id="submitBulk" class="btn btn-primary">Submit</button>
+      									
     								</div>
   								</form>
 							</div>
