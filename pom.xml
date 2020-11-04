@@ -159,16 +159,14 @@
 					<artifactId>cobertura-maven-plugin</artifactId>
 					<version>2.7</version>
 				</plugin>
-				
 				<plugin>
-					<groupId>org.eclipse.jetty</groupId>
-					<artifactId>jetty-maven-plugin</artifactId>
-					<version>9.4.31.v20200723</version>
-					<configuration>
-						<scanIntervalSeconds>5</scanIntervalSeconds>
-						<jettyXml>src/main/resources/jetty.xml</jettyXml>
-					</configuration>
-				</plugin>
+				  <groupId>org.eclipse.jetty</groupId>
+				  <artifactId>jetty-maven-plugin</artifactId>
+				  <version>9.4.33.v20201020</version>
+				  <configuration>
+				    <jettyXml>src/main/resources/jetty.xml,src/main/resources/jetty-ssl.xml,src/main/resources/jetty-https.xml</jettyXml>
+				  </configuration>
+				</plugin>	
 			</plugins>
 		</pluginManagement>
 	</build>
