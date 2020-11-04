@@ -366,9 +366,6 @@ canvas{
 				$('#zoomIn').click(
 						function(e) {
 							zooming_graph_lock = true;
-							$('#graphStartDate').on("change", function() {console.log("graphStartDate changed.")});
-							$('#graphEndDate').on("change", function() {console.log("graphEndDate changed.")});
-							
 							if($('#graphUnits').val() == "weeks"){
 								var end_date_new = $('#graphEndDate').datepicker('getDate'); 
 							    end_date_new.setDate(end_date_new.getDate () - 7); 
@@ -390,13 +387,6 @@ canvas{
 							
 							getPositions();  
 					    	getHistoricalPositions();
-					    	$('#graphStartDate').on("change", function() {
-								validateGraphDates('start-date');
-							});
-							
-							$('#graphEndDate').on("change", function() {
-								validateGraphDates('end-date');
-							});
 					    	zooming_graph_lock = false;
 						}
 					);
@@ -405,9 +395,6 @@ canvas{
 						function(e) {
 							zooming_graph_lock = true;
 							let earliest_start_date = new Date().setFullYear(new Date().getFullYear() - 1);
-							$('#graphStartDate').on("change", function() {console.log("graphStartDate changed.")});
-							$('#graphEndDate').on("change", function() {console.log("graphEndDate changed.")});
-							
 							if($('#graphUnits').val() == "weeks"){
 								var end_date_new = $('#graphEndDate').datepicker('getDate'); 
 								if(end_date_new.getDate() + 7 <= new Date().getDate()) {
@@ -438,13 +425,6 @@ canvas{
 							
 							getPositions();  
 					    	getHistoricalPositions();
-					    	$('#graphStartDate').on("change", function() {
-								validateGraphDates('start-date');
-							});
-							
-							$('#graphEndDate').on("change", function() {
-								validateGraphDates('end-date');
-							});
 					    	zooming_graph_lock = false;
 						}
 					);
@@ -526,6 +506,7 @@ canvas{
 					else{
 						graphUnit = "D";
 					}
+					
 					getPositions();
 					getHistoricalPositions();
 				});
@@ -597,10 +578,6 @@ canvas{
 	
 	// Populate portfolio list
 	function getPositions() {
-		if(!initial_request) {
-			//window.stop()
-			initial_request = true;
-		}
         var username = '<%= session.getAttribute("username")%>'
         var HTTP = new XMLHttpRequest();
         var d = new Date();
@@ -624,18 +601,21 @@ canvas{
         
         $("#positions").html("");
         
+        var row = "<div class='row' style='border-width:thin;border:solid;border-radius:5px;display:flex;flex-wrap:wrap;justify-content:center;' id='select-all-portfolio'>" +
+		"<button id=\"selectAllPortfolioButton\" style='margin:5px;' type=\"button\" onclick='stockChecked(\"Select-All\", { checked: true})' class=\"btn btn-primary\">Select All</button>" +
+		"<button id=\"deselectAllPortfolioButton\" style='margin:5px;' type=\"button\" onclick='stockChecked(\"Select-All\", { checked: false})' class=\"btn btn-primary\">DeSelect All</button>" +
+		"</div>";
+		$("#positions").append(row);
+		
      	// Reset Graph 
 		config.data.labels= []
 		config.data.datasets = []
         
         HTTP.onreadystatechange = async (e) => {
         	if(HTTP.readyState == 4 && HTTP.status == 200){
+        		//$("#positions").html("");
         		var getPositionResponse = JSON.parse(HTTP.responseText);
-        		var row = "<div class='row' style='border-width:thin;border:solid;border-radius:5px;display:flex;flex-wrap:wrap;justify-content:center;' id='select-all-portfolio'>" +
-        		"<button id=\"selectAllPortfolioButton\" style='margin:5px;' type=\"button\" onclick='stockChecked(\"Select-All\", { checked: true})' class=\"btn btn-primary\">Select All</button>" +
-        		"<button id=\"deselectAllPortfolioButton\" style='margin:5px;' type=\"button\" onclick='stockChecked(\"Select-All\", { checked: false})' class=\"btn btn-primary\">DeSelect All</button>" +
-				"</div>";
-        		$("#positions").append(row);
+        		
         		
         		// * Check if Total Portfolio Value is not already populated
         		if(stockHistoryLabels.indexOf("Total Portfolio Value") == -1){
@@ -676,13 +656,15 @@ canvas{
 		        			var dateSold = getPositionResponse.positions[i].date_sold;
 		        			var today = new Date();
 		        			if(Date.parse(dateBought) <= today && today <= Date.parse(dateSold)){
-		        				var row = "<div class='row' style='border-width:thin;border:solid;border-radius:5px;margin-top:5px;padding-right:10px;' id='r" + tickerSymbol + "'><div class='col-sm-2 position-padding'><input type='checkbox' id='cb-portfolio-" + tickerSymbol + "' onclick='stockChecked(\"" + tickerSymbol + "\", this)'/></div><div class='col-sm-8 position-padding'>" + tickerSymbol + 
-		        				"</div><div class='col-sm-2'><button type='button' class='btn' onclick=deleteStockModal('" + tickerSymbol + "')>X</button></div></div>";
-		                		$("#positions").append(row);
-		                		positions.set(tickerSymbol, new Position(tickerSymbol, shareCount, formatDate(dateBought), formatDate(dateSold)));
-		                		if(prev_checked_positions.indexOf(tickerSymbol) !== -1) {
-		                			stockChecked(tickerSymbol, {checked: true})
-		                		}
+		        				// if(!positions.has(tickerSymbol)) {
+			        				var row = "<div class='row' style='border-width:thin;border:solid;border-radius:5px;margin-top:5px;padding-right:10px;' id='r" + tickerSymbol + "'><div class='col-sm-2 position-padding'><input type='checkbox' id='cb-portfolio-" + tickerSymbol + "' onclick='stockChecked(\"" + tickerSymbol + "\", this)'/></div><div class='col-sm-8 position-padding'>" + tickerSymbol + 
+			        				"</div><div class='col-sm-2'><button type='button' class='btn' onclick=deleteStockModal('" + tickerSymbol + "')>X</button></div></div>";
+			                		$("#positions").append(row);
+			                		positions.set(tickerSymbol, new Position(tickerSymbol, shareCount, formatDate(dateBought), formatDate(dateSold)));
+			                		if(prev_checked_positions.indexOf(tickerSymbol) !== -1) {
+			                			stockChecked(tickerSymbol, {checked: true})
+			                		}
+		        				// }
 		        			}
 		        		}
 
@@ -721,14 +703,17 @@ canvas{
         
         $("#historicalPositions").html("");
         
+        var row = "<div class='row' style='border-width:thin;border:solid;border-radius:5px;display:flex;flex-wrap:wrap;justify-content:center;' id='select-all-historical'>" +
+		"<button id=\"selectAllHistoricalButton\" style='margin:5px;' type=\"button\" onclick='historicalStockChecked(\"Select-All\", { checked: true})' class=\"btn btn-primary\">Select All</button>" +
+		"<button id=\"deselectAllHistoricalButton\" style='margin:5px;' type=\"button\" onclick='historicalStockChecked(\"Select-All\", { checked: false})' class=\"btn btn-primary\">DeSelect All</button>" +
+		"</div>";
+		$("#historicalPositions").append(row);
+		
         HTTP.onreadystatechange = (e) => {
         	if(HTTP.readyState == 4 && HTTP.status == 200){
+        		//$("#historicalPositions").html("");
         		var response = JSON.parse(HTTP.responseText);
-        		var row = "<div class='row' style='border-width:thin;border:solid;border-radius:5px;display:flex;flex-wrap:wrap;justify-content:center;' id='select-all-historical'>" +
-        		"<button id=\"selectAllHistoricalButton\" style='margin:5px;' type=\"button\" onclick='historicalStockChecked(\"Select-All\", { checked: true})' class=\"btn btn-primary\">Select All</button>" +
-        		"<button id=\"deselectAllHistoricalButton\" style='margin:5px;' type=\"button\" onclick='historicalStockChecked(\"Select-All\", { checked: false})' class=\"btn btn-primary\">DeSelect All</button>" +
-				"</div>";
-        		$("#historicalPositions").append(row);
+        		
         		
         		// * Append S&P Row
         		var s_p_ticker = "spy";
