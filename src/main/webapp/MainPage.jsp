@@ -351,7 +351,7 @@ canvas{
 				
 				// * Check timeout
 				const idleDurationSecs = 120;    // X number of seconds
-			    const redirectUrl = 'http://localhost:8080/index.jsp';  // Redirect idle users to this URL
+			    const redirectUrl = 'https://localhost:8443/index.jsp';  // Redirect idle users to this URL
 			    let idleTimeout; // variable to hold the timeout, do not modify
 			
 			    const resetIdleTimeout = function() {
@@ -529,14 +529,14 @@ canvas{
 						let HTTP = new XMLHttpRequest();
 					    var d = new Date();
 					    var n = d.getTime();
-						const url = "http://localhost:8080/logout";
+						const url = "https://localhost:8443/logout";
 						HTTP.open("POST", url);
 						HTTP.send();
 						    
 						HTTP.onreadystatechange = (e) => {
 							if(HTTP.status == 200) {
 							    // Successfully logged out user
-							   	window.location.href = 'http://localhost:8080/index.jsp';
+							   	window.location.href = 'https://localhost:8443/index.jsp';
 							}
 						}
 					}
@@ -561,7 +561,7 @@ canvas{
 				
 				// Redirect user if they are not logged in
 				if(username == "" || null_username == "true") {
-					window.location.href = 'http://localhost:8080/index.jsp';
+					window.location.href = 'https://localhost:8443/index.jsp';
 				}
 
 			}
@@ -626,7 +626,7 @@ canvas{
         var HTTP = new XMLHttpRequest();
         var d = new Date();
         var n = d.getTime();
-        const url = "http://localhost:8080/portfolio?username=" + username.toString() + "&t=" + n;
+        const url = "https://localhost:8443/portfolio?username=" + username.toString() + "&t=" + n;
         HTTP.open("GET", url);
         HTTP.send();
         
@@ -730,7 +730,7 @@ canvas{
         let HTTP = new XMLHttpRequest();
         var d = new Date();
         var n = d.getTime();
-        const url = "http://localhost:8080/historical?username=" + username.toString() + "&t=" + n;
+        const url = "https://localhost:8443/historical?username=" + username.toString() + "&t=" + n;
         HTTP.open("GET", url);
         HTTP.send();
         
@@ -807,7 +807,7 @@ canvas{
 		var username = '<%= session.getAttribute("username")%>'
 		
 		const HTTP = new XMLHttpRequest();
-       	const url = "http://localhost:8080/portfolio?username=" + username.toString() + "&position=" + tickerSymbol.toString();
+       	const url = "https://localhost:8443/portfolio?username=" + username.toString() + "&position=" + tickerSymbol.toString();
        	HTTP.open("DELETE", url);
        	HTTP.send();
        
@@ -833,7 +833,7 @@ canvas{
 		var username = '<%= session.getAttribute("username")%>'
 		
 		const HTTP = new XMLHttpRequest();
-       	const url = "http://localhost:8080/historical?username=" + username.toString() + "&position=" + tickerSymbol.toString();
+       	const url = "https://localhost:8443/historical?username=" + username.toString() + "&position=" + tickerSymbol.toString();
        	HTTP.open("DELETE", url);
        	HTTP.send();
        
@@ -915,7 +915,7 @@ canvas{
 
        			if(error == false){
        	            const HTTP = new XMLHttpRequest();
-       	            const url = "http://localhost:8080/historical?username=" + username.toString() + "&position=" + tickerSymbol.toString() + "&share_count=" + 
+       	            const url = "https://localhost:8443/historical?username=" + username.toString() + "&position=" + tickerSymbol.toString() + "&share_count=" + 
        	            	numShares.toString() + "&date_bought=" + buyDate.toString() + "&date_sold=" + sellDate.toString();
        	            HTTP.open("POST", url);
        	            HTTP.send();
@@ -1001,7 +1001,7 @@ canvas{
        			
        			if(error == false){
        	            const HTTP = new XMLHttpRequest();
-       	            const url = "http://localhost:8080/portfolio?username=" + username.toString() + "&position=" + tickerSymbol.toString() + "&share_count=" + 
+       	            const url = "https://localhost:8443/portfolio?username=" + username.toString() + "&position=" + tickerSymbol.toString() + "&share_count=" + 
        	            	numShares.toString() + "&date_bought=" + buyDate.toString() + "&date_sold=" + sellDate.toString();
        	            HTTP.open("POST", url);
        	            HTTP.send();
