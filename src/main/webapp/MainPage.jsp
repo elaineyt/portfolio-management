@@ -292,6 +292,8 @@ canvas{
 	
 	var positions = new Map();
 	var historicalPositions = new Map();
+	var zooming_graph_lock = false;
+	var initial_request = false;
 	
 		$(document).ready(
 			function(){
@@ -309,11 +311,11 @@ canvas{
 				setDefaultGraphDates();
 				
 				$('#graphStartDate').on("change", function() {
-					validateGraphDates('start-date');
+					validateGraphDates('start-date')
 				});
 				
 				$('#graphEndDate').on("change", function() {
-					validateGraphDates('end-date');
+					validateGraphDates('end-date')
 				});
 				
 				// * Get stock positions
@@ -363,6 +365,7 @@ canvas{
 				
 				$('#zoomIn').click(
 						function(e) {
+							zooming_graph_lock = true;
 							$('#graphStartDate').on("change", function() {console.log("graphStartDate changed.")});
 							$('#graphEndDate').on("change", function() {console.log("graphEndDate changed.")});
 							
@@ -384,20 +387,23 @@ canvas{
 							    $('#graphStartDate').datepicker ('setDate', start_date_new);
 							}
 							
-							$('#graphStartDate').on("change", function() {
+							
+							getPositions();  
+					    	getHistoricalPositions();
+					    	$('#graphStartDate').on("change", function() {
 								validateGraphDates('start-date');
 							});
 							
 							$('#graphEndDate').on("change", function() {
 								validateGraphDates('end-date');
 							});
-							getPositions();  
-					    	getHistoricalPositions();
+					    	zooming_graph_lock = false;
 						}
 					);
 				
 				$('#zoomOut').click(
 						function(e) {
+							zooming_graph_lock = true;
 							let earliest_start_date = new Date().setFullYear(new Date().getFullYear() - 1);
 							$('#graphStartDate').on("change", function() {console.log("graphStartDate changed.")});
 							$('#graphEndDate').on("change", function() {console.log("graphEndDate changed.")});
@@ -429,15 +435,17 @@ canvas{
 								}
 							}	
 							
-							$('#graphStartDate').on("change", function() {
+							
+							getPositions();  
+					    	getHistoricalPositions();
+					    	$('#graphStartDate').on("change", function() {
 								validateGraphDates('start-date');
 							});
 							
 							$('#graphEndDate').on("change", function() {
 								validateGraphDates('end-date');
 							});
-							getPositions();  
-					    	getHistoricalPositions();
+					    	zooming_graph_lock = false;
 						}
 					);
 				
@@ -589,6 +597,10 @@ canvas{
 	
 	// Populate portfolio list
 	function getPositions() {
+		if(!initial_request) {
+			//window.stop()
+			initial_request = true;
+		}
         var username = '<%= session.getAttribute("username")%>'
         var HTTP = new XMLHttpRequest();
         var d = new Date();
@@ -1331,8 +1343,10 @@ canvas{
     	else{
     		graphEndDate = $('#graphEndDate').val();
     		$('#graphDateError').html('');
-	    	getPositions();  
-	    	getHistoricalPositions();
+    		if(!zooming_graph_lock) { 
+	    		getPositions();  
+	    		getHistoricalPositions();
+    		}
     	}
     }
     

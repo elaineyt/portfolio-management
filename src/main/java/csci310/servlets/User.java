@@ -101,7 +101,11 @@ public class User extends HttpServlet {
         		out.flush();
         	} 
         	catch (SQLException sqle) { /* Ignore */ } 
-        	finally { }
+        	finally { 
+        		try {
+					conn.close();
+				} catch (SQLException e) {}
+        	}
         }
     }
 }

@@ -85,7 +85,11 @@ public class Portfolio extends HttpServlet {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} finally { }
+		} finally {
+			try {
+				conn.close();
+			} catch (SQLException e) {}
+		}
 	}
 
 	/**
@@ -164,7 +168,11 @@ public class Portfolio extends HttpServlet {
         	} catch (SQLException sqle) {
         		System.out.println ("SQLException: " + sqle.getMessage());
         	} catch (ClassNotFoundException cnf) { /* Ignore - invalid project setup */ } 
-        	finally { }
+        	finally { 
+        		try {
+					conn.close();
+				} catch (SQLException e) {}
+        	}
         }
 	}
 	
@@ -226,7 +234,11 @@ public class Portfolio extends HttpServlet {
         	} catch (SQLException sqle) {
         		System.out.println ("SQLException: " + sqle.getMessage());
         	} catch (ClassNotFoundException cnf) { /* Ignore - invalid project setup */ } 
-        	finally { }
+        	finally { 
+        		try {
+					conn.close();
+				} catch (SQLException e) {}
+        	}
         }
 	}
 
