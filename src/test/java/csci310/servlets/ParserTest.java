@@ -27,7 +27,7 @@ public class ParserTest extends Mockito {
         PrintWriter writer = new PrintWriter(stringWriter);
         when(response.getWriter()).thenReturn(writer);
 
-        new Portfolio().doPost(request, response);
+        new Parser().doPost(request, response);
 
         verify(request, atLeast(1)).getParameter("username"); // only if you want to verify username was called...
         writer.flush(); // it may not have been flushed yet...
@@ -50,7 +50,7 @@ public class ParserTest extends Mockito {
         PrintWriter writer = new PrintWriter(stringWriter);
         when(response.getWriter()).thenReturn(writer);
 
-        new Portfolio().doPost(request, response);
+        new Parser().doPost(request, response);
 
         verify(request, atLeast(1)).getParameter("username"); // only if you want to verify username was called...
         writer.flush(); // it may not have been flushed yet...
@@ -72,7 +72,7 @@ public class ParserTest extends Mockito {
         PrintWriter writer = new PrintWriter(stringWriter);
         when(response.getWriter()).thenReturn(writer);
 
-        new Portfolio().doPost(request, response);
+        new Parser().doPost(request, response);
 
         verify(request, atLeast(1)).getParameter("username"); // only if you want to verify username was called...
         writer.flush(); // it may not have been flushed yet...
@@ -95,7 +95,7 @@ public class ParserTest extends Mockito {
         PrintWriter writer = new PrintWriter(stringWriter);
         when(response.getWriter()).thenReturn(writer);
 
-        new Portfolio().doPost(request, response);
+        new Parser().doPost(request, response);
 
         writer.flush(); // it may not have been flushed yet...
         
@@ -116,7 +116,7 @@ public class ParserTest extends Mockito {
         PrintWriter writer = new PrintWriter(stringWriter);
         when(response.getWriter()).thenReturn(writer);
 
-        new Portfolio().doPost(request, response);
+        new Parser().doPost(request, response);
 
         verify(request, atLeast(1)).getParameter("position"); // only if you want to verify username was called...
         writer.flush(); // it may not have been flushed yet...
@@ -138,7 +138,7 @@ public class ParserTest extends Mockito {
         PrintWriter writer = new PrintWriter(stringWriter);
         when(response.getWriter()).thenReturn(writer);
 
-        new Portfolio().doPost(request, response);
+        new Parser().doPost(request, response);
 
         writer.flush();
         
@@ -160,7 +160,7 @@ public class ParserTest extends Mockito {
         PrintWriter writer = new PrintWriter(stringWriter);
         when(response.getWriter()).thenReturn(writer);
 
-        new Portfolio().doPost(request, response);
+        new Parser().doPost(request, response);
 
         writer.flush(); // it may not have been flushed yet...
         
@@ -182,7 +182,7 @@ public class ParserTest extends Mockito {
         PrintWriter writer = new PrintWriter(stringWriter);
         when(response.getWriter()).thenReturn(writer);
 
-        new Portfolio().doPost(request, response);
+        new Parser().doPost(request, response);
 
         writer.flush(); // it may not have been flushed yet...
         
@@ -203,7 +203,7 @@ public class ParserTest extends Mockito {
         PrintWriter writer = new PrintWriter(stringWriter);
         when(response.getWriter()).thenReturn(writer);
 
-        new Portfolio().doPost(request, response);
+        new Parser().doPost(request, response);
 
         writer.flush(); // it may not have been flushed yet...
         
@@ -225,7 +225,7 @@ public class ParserTest extends Mockito {
         PrintWriter writer = new PrintWriter(stringWriter);
         when(response.getWriter()).thenReturn(writer);
 
-        new Portfolio().doPost(request, response);
+        new Parser().doPost(request, response);
 
         writer.flush(); // it may not have been flushed yet...
         
@@ -247,7 +247,7 @@ public class ParserTest extends Mockito {
         PrintWriter writer = new PrintWriter(stringWriter);
         when(response.getWriter()).thenReturn(writer);
 
-        new Portfolio().doPost(request, response);
+        new Parser().doPost(request, response);
 
         writer.flush(); // it may not have been flushed yet...
         
@@ -268,7 +268,7 @@ public class ParserTest extends Mockito {
         PrintWriter writer = new PrintWriter(stringWriter);
         when(response.getWriter()).thenReturn(writer);
 
-        new Portfolio().doPost(request, response);
+        new Parser().doPost(request, response);
 
         writer.flush(); // it may not have been flushed yet...
         
@@ -290,7 +290,7 @@ public class ParserTest extends Mockito {
         PrintWriter writer = new PrintWriter(stringWriter);
         when(response.getWriter()).thenReturn(writer);
 
-        new Portfolio().doPost(request, response);
+        new Parser().doPost(request, response);
 
         writer.flush(); // it may not have been flushed yet...
         
@@ -312,7 +312,7 @@ public class ParserTest extends Mockito {
         PrintWriter writer = new PrintWriter(stringWriter);
         when(response.getWriter()).thenReturn(writer);
 
-        new Portfolio().doPost(request, response);
+        new Parser().doPost(request, response);
 
         writer.flush(); // it may not have been flushed yet...
         
@@ -334,7 +334,7 @@ public class ParserTest extends Mockito {
         PrintWriter writer = new PrintWriter(stringWriter);
         when(response.getWriter()).thenReturn(writer);
 
-        new Portfolio().doPost(request, response);
+        new Parser().doPost(request, response);
 
         writer.flush();
         
@@ -356,7 +356,7 @@ public class ParserTest extends Mockito {
         PrintWriter writer = new PrintWriter(stringWriter);
         when(response.getWriter()).thenReturn(writer);
 
-        new Portfolio().doPost(request, response);
+        new Parser().doPost(request, response);
         
         writer.flush();
         
