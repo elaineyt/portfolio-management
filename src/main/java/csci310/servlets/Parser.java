@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -22,17 +23,16 @@ import java.text.SimpleDateFormat;
 import java.text.DateFormat;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.*;
 import java.nio.file.Paths;
 import java.util.Date;
 
+@MultipartConfig(location="/tmp", fileSizeThreshold=1024*1024,
+maxFileSize=1024*1024*5, maxRequestSize=1024*1024*5*5)
 
-
-@WebServlet(name="parser",urlPatterns={"/parser"})
+@WebServlet(name="Parser",urlPatterns={"/parser"})
 public class Parser extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static Connection conn = null;
@@ -48,47 +48,27 @@ public class Parser extends HttpServlet {
     }
     
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    	Part filePart = request.getPart("file"); // Retrieves <input type="file" name="file">
-        String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); // MSIE fix.
+    	Part filePart = request.getPart("file"); // Retrieves <input type="file" name="file">// MSIE fix.
         BufferedReader br = null;
-        System.out.println(fileName);
         String line = "";
         String split = ",";
+        HttpSession session = request.getSession();
 
-        try {//
+        try {
 
-            br = new BufferedReader(new FileReader(fileName));
+            br = new BufferedReader(new InputStreamReader(filePart.getInputStream(), "UTF-8"));
             while ((line = br.readLine()) != null) {
                 String[] stock = line.split(split);
 
                 System.out.println("Stock [ticker= " + stock[0] + " , amount=" + stock[1] + " , date=" + stock[2] + " , date=" + stock[3] + "]");
-                String dateSplit = "/";
-                String[] date = stock[2].split(dateSplit);
-                if(Integer.parseInt(stock[2]) < 1)
-                {
-                	stock[2] = "1";
-                }
-                String[] dateB = stock[2].split(dateSplit);
-                if(Integer.parseInt(stock[2]) < 1)
-                {
-                	stock[2] = "1";
-                }
-                DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+                //String dateSplit = "/";
+                
+                DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
             	Date d = new Date();
             	System.out.println(dateFormat.format(d));
-                if(Integer.parseInt(date[0]) > 12 || Integer.parseInt(date[0]) < 1)
-                {
-                	
-                	stock[1] = dateFormat.format(d);
-                	System.out.println(stock[1]);
-                }
-                if(Integer.parseInt(dateB[0]) > 12 || Integer.parseInt(dateB[0]) < 1)
-                {
-                	
-                	stock[1] = dateFormat.format(d);
-                	System.out.println(stock[1]);
-                }
-                String username = request.getParameter("username");
+            	
+                String username = session.getAttribute("username").toString();
+                System.out.println(username);
                 String position = stock[0];
                 String share_count = stock[1];
                 String date_bought = stock[2];
@@ -141,9 +121,19 @@ public class Parser extends HttpServlet {
                 		if(rs.next()) {
                 			// * Create Portfolio Position
                 			ps = conn.prepareStatement("INSERT INTO Portfolio (username, position, share_count, date_bought, date_sold) VALUES ('" + username + "', '" + position + "', '" + share_count + "', STR_TO_DATE('" + date_bought.replace('/', '-') + "', '%m-%d-%Y'), STR_TO_DATE('" + date_sold.replace('/', '-') + "', '%m-%d-%Y'));");
+                			System.out.println("INSERT INTO Portfolio (username, position, share_count, date_bought, date_sold) VALUES ('" + username + "', '" + position + "', '" + share_count + "', STR_TO_DATE('" + date_bought.replace('/', '-') + "', '%m-%d-%Y'), STR_TO_DATE('" + date_sold.replace('/', '-') + "', '%m-%d-%Y'));");
                 			ps.executeUpdate();
                 			
         					jsonStr = "{\"Success\": \"Successfully added portfolio position.\"}";
+        					try
+        					{
+        						Thread.sleep(1000);
+        					}
+        					catch(Exception e)
+        					{
+        						
+        					}
+        					response.sendRedirect("localhost:8080/MainPage.jsp");
                 		} else {
                 			jsonStr = "{\"Error\": \"Creating Portfolio Position Failed. No user found.\"}";
                 		}
@@ -157,20 +147,7 @@ public class Parser extends HttpServlet {
                 	} catch (ClassNotFoundException cnf) { /* Ignore - invalid project setup */ } 
                 	finally { }
                 }
-                try {
-
-        			//if not valid, it will throw ParseException
-                	SimpleDateFormat s = new SimpleDateFormat("yyyy/MM/dd");
-        			Date da = s.parse(stock[1]);
-        			System.out.println(da);
-
-        		} catch (Exception e) {
-
-        			stock[1] = dateFormat.format(d);
-        		}
-                System.out.println(stock[1]);
             }
-
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -186,3 +163,4 @@ public class Parser extends HttpServlet {
         }
     }
 }
+
