@@ -139,7 +139,7 @@
 					   			$('#register-password').val() = "";
 					   			$('#register-confirm').val() = "";
 					   	       	 	
-				       			window.location.href = 'http://localhost:8080/index.jsp';
+				       			window.location.href = 'https://localhost:8443/index.jsp';
 
 					   		} 
 				   		);
@@ -156,7 +156,7 @@
 		   		
 		   		
 		   		const HTTP = new XMLHttpRequest();
-		   		const url = "http://localhost:8080/user?username=" + username.toString() + "&password=" + password.toString() + "&confirm=" + confirm.toString();
+		   		const url = "https://localhost:8443/user?username=" + username.toString() + "&password=" + password.toString() + "&confirm=" + confirm.toString();
 		   		HTTP.open("POST", url);
 		        HTTP.send();
 		        
@@ -164,7 +164,7 @@
 		       		if(HTTP.readyState == 4 && HTTP.status == 200){
 		       			var response = HTTP.responseText.toString();
 		       			if(response == "{\"Success\": \"Successfully created user.\"}"){
-		       				window.location.href = 'http://localhost:8080/index.jsp';
+		       				window.location.href = 'https://localhost:8443/index.jsp';
 		       			}
 		       			else{
 		       				if(response == "{\"Error\": \"Creating User. Invalid username.\"}"){
@@ -195,7 +195,7 @@
 				
 				
 		   		const HTTP = new XMLHttpRequest();
-		   		const url = "http://localhost:8080/login?username=" + username.toString() + "&password=" + password.toString();
+		   		const url = "https://localhost:8443/login?username=" + username.toString() + "&password=" + password.toString();
 		        HTTP.onreadystatechange = (e) => {
 		        	
 		       		if(HTTP.readyState == 4 && HTTP.status == 200){
@@ -203,7 +203,7 @@
 		       			
 		       			//if login is successful redirect to Main Page, otherwise stay on index.jsp
 		       			if(response == "{\"Success\": \"Successfully logged in.\"}"){
-		       				window.location.href = 'http://localhost:8080/MainPage.jsp';
+		       				window.location.href = 'https://localhost:8443/MainPage.jsp';
 		       			}
 		       			else{	
 		       				if(response == "{\"Error\": \"Failed to log in user. No username provided.\"}"){
