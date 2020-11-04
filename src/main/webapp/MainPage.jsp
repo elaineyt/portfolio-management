@@ -363,6 +363,9 @@ canvas{
 				
 				$('#zoomIn').click(
 						function(e) {
+							$('#graphStartDate').on("change", function() {console.log("graphStartDate changed.")});
+							$('#graphEndDate').on("change", function() {console.log("graphEndDate changed.")});
+							
 							if($('#graphUnits').val() == "weeks"){
 								var end_date_new = $('#graphEndDate').datepicker('getDate'); 
 							    end_date_new.setDate(end_date_new.getDate () - 7); 
@@ -380,12 +383,24 @@ canvas{
 							    start_date_new.setDate(start_date_new.getDate () + 1); 
 							    $('#graphStartDate').datepicker ('setDate', start_date_new);
 							}
+							
+							$('#graphStartDate').on("change", function() {
+								validateGraphDates('start-date');
+							});
+							
+							$('#graphEndDate').on("change", function() {
+								validateGraphDates('end-date');
+							});
+							getPositions();  
+					    	getHistoricalPositions();
 						}
 					);
 				
 				$('#zoomOut').click(
 						function(e) {
 							let earliest_start_date = new Date().setFullYear(new Date().getFullYear() - 1);
+							$('#graphStartDate').on("change", function() {console.log("graphStartDate changed.")});
+							$('#graphEndDate').on("change", function() {console.log("graphEndDate changed.")});
 							
 							if($('#graphUnits').val() == "weeks"){
 								var end_date_new = $('#graphEndDate').datepicker('getDate'); 
@@ -395,7 +410,8 @@ canvas{
 								}
 								
 							    var start_date_new = $('#graphStartDate').datepicker('getDate'); 
-								if(start_date_new.getDate() - 7 >= earliest_start_date) {
+							    var earliest_plus_seven = earliest_start_date + 604800000; // Number of milliseconds for 7 days
+								if(start_date_new > new Date(earliest_plus_seven)) {
 								    start_date_new.setDate(start_date_new.getDate () - 7); 
 							    	$('#graphStartDate').datepicker ('setDate', start_date_new);
 								}
@@ -407,11 +423,21 @@ canvas{
 								}
 								
 							    var start_date_new = $('#graphStartDate').datepicker('getDate'); 
-							    if(start_date_new.getDate() - 1 >= earliest_start_date) {
+							    if(start_date_new > new Date(earliest_start_date)) {
 								    start_date_new.setDate(start_date_new.getDate () - 1); 
 							    	$('#graphStartDate').datepicker ('setDate', start_date_new);
 								}
 							}	
+							
+							$('#graphStartDate').on("change", function() {
+								validateGraphDates('start-date');
+							});
+							
+							$('#graphEndDate').on("change", function() {
+								validateGraphDates('end-date');
+							});
+							getPositions();  
+					    	getHistoricalPositions();
 						}
 					);
 				
@@ -521,7 +547,7 @@ canvas{
 		
 		var noPositionChecked = true;
 		positions.forEach((value, key) => {
-			if($("#cb-portfolio-" + key)[0].checked){
+			if($("#cb-portfolio-" + key)[0] !== undefined && $("#cb-portfolio-" + key)[0].checked){
 				noPositionChecked = false;
 				const HTTP = new XMLHttpRequest();
 	        	const url = "https://finnhub.io/api/v1/stock/candle?symbol=" + key + "&resolution=D&from=" + todayMinus5 + "&to=" + today + "&token=" + finnhub_token;
@@ -577,7 +603,7 @@ canvas{
         	stockHistory = []
         	let new_prev_checked = []
         	for(var x = 0; x < prev_checked_positions.length; x++) {
-        		if($("#cb-portfolio-" + prev_checked_positions[x])[0].checked) {
+        		if($("#cb-portfolio-" + prev_checked_positions[x])[0] !== undefined && $("#cb-portfolio-" + prev_checked_positions[x])[0].checked) {
         			new_prev_checked.push(prev_checked_positions[x])
         		}
         	}
@@ -674,7 +700,7 @@ canvas{
         if(prev_checked_historical_positions.length > 0) {
         	let new_prev_checked = []
         	for(var x = 0; x < prev_checked_historical_positions.length; x++) {
-        		if($("#cb-historical-" + prev_checked_historical_positions[x])[0].checked) {
+        		if($("#cb-historical-" + prev_checked_historical_positions[x])[0] !== undefined && $("#cb-historical-" + prev_checked_historical_positions[x])[0].checked) {
         			new_prev_checked.push(prev_checked_historical_positions[x])
         		}
         	}
@@ -1296,17 +1322,17 @@ canvas{
     }
     
     function validateGraphDates(type) {
-    	if($('#graphEndDate').val() != "" && $('#graphEndDate').val() < $('#graphStartDate').val()){
+    	if($('#graphEndDate').val() != "" && new Date($('#graphEndDate').val()) < new Date($('#graphStartDate').val())){
     		$('#graphDateError').html('End date before start date');
-    		$('#graphEndDate').datepicker("update", graphEndDate);	
+    		if($('#graphDateError').text() === "") {
+	    		$('#graphEndDate').datepicker("update", graphEndDate);	    			
+    		}
     	}
     	else{
     		graphEndDate = $('#graphEndDate').val();
     		$('#graphDateError').html('');
-    		//if(type == 'start-date') {
-		    	getPositions();  
-		    	getHistoricalPositions();
-    		//}
+	    	getPositions();  
+	    	getHistoricalPositions();
     	}
     }
     

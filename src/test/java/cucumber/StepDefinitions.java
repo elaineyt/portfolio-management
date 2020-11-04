@@ -1404,18 +1404,32 @@ public class StepDefinitions {
 		driver.findElement(By.id("login-password")).sendKeys("test_password");
 		WebElement loginButton = driver.findElement(By.id("login-submit"));
 		loginButton.click();
-		WebDriverWait wait = new WebDriverWait(driver, 5);
+		WebDriverWait wait = new WebDriverWait(driver, 10);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
+		
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		// * First zoom in to make sure the end date isn't max
 		WebElement zoomIn = driver.findElement(By.id("zoomIn"));
 		zoomIn.click();
+		
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Then("the start date should decrease by one day and the end date should increase by a day")
 	public void the_start_date_should_decrease_by_one_day_and_the_end_date_should_increase_by_a_day() {
 		try {
-			Thread.sleep(2000);
+			Thread.sleep(6000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -1433,12 +1447,25 @@ public class StepDefinitions {
 			
 			WebElement zoomOut = driver.findElement(By.id("zoomOut"));
 			zoomOut.click();
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			wait = new WebDriverWait(driver, 5);
+			
 			wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
+			
+			graphStartDate = driver.findElement(By.id("graphStartDate"));
+			graphEndDate = driver.findElement(By.id("graphEndDate"));
 			
 			// * Check that the new dates are updated
 			Date new_start_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphStartDate.getAttribute("value"));
 			Date new_end_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphEndDate.getAttribute("value"));
+			
+			System.out.println("Updated graph start date: " + new_start_date.toString());
+			System.out.println("Original graph start date: " + original_start_date.toString());
 			
 			assertTrue(original_start_date.compareTo(new_start_date) == 1);
 			assertTrue(new_end_date.compareTo(original_end_date) == 1);
@@ -1446,6 +1473,8 @@ public class StepDefinitions {
 		} catch (ParseException e) {
 			System.out.println("Failed to parse dates... Try again");
 		}  
+		
+		driver.close();
 		
 	}
 
@@ -1491,6 +1520,9 @@ public class StepDefinitions {
 			wait = new WebDriverWait(driver, 5);
 			wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
 			
+			graphStartDate = driver.findElement(By.id("graphStartDate"));
+			graphEndDate = driver.findElement(By.id("graphEndDate"));
+			
 			// * Check that the new dates are updated
 			Date new_start_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphStartDate.getAttribute("value"));
 			Date new_end_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphEndDate.getAttribute("value"));
@@ -1501,6 +1533,8 @@ public class StepDefinitions {
 		} catch (ParseException e) {
 			System.out.println("Failed to parse dates... Try again");
 		}  
+		
+		driver.close();
 	}
 
 	@Given("I click the zoom out button the graph units are in days the start date is the furthest date in the past the end date is todays date")
@@ -1525,7 +1559,7 @@ public class StepDefinitions {
 		Calendar instance = Calendar.getInstance();
 		instance.setTime(new Date());
 		instance.add(Calendar.YEAR, -1);
-		driver.findElement(By.id("graphStartDate")).sendKeys(new SimpleDateFormat("MM/dd/yy").format(instance.getTime()));
+		driver.findElement(By.id("graphStartDate")).sendKeys(new SimpleDateFormat("MM/dd/yyyy").format(instance.getTime()));
 		
 	}
 
@@ -1566,6 +1600,8 @@ public class StepDefinitions {
 		} catch (ParseException e) {
 			System.out.println("Failed to parse dates... Try again");
 		}  
+		
+		driver.close();
 	}
 
 	// Zoom Out Weeks
@@ -1619,6 +1655,9 @@ public class StepDefinitions {
 			wait = new WebDriverWait(driver, 5);
 			wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
 			
+			graphStartDate = driver.findElement(By.id("graphStartDate"));
+			graphEndDate = driver.findElement(By.id("graphEndDate"));
+			
 			// * Check that the new dates are updated
 			Date new_start_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphStartDate.getAttribute("value"));
 			Date new_end_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphEndDate.getAttribute("value"));
@@ -1629,6 +1668,8 @@ public class StepDefinitions {
 		} catch (ParseException e) {
 			System.out.println("Failed to parse dates... Try again");
 		}  
+		
+		driver.close();
 	}
 
 	@Given("I click the zoom out button the graph units are in weeks the start date is not the furthest date in the past the end date is todays date")
@@ -1677,6 +1718,9 @@ public class StepDefinitions {
 			wait = new WebDriverWait(driver, 5);
 			wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
 			
+			graphStartDate = driver.findElement(By.id("graphStartDate"));
+			graphEndDate = driver.findElement(By.id("graphEndDate"));
+			
 			// * Check that the new dates are updated
 			Date new_start_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphStartDate.getAttribute("value"));
 			Date new_end_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphEndDate.getAttribute("value"));
@@ -1687,6 +1731,8 @@ public class StepDefinitions {
 		} catch (ParseException e) {
 			System.out.println("Failed to parse dates... Try again");
 		}  
+		
+		driver.close();
 	}
 
 	@Given("I click the zoom out button the graph units are in weeks the start date is the furthest date in the past the end date is todays date")
@@ -1711,7 +1757,7 @@ public class StepDefinitions {
 		Calendar instance = Calendar.getInstance();
 		instance.setTime(new Date());
 		instance.add(Calendar.YEAR, -1);
-		driver.findElement(By.id("graphStartDate")).sendKeys(new SimpleDateFormat("MM/dd/yy").format(instance.getTime()));
+		driver.findElement(By.id("graphStartDate")).sendKeys(new SimpleDateFormat("MM/dd/yyyy").format(instance.getTime()));
 		
 		// * Then Select Weeks
 		Select graphUnit = new Select(driver.findElement(By.id("graphUnits")));
@@ -1755,6 +1801,8 @@ public class StepDefinitions {
 		} catch (ParseException e) {
 			System.out.println("Failed to parse dates... Try again");
 		} 
+		
+		driver.close();
 	}
 
 	// Zoom In Days
@@ -1810,6 +1858,8 @@ public class StepDefinitions {
 		} catch (ParseException e) {
 			System.out.println("Failed to parse dates... Try again");
 		} 
+		
+		driver.close();
 	}
 
 	@Given("I click the zoom in button the graph units are in days the start date is equal to the end date")
@@ -1831,7 +1881,7 @@ public class StepDefinitions {
 		
 		// * Set the earliest start date
 		driver.findElement(By.id("graphStartDate")).clear();
-		driver.findElement(By.id("graphStartDate")).sendKeys(new SimpleDateFormat("MM/dd/yy").format(new Date()));
+		driver.findElement(By.id("graphStartDate")).sendKeys(new SimpleDateFormat("MM/dd/yyyy").format(new Date()));
 				
 	}
 
@@ -1872,6 +1922,8 @@ public class StepDefinitions {
 		} catch (ParseException e) {
 			System.out.println("Failed to parse dates... Try again");
 		} 
+		
+		driver.close();
 	}
 
 	// Zoom In Weeks
@@ -1931,6 +1983,8 @@ public class StepDefinitions {
 		} catch (ParseException e) {
 			System.out.println("Failed to parse dates... Try again");
 		} 
+		
+		driver.close();
 	}
 
 	@Given("I click the zoom in button the graph units are in weeks the start date is equal to the end date")
@@ -1952,7 +2006,7 @@ public class StepDefinitions {
 		
 		// * Set the earliest start date
 		driver.findElement(By.id("graphStartDate")).clear();
-		driver.findElement(By.id("graphStartDate")).sendKeys(new SimpleDateFormat("MM/dd/yy").format(new Date()));
+		driver.findElement(By.id("graphStartDate")).sendKeys(new SimpleDateFormat("MM/dd/yyyy").format(new Date()));
 			
 		// * Then Select Weeks
 		Select graphUnit = new Select(driver.findElement(By.id("graphUnits")));
@@ -2000,6 +2054,8 @@ public class StepDefinitions {
 		} catch (ParseException e) {
 			System.out.println("Failed to parse dates... Try again");
 		} 
+		
+		driver.close();
 	}
 	
 	@After()
