@@ -11,13 +11,6 @@
   	<servlet-name>Portfolio</servlet-name>
 	<url-pattern>/portfolio</url-pattern>
   </servlet-mapping>
- <servlet>
-  	<servlet-name>Parser</servlet-name>
-  	<servlet-class>csci310.servlets.Parser</servlet-class></servlet>
-  <servlet-mapping>
-  	<servlet-name>Parser</servlet-name>
-	<url-pattern>/parser</url-pattern>
-  </servlet-mapping>
   <servlet>
   	<servlet-name>User</servlet-name>
   	<servlet-class>csci310.servlets.User</servlet-class></servlet>
