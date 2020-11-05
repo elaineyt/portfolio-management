@@ -674,8 +674,8 @@ canvas{
 		        			var dateSold = getPositionResponse.positions[i].date_sold;
 		        			var today = new Date();
 		        			if(Date.parse(dateBought) <= today && today <= Date.parse(dateSold)){
-		        				var row = "<div class='row' style='border-width:thin;border:solid;border-radius:5px;margin-top:5px;padding-right:10px;' id='r" + tickerSymbol + "'><div class='col-sm-2 position-padding'><input type='checkbox' id='cb-portfolio-" + tickerSymbol + "' onclick='stockChecked(\"" + tickerSymbol + "\", this)'/></div><div class='col-sm-8 position-padding'>" + tickerSymbol + 
-		        				"</div><div class='col-sm-2'><button type='button' class='btn' onclick=deleteStockModal('" + tickerSymbol + "')>X</button></div></div>";
+		        				var row = "<div class='row' style='border-width:thin;border:solid;border-radius:5px;margin-top:5px;padding-right:10px;' id='r" + tickerSymbol + "'><div class='p-2 position-padding'><input type='checkbox' id='cb-portfolio-" + tickerSymbol + "' onclick='stockChecked(\"" + tickerSymbol + "\", this)'/></div><div class='position-padding'>" + tickerSymbol + 
+		        				"</div><div><button type='button' class='btn' onclick=deleteStockModal('" + tickerSymbol + "')>X</button></div></div>";
 		                		$("#positions").append(row);
 		                		positions.set(tickerSymbol, new Position(tickerSymbol, shareCount, formatDate(dateBought), formatDate(dateSold)));
 		                		if(prev_checked_positions.indexOf(tickerSymbol) !== -1) {
@@ -730,8 +730,8 @@ canvas{
         		
         		// * Append S&P Row
         		var s_p_ticker = "spy";
-        		var s_p_row = "<div class='row' style='border-width:thin;border:solid;border-radius:5px;margin-top:5px;padding-right:10px;' id='r" + s_p_ticker + "'><div class='col-sm-2 position-padding'><input type='checkbox' id='cb-historical-" + s_p_ticker + "' onclick='historicalStockChecked(\"" + s_p_ticker + "\", this)'/></div><div class='col-sm-8 position-padding'>S&P" + 
-				"</div><div class='col-sm-2'><button type='button' class='btn' onclick=deleteHistoricalStockModal('" + s_p_ticker + "')>X</button></div></div>";
+        		var s_p_row = "<div class='row' style='border-width:thin;border:solid;border-radius:5px;margin-top:5px;padding-right:10px;' id='r" + s_p_ticker + "'><div class='p-2 position-padding'><input type='checkbox' id='cb-historical-" + s_p_ticker + "' onclick='historicalStockChecked(\"" + s_p_ticker + "\", this)'/></div><div class='position-padding'>S&P" + 
+				"</div><div><button type='button' class='btn' onclick=deleteHistoricalStockModal('" + s_p_ticker + "')>X</button></div></div>";
         		$("#historicalPositions").append(s_p_row);
         		
         		// * Init Portfolio Graph
@@ -748,8 +748,8 @@ canvas{
         			var dateSold = response.positions[i].date_sold;
         			var today = new Date();
         			if(Date.parse(dateBought) <= today && today <= Date.parse(dateSold)){
-        				var row = "<div class='row' style='border-width:thin;border:solid;border-radius:5px;margin-top:5px;padding-right:10px;' id='r-historical-" + tickerSymbol + "'><div class='col-sm-2 position-padding'><input type='checkbox' id='cb-historical-" + tickerSymbol + "' onclick='historicalStockChecked(\"" + tickerSymbol + "\", this)'/></div><div class='col-sm-8 position-padding'>" + tickerSymbol + 
-        				"</div><div class='col-sm-2'><button type='button' class='btn' onclick=deleteHistoricalStockModal('" + tickerSymbol + "')>X</button></div></div>";
+        				var row = "<div class='row' style='border-width:thin;border:solid;border-radius:5px;margin-top:5px;padding-right:10px;' id='r-historical-" + tickerSymbol + "'><div class='p-2 position-padding'><input type='checkbox' id='cb-historical-" + tickerSymbol + "' onclick='historicalStockChecked(\"" + tickerSymbol + "\", this)'/></div><div class='position-padding'>" + tickerSymbol + 
+        				"</div><div><button type='button' class='btn' onclick=deleteHistoricalStockModal('" + tickerSymbol + "')>X</button></div></div>";
                 		$("#historicalPositions").append(row);
                 		historicalPositions.set(tickerSymbol, new Position(tickerSymbol, shareCount, formatDate(dateBought), formatDate(dateSold)));
                 		if(prev_checked_historical_positions.indexOf(tickerSymbol) !== -1) {
@@ -894,8 +894,8 @@ canvas{
        	        			$("#addHistoricalStockModal").modal('hide');
        	        			var today = new Date();
        	            		if(Date.parse(buyDate.toString()) <= today && today <= Date.parse(sellDate.toString())){
-       	            			var row = "<div class='row' style='border-width:thin;border:solid;border-radius:5px;margin-top:5px;padding-right:10px;' id='r-historical-" + tickerSymbol + "'><div class='col-sm-2 position-padding'><input type='checkbox' id='cb-historical-" + tickerSymbol + "' onclick='historicalStockChecked(\"" + tickerSymbol + "\", this)'/></div><div class='col-sm-8 position-padding'>" + tickerSymbol + 
-       	        				"</div><div class='col-sm-2'><button type='button' class='btn' onclick=deleteHistoricalStockModal('" + tickerSymbol + "')>X</button></div></div>";
+       	            			var row = "<div class='row' style='border-width:thin;border:solid;border-radius:5px;margin-top:5px;padding-right:10px;' id='r-historical-" + tickerSymbol + "'><div class='p-2 position-padding'><input type='checkbox' id='cb-historical-" + tickerSymbol + "' onclick='historicalStockChecked(\"" + tickerSymbol + "\", this)'/></div><div class='position-padding'>" + tickerSymbol + 
+       	        				"</div><div><button type='button' class='btn' onclick=deleteHistoricalStockModal('" + tickerSymbol + "')>X</button></div></div>";
        	                		$("#historicalPositions").append(row);
        	                		historicalPositions.set(tickerSymbol, new Position(tickerSymbol, numShares, buyDate, sellDate));
        	            		}        		
@@ -980,8 +980,8 @@ canvas{
        	        			$("#addStockModal").modal('hide');
        	        			var today = new Date();
        	            		if(Date.parse(buyDate.toString()) <= today && today <= Date.parse(sellDate.toString())){
-       	            			var row = "<div class='row' style='border-width:thin;border:solid;border-radius:5px;margin-top:5px;padding-right:10px;' id='r" + tickerSymbol + "'><div class='col-sm-2 position-padding'><input type='checkbox' id='cb-portfolio-" + tickerSymbol + "' onclick='stockChecked(\"" + tickerSymbol + "\", this)'/></div><div class='col-sm-8 position-padding'>" + tickerSymbol + 
-       	        				"</div><div class='col-sm-2'><button type='button' class='btn' onclick=deleteStockModal('" + tickerSymbol + "')>X</button></div></div>";
+       	            			var row = "<div class='row' style='border-width:thin;border:solid;border-radius:5px;margin-top:5px;padding-right:10px;' id='r" + tickerSymbol + "'><div class='p-2 position-padding'><input type='checkbox' id='cb-portfolio-" + tickerSymbol + "' onclick='stockChecked(\"" + tickerSymbol + "\", this)'/></div><div class='position-padding'>" + tickerSymbol + 
+       	        				"</div><div><button type='button' class='btn' onclick=deleteStockModal('" + tickerSymbol + "')>X</button></div></div>";
        	                		$("#positions").append(row);
        	                		positions.set(tickerSymbol, new Position(tickerSymbol, numShares, buyDate, sellDate));
        	            		}        		
