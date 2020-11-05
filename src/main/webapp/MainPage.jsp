@@ -317,6 +317,7 @@ canvas{
 	
 	var positions = new Map();
 	var historicalPositions = new Map();
+	var earliestStartDates = new Map();
 	var zooming_graph_lock = false;
 	var initial_request = false;
 	
@@ -619,7 +620,7 @@ canvas{
 			$("#greenUpTriangle").css('display', 'inline');
 		}
 	}
-	
+
 	// Populate portfolio list
 	function getPositions() {
         var username = '<%= session.getAttribute("username")%>'
@@ -659,7 +660,6 @@ canvas{
         	if(HTTP.readyState == 4 && HTTP.status == 200){
         		//$("#positions").html("");
         		var getPositionResponse = JSON.parse(HTTP.responseText);
-        		
         		
         		// * Check if Total Portfolio Value is not already populated
         		if(stockHistoryLabels.indexOf("Total Portfolio Value") == -1){
@@ -1149,10 +1149,30 @@ canvas{
     				if(key !== "Total Portfolio Value" && key.indexOf("Historical-") === -1) {
     					$("#cb-portfolio-" + key)[0].checked = false;
 	    		    	deleteFromTotalPortfolio(key, positions.get(key).shares);
+	    		    	earliestStartDates.delete(key);
     				}
     			});
+    			
+    			// * All are unchecked, we can set the start date back to 3 months
+    			zooming_graph_lock = true;
+    			$('#graphStartDate').datepicker("update", addDaysAndFormat(new Date(), -92));
+    			zooming_graph_lock = false;
     		} else {
 	    		deleteFromTotalPortfolio(tickerSymbol, positions.get(tickerSymbol).shares);
+	    		earliestStartDates.delete(tickerSymbol);
+	    		
+	    		var earliest_position_bought_date = new Date();
+				earliestStartDates.forEach((pos, key) => {
+					if(earliestStartDates.get(key).date_bought < earliest_position_bought_date) {
+	    				earliest_position_bought_date = earliestStartDates.get(key).date_bought;
+	    			}
+				});
+				
+				zooming_graph_lock = true;
+				var start_date_new = $('#graphStartDate').datepicker('getDate'); 
+			    start_date_new.setDate(earliest_position_bought_date);
+			    $('#graphStartDate').datepicker('setDate', start_date_new);
+		    	zooming_graph_lock = false;
     		}
     	}
     	else {
@@ -1161,12 +1181,27 @@ canvas{
     				if(key !== "Total Portfolio Value" && key.indexOf("Historical-") === -1) {
     					$("#cb-portfolio-" + key)[0].checked = true;
 		    			addToTotalPortfolio(key, positions.get(key).shares);
+		    			earliestStartDates.set(tickerSymbol, positions.get(key));
     				}
     			});
     		} else {
 				$("#cb-portfolio-" + tickerSymbol)[0].checked = true;
 				addToTotalPortfolio(tickerSymbol, positions.get(tickerSymbol).shares);
+				earliestStartDates.set(tickerSymbol, positions.get(tickerSymbol));
 	    	}
+    		
+    		var earliest_position_bought_date = new Date();
+			earliestStartDates.forEach((pos, key) => {
+				if(earliestStartDates.get(key).date_bought < earliest_position_bought_date) {
+    				earliest_position_bought_date = earliestStartDates.get(key).date_bought;
+    			}
+			});
+			
+			zooming_graph_lock = true;
+			var start_date_new = $('#graphStartDate').datepicker('getDate'); 
+		    start_date_new.setDate(earliest_position_bought_date);
+		    $('#graphStartDate').datepicker('setDate', start_date_new);
+	    	zooming_graph_lock = false;
     	}
     }
     
