@@ -1404,14 +1404,20 @@ public class StepDefinitions {
 		WebElement button = mobileDriver.findElement(By.id("login-submit"));
 		button.click();
 		
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		String element = mobileDriver.findElement(By.xpath("/html/body/div[1]/h1")).getText();
-		assertTrue(element.equals("USC CS310 Stock Portfolio Management"));  
+		WebDriverWait wait1 = new WebDriverWait(mobileDriver, 5);
+		wait1.until(ExpectedConditions.visibilityOfElementLocated(By.id("graph")));
+		WebElement graph = mobileDriver.findElement(By.id("graph"));
+		int graphBottom = graph.getLocation().y + 300; 
+		
+		WebElement positions = mobileDriver.findElement(By.id("positions"));
+		int positionsTop = positions.getLocation().y;
+		int positionsBottom = positionsTop + positions.getSize().height;
+		
+		WebElement historical = mobileDriver.findElement(By.id("historicalPositions"));
+		int historicalTop = historical.getLocation().y;
+		
+		
+		assertTrue(graphBottom < positionsTop && positionsBottom < historicalTop);  
 		
 	}
 	

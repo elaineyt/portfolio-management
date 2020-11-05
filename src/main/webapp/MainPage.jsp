@@ -50,7 +50,7 @@ canvas{
 </head>
 <body>
 	<div class="topnav" style="padding-top: 2%; padding-bottom: 2.5%; margin-bottom: 25px; background-color: #787878;">
-		<h1 style="color: #white; font-family:Lato; font-size:250%; padding-left: 7%;">USC CS310 Stock Portfolio Management </h1>
+		<h1 style="color: #white; font-family:Lato; font-size:250%; padding-left: 7%;">USC CS310 <Br> Stock Portfolio Management </h1>
 	</div>
 	
 	<div id="top-right">
