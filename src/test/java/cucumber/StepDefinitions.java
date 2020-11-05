@@ -2124,6 +2124,245 @@ public class StepDefinitions {
 		assertEquals("Exit",bulkButton.getText());
 	}
 	
+	// Graph B Step Definitions ------------------------------------------------------------------------------------------------------------------
+	
+	@Given("the unit is in weeks")
+	public void the_unit_is_in_weeks() {
+		driver.get(ROOT_URL);  
+		//login first
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// * Try to avoid ssl issues
+		avoid_ssl_issues();
+				
+		driver.findElement(By.id("login-username")).sendKeys("elaine-user-2");
+		driver.findElement(By.id("login-password")).sendKeys("elaine-pw-2");
+		WebElement loginButton = driver.findElement(By.id("login-submit"));
+		loginButton.click();
+		WebDriverWait wait = new WebDriverWait(driver, 5);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphUnits")));
+			
+		// * Select Weeks
+		Select graphUnit = new Select(driver.findElement(By.id("graphUnits")));
+		graphUnit.selectByValue("weeks");
+	}
+
+	@Then("the number of graph points should increase if I switch to days")
+	public void the_number_of_graph_points_should_increase_if_I_switch_to_days() {
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// Get number of graph points
+		WebElement graphPointsElement = driver.findElement(By.id("graphPoints"));
+		int graphPoints = Integer.parseInt(graphPointsElement.getText());
+
+		// Switch to Days
+		Select graphUnit = new Select(driver.findElement(By.id("graphUnits")));
+		graphUnit.selectByValue("days");
+		
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// Get new number of graph points
+		WebElement newGraphPointsElement = driver.findElement(By.id("graphPoints"));
+		int newGraphPoints = Integer.parseInt(graphPointsElement.getText());
+		
+		assertTrue(newGraphPoints > graphPoints);
+	}
+	@Given("a position is unchecked")
+	public void a_position_is_unchecked() {
+		driver.get(ROOT_URL);  
+		//login first
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// * Try to avoid ssl issues
+		avoid_ssl_issues();
+				
+		driver.findElement(By.id("login-username")).sendKeys("elaine-user-2");
+		driver.findElement(By.id("login-password")).sendKeys("elaine-pw-2");
+		WebElement loginButton = driver.findElement(By.id("login-submit"));
+		loginButton.click();
+		
+		// Unchecked by default
+		
+		driver.close();
+	}
+	
+	@Then("the total portfolio line graph should increase if I check a position")
+	public void the_total_portfolio_line_graph_should_increase_if_I_check_a_position() {
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// Get today's and yesterday's total portfolio points
+		WebElement todayPortfolioPointElement = driver.findElement(By.id("todayPortfolioPoint"));
+		int todayPortfolioPoint = Integer.parseInt(todayPortfolioPointElement.getText());
+		WebElement yesterdayPortfolioPointElement = driver.findElement(By.id("yesterdayPortfolioPoint"));
+		int yesterdayPortfolioPoint = Integer.parseInt(yesterdayPortfolioPointElement.getText());
+		
+		// Check MSFT
+		WebElement msftCheckBox = driver.findElement(By.id("cb-portfolio-msft"));
+		msftCheckBox.click();
+		
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// Get today's and yesterday's total portfolio points again
+		WebElement newTodayPortfolioPointElement = driver.findElement(By.id("todayPortfolioPoint"));
+		int newTodayPortfolioPoint = Integer.parseInt(newTodayPortfolioPointElement.getText());
+		WebElement newYesterdayPortfolioPointElement = driver.findElement(By.id("yesterdayPortfolioPoint"));
+		int newYesterdayPortfolioPoint = Integer.parseInt(newYesterdayPortfolioPointElement.getText());
+		
+		assertTrue(newTodayPortfolioPoint > todayPortfolioPoint);
+		assertTrue(newYesterdayPortfolioPoint > yesterdayPortfolioPoint);
+		
+		driver.close();
+	}
+	
+	@Given("a position is checked")
+	public void a_position_is_checked() {
+		driver.get(ROOT_URL);  
+		//login first
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// * Try to avoid ssl issues
+		avoid_ssl_issues();
+				
+		driver.findElement(By.id("login-username")).sendKeys("elaine-user-2");
+		driver.findElement(By.id("login-password")).sendKeys("elaine-pw-2");
+		WebElement loginButton = driver.findElement(By.id("login-submit"));
+		loginButton.click();
+		
+		// Checked MSFT
+		WebElement msftCheckBox = driver.findElement(By.id("cb-portfolio-msft"));
+		msftCheckBox.click();
+		
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		driver.close();
+	}
+	
+	@Then("the total portfolio line graph should decrease if I uncheck a position")
+	public void the_total_portfolio_line_graph_should_decrease_if_I_uncheck_a_position() {
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// Get today's and yesterday's total portfolio points
+		WebElement todayPortfolioPointElement = driver.findElement(By.id("todayPortfolioPoint"));
+		int todayPortfolioPoint = Integer.parseInt(todayPortfolioPointElement.getText());
+		WebElement yesterdayPortfolioPointElement = driver.findElement(By.id("yesterdayPortfolioPoint"));
+		int yesterdayPortfolioPoint = Integer.parseInt(yesterdayPortfolioPointElement.getText());
+		
+		// Uncheck MSFT
+		WebElement msftCheckBox = driver.findElement(By.id("cb-portfolio-msft"));
+		msftCheckBox.click();
+		
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// Get today's and yesterday's total portfolio points again
+		WebElement newTodayPortfolioPointElement = driver.findElement(By.id("todayPortfolioPoint"));
+		int newTodayPortfolioPoint = Integer.parseInt(newTodayPortfolioPointElement.getText());
+		WebElement newYesterdayPortfolioPointElement = driver.findElement(By.id("yesterdayPortfolioPoint"));
+		int newYesterdayPortfolioPoint = Integer.parseInt(newYesterdayPortfolioPointElement.getText());
+		
+		assertTrue(newTodayPortfolioPoint < todayPortfolioPoint);
+		assertTrue(newYesterdayPortfolioPoint < yesterdayPortfolioPoint);
+		
+		driver.close();
+	}
+	
+	@Then("the total portfolio line graph should decrease if I delete a position")
+	public void the_total_portfolio_line_graph_should_decrease_if_I_delete_a_position() {
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// Get today's and yesterday's total portfolio points
+		WebElement todayPortfolioPointElement = driver.findElement(By.id("todayPortfolioPoint"));
+		int todayPortfolioPoint = Integer.parseInt(todayPortfolioPointElement.getText());
+		WebElement yesterdayPortfolioPointElement = driver.findElement(By.id("yesterdayPortfolioPoint"));
+		int yesterdayPortfolioPoint = Integer.parseInt(yesterdayPortfolioPointElement.getText());
+		
+		// Delete MSFT
+		WebDriverWait wait = new WebDriverWait(driver, 5);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='rMSFT']/div[3]/button")));
+		WebElement button = driver.findElement(By.xpath("//*[@id='rMSFT']/div[3]/button"));
+		button.click();
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		WebElement button1 = driver.findElement(By.id("deleteStock"));
+		button1.click();
+		
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// Get today's and yesterday's total portfolio points again
+		WebElement newTodayPortfolioPointElement = driver.findElement(By.id("todayPortfolioPoint"));
+		int newTodayPortfolioPoint = Integer.parseInt(newTodayPortfolioPointElement.getText());
+		WebElement newYesterdayPortfolioPointElement = driver.findElement(By.id("yesterdayPortfolioPoint"));
+		int newYesterdayPortfolioPoint = Integer.parseInt(newYesterdayPortfolioPointElement.getText());
+		
+		assertTrue(newTodayPortfolioPoint < todayPortfolioPoint);
+		assertTrue(newYesterdayPortfolioPoint < yesterdayPortfolioPoint);
+		
+		driver.close();
+	}
+	
 	@After()
 	public void after() {
 		driver.quit();
