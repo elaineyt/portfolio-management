@@ -67,6 +67,29 @@ public class StepDefinitions {
 		assertTrue(url.contains("https"));	
 	}
 	
+	@Given("I go to http://localhost:8443")
+	public void i_go_to_localhost8080() {
+		try {
+			driver.get("http://localhost8443/");  
+		} catch(Exception e) {
+			
+		}
+		
+	}
+	
+	@Then("site can't be reached")
+	public void  site_cant_be_reached() {
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String message = driver.findElement(By.id("main-message")).getText();
+		assertTrue(message.contains("This site can’t be reached"));
+	}
+	
+	
 	//LimitedLoginAttemps.feature
 	//
 	//
