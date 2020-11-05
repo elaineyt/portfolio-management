@@ -22,6 +22,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -2073,6 +2075,43 @@ public class StepDefinitions {
 		} 
 		
 		driver.close();
+	}
+	
+	@Given("I login on a mobile device")
+	public void i_login_on_a_mobile_device(){
+		Map<String, String> mobileEmulation = new HashMap<>();
+		mobileEmulation.put("deviceName", "iPhone X");
+
+
+		ChromeOptions chromeOptions = new ChromeOptions();
+		chromeOptions.setExperimentalOption("mobileEmulation", mobileEmulation);
+
+		WebDriver mobileDriver = new ChromeDriver(chromeOptions);
+		
+		mobileDriver.get(ROOT_URL);
+		
+		WebDriverWait wait = new WebDriverWait(mobileDriver, 5);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("login-submit")));
+		mobileDriver.findElement(By.id("login-username")).sendKeys("test_user");
+		mobileDriver.findElement(By.id("login-password")).sendKeys("test_password");
+		WebElement button = mobileDriver.findElement(By.id("login-submit"));
+		button.click();
+		
+		WebDriverWait wait1 = new WebDriverWait(mobileDriver, 5);
+		wait1.until(ExpectedConditions.visibilityOfElementLocated(By.id("graph")));
+		WebElement graph = mobileDriver.findElement(By.id("graph"));
+		int graphBottom = graph.getLocation().y + 300; 
+		
+		WebElement positions = mobileDriver.findElement(By.id("positions"));
+		int positionsTop = positions.getLocation().y;
+		int positionsBottom = positionsTop + positions.getSize().height;
+		
+		WebElement historical = mobileDriver.findElement(By.id("historicalPositions"));
+		int historicalTop = historical.getLocation().y;
+		
+		
+		assertTrue(graphBottom < positionsTop && positionsBottom < historicalTop);  
+		
 	}
 	
 	@After()
