@@ -150,7 +150,22 @@ public class StepDefinitions {
 	//mainpage.feature
 	@Given("I am on mainpage.jsp")
 	public void i_am_on_mainpage_jsp() {
-	    driver.get(ROOT_URL + "MainPage.jsp"); 
+		driver.get(ROOT_URL);  
+		//login first
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// * Try to avoid ssl issues
+		avoid_ssl_issues();
+		
+		driver.findElement(By.id("login-username")).sendKeys("test_user");
+		driver.findElement(By.id("login-password")).sendKeys("test_password");
+		WebElement loginButton = driver.findElement(By.id("login-submit"));
+		loginButton.click();
 	}
 	
 	@Then("the banner color should be grey")
@@ -1357,6 +1372,8 @@ public class StepDefinitions {
 	//
 	//
 	//graph.feature
+	
+	
 	@Given("I enter a start date that is before my end date")
 	public void i_enter_a_start_date_that_is_before_my_end_date() {
 		driver.get(ROOT_URL);  
@@ -1419,6 +1436,37 @@ public class StepDefinitions {
 		
 		driver.manage().timeouts().implicitlyWait(120, TimeUnit.SECONDS);
 	}
+	
+
+	@Then("S&P data is present")
+	public void s_P_data_is_present(){
+			WebElement sp_box = driver.findElement(By.id("cb-historical-spy"));
+			assertTrue(sp_box.isSelected());
+		}
+	
+	@When("I toggle S&P data off")
+	public void i_toggle_sp_data_off() {
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		WebElement sp_box = driver.findElement(By.id("cb-historical-spy"));
+		sp_box.click();
+	}
+	
+	@Then("number of points decreases")
+	public void number_of_points_decreases() {
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		WebElement sp_box = driver.findElement(By.id("cb-historical-spy"));
+	}
+	
 	
 	//zoom.feature 
 	//
