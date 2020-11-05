@@ -2124,6 +2124,123 @@ public class StepDefinitions {
 		assertEquals("Exit",bulkButton.getText());
 	}
 	
+	@Given("I have logged in with no portfolio")
+	public void i_have_logged_in_with_no_portfolio() {
+		driver.get(ROOT_URL);  
+		//login first
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// * Try to avoid ssl issues
+		avoid_ssl_issues();
+		
+		driver.findElement(By.id("login-username")).sendKeys("test_user");
+		driver.findElement(By.id("login-password")).sendKeys("test_password");
+		WebElement loginButton = driver.findElement(By.id("login-submit"));
+		loginButton.click();
+		
+		
+	}
+
+	@Then("total portfolio value is zero")
+	public void total_portfolio_value_is_zero() {
+		WebDriverWait wait = new WebDriverWait(driver, 10);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("currentPortfolioValue")));
+		
+		String currentPortfolioValue = driver.findElement(By.id("currentPortfolioValue")).getText();
+		assertTrue(currentPortfolioValue.equals("$0.00"));
+	}
+
+	@Given("I have clicked cmg")
+	public void i_have_clicked_cmg() {
+		driver.get(ROOT_URL);  
+		//login first
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// * Try to avoid ssl issues
+		avoid_ssl_issues();
+		
+		driver.findElement(By.id("login-username")).sendKeys("test_user");
+		driver.findElement(By.id("login-password")).sendKeys("test_password");
+		WebElement loginButton = driver.findElement(By.id("login-submit"));
+		loginButton.click();
+		
+		WebDriverWait wait = new WebDriverWait(driver, 10);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("cb-portfolio-cmg")));
+		WebElement cmgCheckBox = driver.findElement(By.id("cb-portfolio-cmg"));
+		cmgCheckBox.click();
+	}
+
+	@Then("percent change value is greater than zero")
+	public void percent_change_value_is_greater_than_zero() {
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		WebDriverWait wait = new WebDriverWait(driver, 10);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("yesterdayPortfolioPoint")));
+		int yesterdayPortfolioValue = Integer.parseInt(driver.findElement(By.id("yesterdayPortfolioPoint")).getText());
+		int currentPortfolioValue = Integer.parseInt(driver.findElement(By.id("todayPortfolioPoint")).getText());
+		double percentChange = (((currentPortfolioValue-yesterdayPortfolioValue)/(double)yesterdayPortfolioValue)*100);
+		String roundedValue = String.format("%.2f", percentChange);
+		String percentChangeValue = driver.findElement(By.id("currentPortfolioValueChange")).getText();
+		assertTrue(percentChangeValue.equals("+" + roundedValue + "%") && percentChange > 0);
+				
+				
+		
+	}
+
+	@Given("the percent change value is above zero")
+	public void the_percent_change_value_is_above_zero() {
+		driver.get(ROOT_URL);  
+		//login first
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// * Try to avoid ssl issues
+		avoid_ssl_issues();
+		
+		driver.findElement(By.id("login-username")).sendKeys("test_user");
+		driver.findElement(By.id("login-password")).sendKeys("test_password");
+		WebElement loginButton = driver.findElement(By.id("login-submit"));
+		loginButton.click();
+		
+		WebDriverWait wait = new WebDriverWait(driver, 10);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("cb-portfolio-cmg")));
+		WebElement cmgCheckBox = driver.findElement(By.id("cb-portfolio-cmg"));
+		cmgCheckBox.click();
+	}
+
+	@Then("green arrow displays")
+	public void green_arrow_displays() {
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		WebElement greenArrow = driver.findElement(By.id("greenUpTriangle"));
+		String arrow = greenArrow.getCssValue("display");
+		System.out.println("CSS " + arrow);
+		assertTrue(arrow.equals("inline"));
+		
+	}
 	@After()
 	public void after() {
 		driver.quit();
