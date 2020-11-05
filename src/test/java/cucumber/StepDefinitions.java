@@ -1444,8 +1444,8 @@ public class StepDefinitions {
 			assertTrue(sp_box.isSelected());
 		}
 	
-	@When("I toggle S&P data off")
-	public void i_toggle_sp_data_off() {
+	@Then("I toggle S&P data off number of points decreases")
+	public void i_toggle_sp_data_off_number_of_points_decreases() {
 		try {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {
@@ -1453,18 +1453,21 @@ public class StepDefinitions {
 			e.printStackTrace();
 		}
 		WebElement sp_box = driver.findElement(By.id("cb-historical-spy"));
+		//get num of points before clicking
+		String num_points = driver.findElement(By.id("graphPoints")).getText();
+		int og_pts = Integer.parseInt(num_points);
 		sp_box.click();
-	}
-	
-	@Then("number of points decreases")
-	public void number_of_points_decreases() {
 		try {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		WebElement sp_box = driver.findElement(By.id("cb-historical-spy"));
+		num_points = driver.findElement(By.id("graphPoints")).getText();
+		int new_pts = Integer.parseInt(num_points);
+		assertTrue(new_pts<og_pts);
+		
+	
 	}
 	
 	

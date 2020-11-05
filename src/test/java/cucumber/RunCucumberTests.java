@@ -15,7 +15,7 @@ import org.junit.runner.RunWith;
 //    "src/test/resources/cucumber/SSL.feature",
 //    "src/test/resources/cucumber/zoom.feature"
 		//"src/test/resources/cucumber/LimitedLoginAttempts.feature", 
-		"src/test/resources/cucumber/graph.feature",
+		"src/test/resources/cucumber/graphH.feature",
 		//"src/test/resources/cucumber/historical.feature",
 		//"src/test/resources/cucumber/parser.feature",
 		//"src/test/resources/cucumber/mainpage.feature",
