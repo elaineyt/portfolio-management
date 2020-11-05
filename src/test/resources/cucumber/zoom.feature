@@ -11,10 +11,6 @@ Feature: Zooming in and out of the graph
  		Given I click the zoom out button the graph units are in days the start date is the furthest date in the past the end date is todays date
  		Then the start date and end date should remain the same
  	
- Scenario: Clicking zoom out makes the start date earlier and end date later in weeks
- 		Given I click the zoom out button the graph units are in weeks the start date is not the furthest date in the past the end date is not todays date
- 		Then the start date should decrease by one week and the end date should increase by one day
- 		
  	Scenario: Clicking zoom out makes the start date earlier and end date the same in weeks
  		Given I click the zoom out button the graph units are in weeks the start date is not the furthest date in the past the end date is todays date
  		Then the start date should decrease by one week and the end date should stay the same
