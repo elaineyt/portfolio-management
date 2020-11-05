@@ -6,10 +6,13 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.interactions.HasInputDevices;
+import org.openqa.selenium.interactions.Keyboard;
 import org.openqa.selenium.support.Color;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
@@ -2041,12 +2044,8 @@ public class StepDefinitions {
 			wait = new WebDriverWait(driver, 5);
 			wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
 			
-			System.out.println("Finding new dates");
 			graphStartDate = driver.findElement(By.id("graphStartDate"));
 			graphEndDate = driver.findElement(By.id("graphEndDate"));
-			
-			System.out.println("Updated graph start date: " + graphStartDate.getAttribute("value"));
-			System.out.println("Updated graph end date: " + graphEndDate.getAttribute("value"));
 			
 			// * Check that the new dates are updated
 			Date new_start_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphStartDate.getAttribute("value"));
@@ -2062,6 +2061,346 @@ public class StepDefinitions {
 		driver.close();
 	}
 	
+	
+	
+	//graphDates.feature 
+	//
+	//
+	//
+	//graphDates.feature
+	@Given("i am logged into the application")
+	public void i_am_logged_into_the_application() {
+		driver.get(ROOT_URL);  
+		//login first
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// * Try to avoid ssl issues
+		avoid_ssl_issues();
+				
+		driver.findElement(By.id("login-username")).sendKeys("test_user");
+		driver.findElement(By.id("login-password")).sendKeys("test_password");
+		WebElement loginButton = driver.findElement(By.id("login-submit"));
+		loginButton.click();
+		WebDriverWait wait = new WebDriverWait(driver, 5);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
+	}
+
+	@Then("the end date should be the current date")
+	public void the_end_date_should_be_the_current_date() {
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		WebDriverWait wait = new WebDriverWait(driver, 5);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
+		
+		// * Get updated dates
+		WebElement graphEndDate = driver.findElement(By.id("graphEndDate"));
+		try {
+			Date original_end_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphEndDate.getAttribute("value"));
+
+			// * Check that the new dates are updated
+			Date new_end_date = new SimpleDateFormat("MM/dd/yyyy").parse(new Date().toString());
+			
+			assertTrue(original_end_date.compareTo(new_end_date) == 0);
+			
+		} catch (ParseException e) {
+			System.out.println("Failed to parse dates... Try again");
+		} 
+		
+		driver.close();
+	}
+
+	@Given("i am logged into the website")
+	public void i_am_logged_into_the_website() {
+		driver.get(ROOT_URL);  
+		//login first
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// * Try to avoid ssl issues
+		avoid_ssl_issues();
+				
+		driver.findElement(By.id("login-username")).sendKeys("test_user");
+		driver.findElement(By.id("login-password")).sendKeys("test_password");
+		WebElement loginButton = driver.findElement(By.id("login-submit"));
+		loginButton.click();
+		WebDriverWait wait = new WebDriverWait(driver, 5);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
+	}
+
+	@Then("i cannot set the start date to be after the end date")
+	public void i_cannot_set_the_start_date_to_be_after_the_end_date() {
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		WebDriverWait wait = new WebDriverWait(driver, 5);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
+		
+		try {
+			
+			// * Set the earliest start date
+			driver.findElement(By.id("graphStartDate")).clear();
+			Calendar instance = Calendar.getInstance();
+			instance.setTime(new Date());
+			instance.add(Calendar.YEAR, 2);
+			driver.findElement(By.id("graphStartDate")).sendKeys(new SimpleDateFormat("MM/dd/yyyy").format(instance.getTime()));
+			driver.findElement(By.id("graphStartDate")).submit();
+			
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			// * Get updated dates
+			WebElement graphStartDate = driver.findElement(By.id("graphStartDate"));
+			
+			Date original_start_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphStartDate.getAttribute("value"));
+			
+			// * Check that the new dates are updated
+			instance = Calendar.getInstance();
+			instance.setTime(new Date());
+			instance.add(Calendar.MONTH, -3);
+			Date three_months_ago_date = instance.getTime();
+	
+			assertTrue(original_start_date.compareTo(three_months_ago_date) == 0);
+			
+		} catch (Exception e) {
+			System.out.println("Failed to set start date to greater than the end date.");
+		} 
+		
+		driver.close();
+	}
+
+	@Given("i am logged into the web app")
+	public void i_am_logged_into_the_web_app() {
+		driver.get(ROOT_URL);  
+		//login first
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// * Try to avoid ssl issues
+		avoid_ssl_issues();
+				
+		driver.findElement(By.id("login-username")).sendKeys("test_user");
+		driver.findElement(By.id("login-password")).sendKeys("test_password");
+		WebElement loginButton = driver.findElement(By.id("login-submit"));
+		loginButton.click();
+		WebDriverWait wait = new WebDriverWait(driver, 5);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
+	}
+
+	@Then("i cannot set the start date to be further than a year into the past")
+	public void i_cannot_set_the_start_date_to_be_further_than_a_year_into_the_past() {
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		WebDriverWait wait = new WebDriverWait(driver, 5);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
+		
+		try {
+			
+			// * Set the earliest start date
+			driver.findElement(By.id("graphStartDate")).clear();
+			Calendar instance = Calendar.getInstance();
+			instance.setTime(new Date());
+			instance.add(Calendar.YEAR, -2);
+			driver.findElement(By.id("graphStartDate")).sendKeys(new SimpleDateFormat("MM/dd/yyyy").format(instance.getTime()));
+			driver.findElement(By.id("graphStartDate")).submit();
+			
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			// * Get updated dates
+			WebElement graphStartDate = driver.findElement(By.id("graphStartDate"));
+			
+			Date original_start_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphStartDate.getAttribute("value"));
+			
+			System.out.println("Original graph start date: " + original_start_date);
+			
+			// * Check that the new dates are updated
+			instance = Calendar.getInstance();
+			instance.setTime(new Date());
+			instance.add(Calendar.MONTH, -3);
+			Date three_months_ago_date = instance.getTime();
+						
+			assertTrue(original_start_date.compareTo(three_months_ago_date) == 0);
+			
+		} catch (Exception e) {
+			System.out.println("Failed to set date to more than a year in the past.");
+		} 
+		
+		driver.close();
+	}
+	
+	@Given("i am logged in and at least one position exists and is checked")
+	public void i_am_logged_in_and_at_least_one_position_exists_and_is_checked() {
+		driver.get(ROOT_URL);  
+		//login first
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// * Try to avoid ssl issues
+		avoid_ssl_issues();
+				
+		driver.findElement(By.id("login-username")).sendKeys("test_user");
+		driver.findElement(By.id("login-password")).sendKeys("test_password");
+		WebElement loginButton = driver.findElement(By.id("login-submit"));
+		loginButton.click();
+		WebDriverWait wait = new WebDriverWait(driver, 5);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
+		
+		// * Wait until the getPositions is complete
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// * Click Select All
+		WebElement selectAllButton = driver.findElement(By.id("selectAllPortfolioButton"));
+		selectAllButton.click();
+		
+		// * Wait until all positions are populated on graph
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	@Then("the start date should be the earliest date in the portfolio")
+	public void the_start_date_should_be_the_earliest_date_in_the_portfolio() {
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		WebDriverWait wait = new WebDriverWait(driver, 5);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
+		
+		// * Get updated dates
+		WebElement graphStartDate = driver.findElement(By.id("graphEndDate"));
+		try {
+			Date parsed_start_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphStartDate.getAttribute("value"));
+			
+			// * Check that the new dates are updated
+			Calendar instance = Calendar.getInstance();
+			instance.setTime(new Date());
+			instance.add(Calendar.MONTH, -3);
+			Date three_months_ago_date = instance.getTime();
+			
+			assertTrue(parsed_start_date.compareTo(three_months_ago_date) != 0);
+			
+		} catch (ParseException e) {
+			System.out.println("Something failed trying to compare earliest of positions graph start date to three months ago.");
+		} 
+		
+		driver.close();
+	}
+	
+	@Given("i am logged into the site")
+	public void i_am_logged_into_the_site() {
+		driver.get(ROOT_URL);  
+		//login first
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// * Try to avoid ssl issues
+		avoid_ssl_issues();
+				
+		driver.findElement(By.id("login-username")).sendKeys("test_user");
+		driver.findElement(By.id("login-password")).sendKeys("test_password");
+		WebElement loginButton = driver.findElement(By.id("login-submit"));
+		loginButton.click();
+		WebDriverWait wait = new WebDriverWait(driver, 5);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
+	}
+
+	@Then("the start date should be three months in the past")
+	public void the_start_date_should_be_three_months_in_the_past() {
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		WebDriverWait wait = new WebDriverWait(driver, 5);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
+		
+		// * Get updated dates
+		try {
+			WebElement graphStartDate = driver.findElement(By.id("graphStartDate"));
+			Date parsed_start_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphStartDate.getAttribute("value"));
+			
+			// * Check that the new dates are updated
+			Calendar instance = Calendar.getInstance();
+			instance.setTime(new Date());
+			instance.add(Calendar.MONTH, -3);
+			instance.set(Calendar.MILLISECOND, 0);
+			instance.set(Calendar.SECOND, 0);
+	        instance.set(Calendar.MINUTE, 0);
+	        instance.set(Calendar.HOUR_OF_DAY, 0);
+			Date three_months_ago_date = instance.getTime();
+			
+			assertTrue(parsed_start_date.compareTo(three_months_ago_date) == 0);
+			
+		} catch (ParseException e) {
+			System.out.println("Something failed trying to compare default graph start date to three months ago.");
+		} 
+		
+		driver.close();
+	}
+	
+	
+	//mobile.feature 
+	//
+	//
+	//
+	//mobile.feature
 	@Given("I login on a mobile device")
 	public void i_login_on_a_mobile_device(){
 		Map<String, String> mobileEmulation = new HashMap<>();
@@ -2074,6 +2413,16 @@ public class StepDefinitions {
 		WebDriver mobileDriver = new ChromeDriver(chromeOptions);
 		
 		mobileDriver.get(ROOT_URL);
+		
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// * Try to avoid ssl issues
+		avoid_ssl_issues();
 		
 		WebDriverWait wait = new WebDriverWait(mobileDriver, 5);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("login-submit")));
