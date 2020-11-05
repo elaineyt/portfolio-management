@@ -31,8 +31,24 @@ import java.util.concurrent.TimeUnit;
  */
 public class StepDefinitions {
 	private static final String ROOT_URL = "https://localhost:8443/";
-
 	private final WebDriver driver = new ChromeDriver();
+	
+	// * Function to click through ssl issues
+	private void avoid_ssl_issues() {
+		try {
+			WebDriverWait wait = new WebDriverWait(driver, 10);
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("details-button")));
+			WebElement details = driver.findElement(By.id("details-button"));
+			details.click();
+			wait = new WebDriverWait(driver, 10);
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("proceed-link")));
+			WebElement proceed = driver.findElement(By.id("proceed-link"));
+			proceed.click();
+			Thread.sleep(2000);
+		} catch (Exception e) {
+			/* IGNORE */
+		}
+	}
 	
 	//SSL.feature
 	//
@@ -1419,6 +1435,10 @@ public class StepDefinitions {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		// * Try to avoid ssl issues
+		avoid_ssl_issues();
+		
 		driver.findElement(By.id("login-username")).sendKeys("test_user");
 		driver.findElement(By.id("login-password")).sendKeys("test_password");
 		WebElement loginButton = driver.findElement(By.id("login-submit"));
@@ -1507,6 +1527,10 @@ public class StepDefinitions {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		// * Try to avoid ssl issues
+		avoid_ssl_issues();
+		
 		driver.findElement(By.id("login-username")).sendKeys("test_user");
 		driver.findElement(By.id("login-password")).sendKeys("test_password");
 		WebElement loginButton = driver.findElement(By.id("login-submit"));
@@ -1566,6 +1590,10 @@ public class StepDefinitions {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		// * Try to avoid ssl issues
+		avoid_ssl_issues();
+		
 		driver.findElement(By.id("login-username")).sendKeys("test_user");
 		driver.findElement(By.id("login-password")).sendKeys("test_password");
 		WebElement loginButton = driver.findElement(By.id("login-submit"));
@@ -1624,73 +1652,6 @@ public class StepDefinitions {
 	}
 
 	// Zoom Out Weeks
-	@Given("I click the zoom out button the graph units are in weeks the start date is not the furthest date in the past the end date is not todays date")
-	public void i_click_the_zoom_out_button_the_graph_units_are_in_weeks_the_start_date_is_not_the_furthest_date_in_the_past_the_end_date_is_not_todays_date() {
-		driver.get(ROOT_URL);  
-		//login first
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		driver.findElement(By.id("login-username")).sendKeys("test_user");
-		driver.findElement(By.id("login-password")).sendKeys("test_password");
-		WebElement loginButton = driver.findElement(By.id("login-submit"));
-		loginButton.click();
-		WebDriverWait wait = new WebDriverWait(driver, 5);
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
-		
-		// * First zoom in to make sure the end date isn't max
-		WebElement zoomIn = driver.findElement(By.id("zoomIn"));
-		zoomIn.click();
-		
-		// * Then Select Weeks
-		Select graphUnit = new Select(driver.findElement(By.id("graphUnits")));
-		graphUnit.selectByValue("weeks");
-	}
-
-	@Then("the start date should decrease by one week and the end date should increase by one day")
-	public void the_start_date_should_decrease_by_one_week_and_the_end_date_should_increase_by_one_day() {
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		WebDriverWait wait = new WebDriverWait(driver, 5);
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
-		
-		// * Get updated dates
-		WebElement graphStartDate = driver.findElement(By.id("graphStartDate"));
-		WebElement graphEndDate = driver.findElement(By.id("graphEndDate"));
-		try {
-			Date original_start_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphStartDate.getAttribute("value"));
-			Date original_end_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphEndDate.getAttribute("value"));
-			
-			WebElement zoomOut = driver.findElement(By.id("zoomOut"));
-			zoomOut.click();
-			wait = new WebDriverWait(driver, 5);
-			wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
-			
-			graphStartDate = driver.findElement(By.id("graphStartDate"));
-			graphEndDate = driver.findElement(By.id("graphEndDate"));
-			
-			// * Check that the new dates are updated
-			Date new_start_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphStartDate.getAttribute("value"));
-			Date new_end_date = new SimpleDateFormat("MM/dd/yyyy").parse(graphEndDate.getAttribute("value"));
-			
-			assertTrue(original_start_date.compareTo(new_start_date) == 1);
-			assertTrue(new_end_date.compareTo(original_end_date) == 1);
-			
-		} catch (ParseException e) {
-			System.out.println("Failed to parse dates... Try again");
-		}  
-		
-		driver.close();
-	}
-
 	@Given("I click the zoom out button the graph units are in weeks the start date is not the furthest date in the past the end date is todays date")
 	public void i_click_the_zoom_out_button_the_graph_units_are_in_weeks_the_start_date_is_not_the_furthest_date_in_the_past_the_end_date_is_todays_date() {
 		driver.get(ROOT_URL);  
@@ -1701,6 +1662,10 @@ public class StepDefinitions {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		// * Try to avoid ssl issues
+		avoid_ssl_issues();
+				
 		driver.findElement(By.id("login-username")).sendKeys("test_user");
 		driver.findElement(By.id("login-password")).sendKeys("test_password");
 		WebElement loginButton = driver.findElement(By.id("login-submit"));
@@ -1764,6 +1729,10 @@ public class StepDefinitions {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		// * Try to avoid ssl issues
+		avoid_ssl_issues();
+				
 		driver.findElement(By.id("login-username")).sendKeys("test_user");
 		driver.findElement(By.id("login-password")).sendKeys("test_password");
 		WebElement loginButton = driver.findElement(By.id("login-submit"));
@@ -1835,6 +1804,10 @@ public class StepDefinitions {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		// * Try to avoid ssl issues
+		avoid_ssl_issues();
+				
 		driver.findElement(By.id("login-username")).sendKeys("test_user");
 		driver.findElement(By.id("login-password")).sendKeys("test_password");
 		WebElement loginButton = driver.findElement(By.id("login-submit"));
@@ -1891,6 +1864,10 @@ public class StepDefinitions {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		// * Try to avoid ssl issues
+		avoid_ssl_issues();
+				
 		driver.findElement(By.id("login-username")).sendKeys("test_user");
 		driver.findElement(By.id("login-password")).sendKeys("test_password");
 		WebElement loginButton = driver.findElement(By.id("login-submit"));
@@ -1956,6 +1933,10 @@ public class StepDefinitions {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		// * Try to avoid ssl issues
+		avoid_ssl_issues();
+		
 		driver.findElement(By.id("login-username")).sendKeys("test_user");
 		driver.findElement(By.id("login-password")).sendKeys("test_password");
 		WebElement loginButton = driver.findElement(By.id("login-submit"));
@@ -2016,6 +1997,10 @@ public class StepDefinitions {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		// * Try to avoid ssl issues
+		avoid_ssl_issues();
+				
 		driver.findElement(By.id("login-username")).sendKeys("test_user");
 		driver.findElement(By.id("login-password")).sendKeys("test_password");
 		WebElement loginButton = driver.findElement(By.id("login-submit"));
