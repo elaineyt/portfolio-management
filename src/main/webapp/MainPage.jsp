@@ -183,12 +183,17 @@ canvas{
 								</button>
 							</div>
 							<div class="modal-body">
-  								<form action="/parser">
+								<form>
+  								
     								<p>CSV File</p>
-    								<input type="file" id="myFile" name="filename2">
-  
+    								
+    								<input type="file" id="myFile" name="file" accept=".txt, .csv">
+    								<div id="bulkStockError" class="errorMessage">
+    								</div>
     								<div class="mt-3">
-      									<button type="submit" class="btn btn-primary">Submit</button>
+    									<button type="button" class="btn btn-secondary" id="closeButton"
+											data-dismiss="modal">Exit</button>
+      									<button type="submit" id="submitBulk" class="btn btn-primary">Submit</button>
     								</div>
   								</form>
 							</div>
@@ -300,8 +305,13 @@ canvas{
 			</div>
 		</div>
 	</div>
+	Number of points on graph: <div id="graphPoints">0</div>
+	Yesterday's total portfolio value: <div id="yesterdayPortfolioPoint">0</div>
+	Today's total portfolio value: <div id="todayPortfolioPoint">0</div>
 	
 	<script>
+	var graphPoints = 0;
+	
 	const finnhub_token = "bts376n48v6teecg7ul0";
 	
 	var graphEndDate = addDaysAndFormat(new Date(), 0);
@@ -468,17 +478,82 @@ canvas{
 					}
 				);
 				
-				$('#uploadStock').click(
-					function(e) {
-						var tickerSymbol = $('#addStockTicker').val();
-						var numShares = $('#addStockShares').val();
-						var buyDate = $('#addStockBuyDate').val();
-						var sellDate = $('#addStockSellDate').val();
-						$('#addStockError').html("");
-							
-						addStock(tickerSymbol, numShares, buyDate, sellDate);		
+				$('#submitBulk').click(function(){
+					$('#bulkStockError').html("");
+					const files = $('#myFile').get(0).files
+					var today = new Date();
+					var dd = String(today.getDate()).padStart(2, '0');
+					var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+					var yyyy = today.getFullYear();
+					today = mm + '/' + dd + '/' + yyyy;
+					console.log(today);
+					if(files.length == 0)
+					{
+						return false;
 					}
-				);
+					else
+				    {
+						console.log(files);
+// 						var suffix = files[0].split(".");
+// 						if((suffix[1] != "txt") || (suffix[1] != "csv"))
+// 						{
+// 							//error bad file format
+// 							console.log("bad file format");
+// 							return false;
+// 						}
+						const file = files[0];
+	 					const reader = new FileReader()
+	 					reader.onload = function(event)
+	 					{
+	 						var stocks = event.target.result.split("\n");
+// 	 						for(var i = 0; i < stocks.length; i++)
+// 	 						{
+// 	 							console.log("HIT");
+// 	 							var stock = stocks[i].split(",");
+// 	 							//check for errors
+// 	 							console.log(stock[1]);
+// 	 							if((stock[1] <= 0) || (!Number.isInteger(Number(stock[1]))) || (stock[1] == ""))
+// 	 							{
+// 	 								//incorrect amount	
+// 	 								console.log("bad stock amount");
+// 	 							}
+// 	 							else if(stock[2] == "")
+// 	 							{
+// 	 								//need buy date
+// 	 							}
+// 	 							else if(stock[3] == "")
+// 	 			    			{
+// 	 								//need sell date
+// 	 			    			}
+// 	 			    			else if(stock[3] < stock[2])
+// 	 			    			{
+// 	 			    				//buy date is after sell date
+// 	 			    				console.log("buy date later");
+// 	 			    			}	
+// 	 			    			else if(stocks[2] > today)
+// 	 			    			{
+// 									//buy date after today
+// 	 			    			}
+// 								else if(today < stocks[3])
+// 								{
+// 									//sell date before today
+// 								}
+// 	 						}
+	 						for(var i = 0; i < stocks.length; i++)
+	 						{
+	 							var stock = stocks[i].split(",");
+	 							bulkAddStock(stock[0],stock[1],stock[2],stock[3]);
+	 						}
+	 					}
+	 					reader.onerror = function(error)
+	 					{
+	 						
+	 					}
+	 					reader.readAsText(file)
+	 					
+				    }
+					return false;
+				});
 				
 				$('#bulkEditModalButton').click(
 					function(e) {
@@ -608,6 +683,10 @@ canvas{
         					$("#redDownTriangle").css('display', 'inline');
         					$("#greenUpTriangle").css('display', 'none');
         				}
+        				
+        				// for graph acceptance tests
+        				$('#yesterdayPortfolioPoint').html(yesterdayPortfolioValue);
+        				$('#todayPortfolioPoint').html(currentPortfolioValue);
 	        		}
 	        	}
 			}
@@ -939,6 +1018,90 @@ canvas{
     	}
 	}
 	
+	function bulkAddStock(tickerSymbol, numShares, buyDate, sellDate){
+		$('#bulkStockError').html("");
+		
+		const HTTP = new XMLHttpRequest();
+	    const url = "https://finnhub.io/api/v1/quote?symbol=" + tickerSymbol.toString() + "&token=" + finnhub_token;
+	    HTTP.open("GET", url);
+	    HTTP.send();
+
+    	HTTP.onreadystatechange = (e) => {
+       		if(HTTP.readyState == 4 && HTTP.status == 200){
+       			var error = false;
+       			// invalid ticker symbol
+       			if(HTTP.responseText.toString() == "{\"c\":0,\"h\":0,\"l\":0,\"o\":0,\"pc\":0,\"t\":0}"){
+       				$('#bulkStockError').html("Invalid ticker symbol.");
+       				error = true;
+       			}
+       			else if(positions.has(tickerSymbol)){
+       				$('#bulkStockError').html("Portfolio already contains this stock.");
+       				error = true;
+       			}
+    			// number of shares is left blank
+    			if(numShares == ""){
+    				$('#bulkStockError').html("Please enter number of shares.");
+    				error = true;
+    			}
+    			// number of shares is not an integer
+    			else if(!Number.isInteger(Number(numShares))){
+    				$('#bulkStockError').html("Please enter a whole number of shares.");
+    				error = true;
+    			}
+    			// number of shares is less than or equal to 0
+    			else if(numShares <= 0){
+    				$('#bulkStockError').html("Number of shares must be greater than zero.");
+    				error = true;
+    			}
+    			// both buy and sell date empty
+    			if(!buyDate && !sellDate){
+    				$('#bulkStockError').html("Purchase date is required.");
+    				error = true;
+    			}
+    			// buy date is empty, sell date is not
+    			else if(!buyDate){
+    				$('#bulkStockError').html("Sold date without purchase date.");
+    				error = true;
+    			}
+    			// sell date is empty, set to far date into the future to be shown "indefinitely"
+    			else if(!sellDate){
+    				sellDate = addDaysAndFormat(new Date(), 10000);
+    			}
+    			// sell date is before buy date
+    			else if(sellDate < buyDate){
+    				$('#bulkStockError').html("Sold date is prior to purchase date.");
+    				error = true;
+    			}	
+       				
+
+       			// Get session attribute here 
+       			var username = '<%= session.getAttribute("username")%>';
+       			
+       			if(error == false){
+       	            const HTTP = new XMLHttpRequest();
+       	            const url = "https://localhost:8443/portfolio?username=" + username.toString() + "&position=" + tickerSymbol.toString() + "&share_count=" + 
+       	            	numShares.toString() + "&date_bought=" + buyDate.toString() + "&date_sold=" + sellDate.toString();
+       	            HTTP.open("POST", url);
+       	            HTTP.send();
+       	            
+       	            HTTP.onreadystatechange = (e) => {
+       	            	if(HTTP.readyState == 4 && HTTP.status == 200){
+       	        			$("#bulkEditModal").modal('hide');
+       	        			var today = new Date();
+       	            		if(Date.parse(buyDate.toString()) <= today && today <= Date.parse(sellDate.toString())){
+       	            			var row = "<div class='row' style='border-width:thin;border:solid;border-radius:5px;margin-top:5px;padding-right:10px;' id='r" + tickerSymbol + "'><div class='col-sm-2 position-padding'><input type='checkbox' id='cb-portfolio-" + tickerSymbol + "' onclick='stockChecked(\"" + tickerSymbol + "\", this)'/></div><div class='col-sm-8 position-padding'>" + tickerSymbol + 
+       	        				"</div><div class='col-sm-2'><button type='button' class='btn' onclick=deleteStockModal('" + tickerSymbol + "')>X</button></div></div>";
+       	                		$("#positions").append(row);
+       	                		positions.set(tickerSymbol, new Position(tickerSymbol, numShares, buyDate, sellDate));
+       	            		}        		
+       	            	}   
+       	            }	
+       			}	
+       		}
+    	}
+	}
+
+	
 	function addStock(tickerSymbol, numShares, buyDate, sellDate){
 		$('#addStockErrorTS').html("");
 		$('#addStockErrorShares').html("");
@@ -1044,9 +1207,11 @@ canvas{
 		for (var i= 0; i < config.data.labels.length; ++i) {
 			newDataset.data.push(stockHistory[index][i]);
 		}
-
 		config.data.datasets.push(newDataset);
 		window.myLine.update();
+		
+		// for graph acceptance tests
+		recalcNumGraphPoints();
 	}
 	
 	function getStockHistory(){
@@ -1140,6 +1305,7 @@ canvas{
 		if(remove_index !== -1) {
 			config.data.datasets.splice(remove_index, 1); 
 			window.myLine.update();
+			recalcNumGraphPoints();
 		}
 	}
 	
@@ -1520,6 +1686,16 @@ canvas{
 		var colorNames = Object.keys(window.chartColors);
 
 
+	</script>
+	<script>
+	function recalcNumGraphPoints(){
+		var graphPoints = 0;
+		for(var i = 0; i < config.data.datasets.length; i++){
+			graphPoints+=config.data.datasets[i].data.length;
+		}
+		$('#graphPoints').html(graphPoints);
+	}
+	
 	</script>
 	
 

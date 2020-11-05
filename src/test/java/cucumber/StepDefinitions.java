@@ -2448,6 +2448,31 @@ public class StepDefinitions {
 		
 	}
 	
+	@And("I click upload stocks")
+	public void i_click_upload_stocks()
+	{
+		WebDriverWait wait = new WebDriverWait(driver, 7);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("bulkEditModalButton")));
+		WebElement bulkButton = driver.findElement(By.id("bulkEditModalButton"));
+		bulkButton.click();
+	}
+	@Then("there should be a upload button")
+	public void there_should_be_a_upload_button()
+	{
+		WebDriverWait wait = new WebDriverWait(driver, 5);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("submitBulk")));
+		WebElement bulkButton = driver.findElement(By.id("submitBulk"));
+		assertEquals("Submit",bulkButton.getText());
+	}
+	@Then("there should be a close button")
+	public void there_should_be_a_close_button()
+	{
+		WebDriverWait wait = new WebDriverWait(driver, 5);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("closeButton")));
+		WebElement bulkButton = driver.findElement(By.id("closeButton"));
+		assertEquals("Exit",bulkButton.getText());
+	}
+	
 	@After()
 	public void after() {
 		driver.quit();
