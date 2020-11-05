@@ -300,8 +300,13 @@ canvas{
 			</div>
 		</div>
 	</div>
+	Number of points on graph: <div id="graphPoints">0</div>
+	Yesterday's total portfolio value: <div id="yesterdayPortfolioPoint">0</div>
+	Today's total portfolio value: <div id="todayPortfolioPoint">0</div>
 	
 	<script>
+	var graphPoints = 0;
+	
 	const finnhub_token = "bts376n48v6teecg7ul0";
 	
 	var graphEndDate = addDaysAndFormat(new Date(), 0);
@@ -606,6 +611,10 @@ canvas{
         					$("#redDownTriangle").css('display', 'inline');
         					$("#greenUpTriangle").css('display', 'none');
         				}
+        				
+        				// for graph acceptance tests
+        				$('#yesterdayPortfolioPoint').html(yesterdayPortfolioValue);
+        				$('#todayPortfolioPoint').html(currentPortfolioValue);
 	        		}
 	        	}
 			}
@@ -1042,9 +1051,11 @@ canvas{
 		for (var i= 0; i < config.data.labels.length; ++i) {
 			newDataset.data.push(stockHistory[index][i]);
 		}
-
 		config.data.datasets.push(newDataset);
 		window.myLine.update();
+		
+		// for graph acceptance tests
+		recalcNumGraphPoints();
 	}
 	
 	function getStockHistory(){
@@ -1138,6 +1149,7 @@ canvas{
 		if(remove_index !== -1) {
 			config.data.datasets.splice(remove_index, 1); 
 			window.myLine.update();
+			recalcNumGraphPoints();
 		}
 	}
 	
@@ -1438,6 +1450,16 @@ canvas{
 		var colorNames = Object.keys(window.chartColors);
 
 
+	</script>
+	<script>
+	function recalcNumGraphPoints(){
+		var graphPoints = 0;
+		for(var i = 0; i < config.data.datasets.length; i++){
+			graphPoints+=config.data.datasets[i].data.length;
+		}
+		$('#graphPoints').html(graphPoints);
+	}
+	
 	</script>
 	
 
