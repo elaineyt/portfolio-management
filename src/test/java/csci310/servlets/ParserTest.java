@@ -1,4 +1,5 @@
 package csci310.servlets;
+
 import static org.junit.Assert.*;
 import org.mockito.Mockito;
 
@@ -277,28 +278,6 @@ public class ParserTest extends Mockito {
 	
 	@Test
     public void testNoUserFound() throws Exception {
-        HttpServletRequest request = mock(HttpServletRequest.class);       
-        HttpServletResponse response = mock(HttpServletResponse.class);    
-
-        when(request.getParameter("username")).thenReturn("test_user_94628596032742364885323");
-        when(request.getParameter("position")).thenReturn("aapl");
-        when(request.getParameter("share_count")).thenReturn("10");
-        when(request.getParameter("date_bought")).thenReturn("today");
-        when(request.getParameter("date_sold")).thenReturn("today");
-
-        StringWriter stringWriter = new StringWriter();
-        PrintWriter writer = new PrintWriter(stringWriter);
-        when(response.getWriter()).thenReturn(writer);
-
-        new Portfolio().doPost(request, response);
-
-        writer.flush(); // it may not have been flushed yet...
-        
-        assertTrue(stringWriter.toString().contains("Creating Portfolio Position Failed. No user found."));
-    }
-	
-	@Test
-    public void testUserNoExist() throws Exception {
         HttpServletRequest request = mock(HttpServletRequest.class);       
         HttpServletResponse response = mock(HttpServletResponse.class);    
 
