@@ -2202,14 +2202,13 @@ public class StepDefinitions {
 		loginButton.click();
 		
 		// Unchecked by default
-		
-		driver.close();
+
 	}
 	
 	@Then("the total portfolio line graph should increase if I check a position")
 	public void the_total_portfolio_line_graph_should_increase_if_I_check_a_position() {
 		try {
-			Thread.sleep(2000);
+			Thread.sleep(5000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -2217,12 +2216,12 @@ public class StepDefinitions {
 		
 		// Get today's and yesterday's total portfolio points
 		WebElement todayPortfolioPointElement = driver.findElement(By.id("todayPortfolioPoint"));
-		int todayPortfolioPoint = Integer.parseInt(todayPortfolioPointElement.getText());
+		Double todayPortfolioPoint = Double.parseDouble(todayPortfolioPointElement.getText());
 		WebElement yesterdayPortfolioPointElement = driver.findElement(By.id("yesterdayPortfolioPoint"));
-		int yesterdayPortfolioPoint = Integer.parseInt(yesterdayPortfolioPointElement.getText());
+		Double yesterdayPortfolioPoint = Double.parseDouble(yesterdayPortfolioPointElement.getText());
 		
 		// Check MSFT
-		WebElement msftCheckBox = driver.findElement(By.id("cb-portfolio-msft"));
+		WebElement msftCheckBox = driver.findElement(By.xpath("//*[@id=\"cb-portfolio-MSFT\"]"));
 		msftCheckBox.click();
 		
 		try {
@@ -2234,14 +2233,13 @@ public class StepDefinitions {
 		
 		// Get today's and yesterday's total portfolio points again
 		WebElement newTodayPortfolioPointElement = driver.findElement(By.id("todayPortfolioPoint"));
-		int newTodayPortfolioPoint = Integer.parseInt(newTodayPortfolioPointElement.getText());
+		Double newTodayPortfolioPoint = Double.parseDouble(newTodayPortfolioPointElement.getText());
 		WebElement newYesterdayPortfolioPointElement = driver.findElement(By.id("yesterdayPortfolioPoint"));
-		int newYesterdayPortfolioPoint = Integer.parseInt(newYesterdayPortfolioPointElement.getText());
+		Double newYesterdayPortfolioPoint = Double.parseDouble(newYesterdayPortfolioPointElement.getText());
 		
 		assertTrue(newTodayPortfolioPoint > todayPortfolioPoint);
 		assertTrue(newYesterdayPortfolioPoint > yesterdayPortfolioPoint);
-		
-		driver.close();
+
 	}
 	
 	@Given("a position is checked")
@@ -2249,7 +2247,7 @@ public class StepDefinitions {
 		driver.get(ROOT_URL);  
 		//login first
 		try {
-			Thread.sleep(2000);
+			Thread.sleep(5000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -2263,24 +2261,30 @@ public class StepDefinitions {
 		WebElement loginButton = driver.findElement(By.id("login-submit"));
 		loginButton.click();
 		
-		// Checked MSFT
-		WebElement msftCheckBox = driver.findElement(By.id("cb-portfolio-msft"));
-		msftCheckBox.click();
-		
 		try {
-			Thread.sleep(2000);
+			Thread.sleep(5000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		driver.close();
+		// Checked MSFT
+		WebElement msftCheckBox = driver.findElement(By.xpath("//*[@id=\"cb-portfolio-MSFT\"]"));
+		msftCheckBox.click();
+		
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 	
 	@Then("the total portfolio line graph should decrease if I uncheck a position")
 	public void the_total_portfolio_line_graph_should_decrease_if_I_uncheck_a_position() {
 		try {
-			Thread.sleep(2000);
+			Thread.sleep(5000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -2288,16 +2292,16 @@ public class StepDefinitions {
 		
 		// Get today's and yesterday's total portfolio points
 		WebElement todayPortfolioPointElement = driver.findElement(By.id("todayPortfolioPoint"));
-		int todayPortfolioPoint = Integer.parseInt(todayPortfolioPointElement.getText());
+		Double todayPortfolioPoint = Double.parseDouble(todayPortfolioPointElement.getText());
 		WebElement yesterdayPortfolioPointElement = driver.findElement(By.id("yesterdayPortfolioPoint"));
-		int yesterdayPortfolioPoint = Integer.parseInt(yesterdayPortfolioPointElement.getText());
+		Double yesterdayPortfolioPoint = Double.parseDouble(yesterdayPortfolioPointElement.getText());
 		
 		// Uncheck MSFT
-		WebElement msftCheckBox = driver.findElement(By.id("cb-portfolio-msft"));
+		WebElement msftCheckBox = driver.findElement(By.xpath("//*[@id=\"cb-portfolio-MSFT\"]"));
 		msftCheckBox.click();
 		
 		try {
-			Thread.sleep(2000);
+			Thread.sleep(5000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -2305,20 +2309,18 @@ public class StepDefinitions {
 		
 		// Get today's and yesterday's total portfolio points again
 		WebElement newTodayPortfolioPointElement = driver.findElement(By.id("todayPortfolioPoint"));
-		int newTodayPortfolioPoint = Integer.parseInt(newTodayPortfolioPointElement.getText());
+		Double newTodayPortfolioPoint = Double.parseDouble(newTodayPortfolioPointElement.getText());
 		WebElement newYesterdayPortfolioPointElement = driver.findElement(By.id("yesterdayPortfolioPoint"));
-		int newYesterdayPortfolioPoint = Integer.parseInt(newYesterdayPortfolioPointElement.getText());
+		Double newYesterdayPortfolioPoint = Double.parseDouble(newYesterdayPortfolioPointElement.getText());
 		
 		assertTrue(newTodayPortfolioPoint < todayPortfolioPoint);
 		assertTrue(newYesterdayPortfolioPoint < yesterdayPortfolioPoint);
-		
-		driver.close();
 	}
 	
 	@Then("the total portfolio line graph should decrease if I delete a position")
 	public void the_total_portfolio_line_graph_should_decrease_if_I_delete_a_position() {
 		try {
-			Thread.sleep(2000);
+			Thread.sleep(5000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -2326,9 +2328,9 @@ public class StepDefinitions {
 		
 		// Get today's and yesterday's total portfolio points
 		WebElement todayPortfolioPointElement = driver.findElement(By.id("todayPortfolioPoint"));
-		int todayPortfolioPoint = Integer.parseInt(todayPortfolioPointElement.getText());
+		Double todayPortfolioPoint = Double.parseDouble(todayPortfolioPointElement.getText());
 		WebElement yesterdayPortfolioPointElement = driver.findElement(By.id("yesterdayPortfolioPoint"));
-		int yesterdayPortfolioPoint = Integer.parseInt(yesterdayPortfolioPointElement.getText());
+		Double yesterdayPortfolioPoint = Double.parseDouble(yesterdayPortfolioPointElement.getText());
 		
 		// Delete MSFT
 		WebDriverWait wait = new WebDriverWait(driver, 5);
@@ -2353,9 +2355,9 @@ public class StepDefinitions {
 		
 		// Get today's and yesterday's total portfolio points again
 		WebElement newTodayPortfolioPointElement = driver.findElement(By.id("todayPortfolioPoint"));
-		int newTodayPortfolioPoint = Integer.parseInt(newTodayPortfolioPointElement.getText());
+		Double newTodayPortfolioPoint = Double.parseDouble(newTodayPortfolioPointElement.getText());
 		WebElement newYesterdayPortfolioPointElement = driver.findElement(By.id("yesterdayPortfolioPoint"));
-		int newYesterdayPortfolioPoint = Integer.parseInt(newYesterdayPortfolioPointElement.getText());
+		Double newYesterdayPortfolioPoint = Double.parseDouble(newYesterdayPortfolioPointElement.getText());
 		
 		assertTrue(newTodayPortfolioPoint < todayPortfolioPoint);
 		assertTrue(newYesterdayPortfolioPoint < yesterdayPortfolioPoint);

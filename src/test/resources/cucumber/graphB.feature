@@ -1,5 +1,5 @@
 Feature: Graph (Part B)	
-	Scenario: Unit switches
+ 	Scenario: Unit switches
  		Given the unit is in weeks
  		Then the number of graph points should increase if I switch to days
  		
