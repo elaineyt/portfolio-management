@@ -924,7 +924,7 @@ canvas{
 				$("#r-historical-" + tickerSymbol).remove();
 				var index = stockHistoryLabels.indexOf('Historical-' + tickerSymbol);
         		if(index >= 0){
-        			removeFromConfigDataSets('Historical-' + tickerSymbol);
+        			removeFromConfigDataSets(tickerSymbol);
         			stockHistory.splice(index, 1);
         			stockHistoryLabels.splice(index, 1);
         		}
