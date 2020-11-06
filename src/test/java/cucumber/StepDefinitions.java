@@ -2772,6 +2772,371 @@ public class StepDefinitions {
 		
 		assertTrue(pointsOnGraphBefore > pointsOnGraphAfter);
 	}
+	
+	//graphPortfolio.feature 
+	//
+	//
+	//
+	//graphPortfolio.feature
+	@Given("portfolio select all is clicked")
+	public void portfolio_select_all_is_clicked() {
+		driver.get(ROOT_URL); 
+		
+		//login first
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// * Try to avoid ssl issues
+		avoid_ssl_issues();
+				
+		driver.findElement(By.id("login-username")).sendKeys("test_user");
+		driver.findElement(By.id("login-password")).sendKeys("test_password");
+		WebElement loginButton = driver.findElement(By.id("login-submit"));
+		loginButton.click();
+		
+		WebDriverWait wait = new WebDriverWait(driver, 5);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
+		
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		WebElement selectAllButton = driver.findElement(By.id("selectAllPortfolioButton"));
+		selectAllButton.click();
+		
+	}
+
+	@Then("the total portfolio value is greater than zero")
+	public void the_total_portfolio_value_is_greater_than_zero() {
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		WebDriverWait wait = new WebDriverWait(driver, 5);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
+		
+		try {
+			double currentPortfolioValue = Double.parseDouble(driver.findElement(By.id("todayPortfolioPoint")).getText());
+
+			assertTrue(currentPortfolioValue > 0);
+			
+		} catch (Exception e) {
+			System.out.println("Failed to parse dates... Try again");
+		} 
+		
+		driver.close();
+	}
+	
+	@Given("the portfolio select all is clicked")
+	public void the_portfolio_select_all_is_clicked() {
+		driver.get(ROOT_URL); 
+		
+		//login first
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// * Try to avoid ssl issues
+		avoid_ssl_issues();
+				
+		driver.findElement(By.id("login-username")).sendKeys("test_user");
+		driver.findElement(By.id("login-password")).sendKeys("test_password");
+		WebElement loginButton = driver.findElement(By.id("login-submit"));
+		loginButton.click();
+		
+		WebDriverWait wait = new WebDriverWait(driver, 5);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
+		
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		WebElement selectAllButton = driver.findElement(By.id("selectAllPortfolioButton"));
+		selectAllButton.click();
+		
+	}
+
+	@Then("total portfolio value has the data from positions")
+	public void total_portfolio_value_has_the_data_from_positions() {
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		WebDriverWait wait = new WebDriverWait(driver, 5);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
+		
+		try {
+			double currentPortfolioValue = Double.parseDouble(driver.findElement(By.id("todayPortfolioPoint")).getText());
+
+			assertTrue(currentPortfolioValue > 0);
+			
+		} catch (Exception e) {
+			System.out.println("Failed to parse dates... Try again");
+		} 
+		
+		driver.close();
+	}
+	
+	@Given("portfolio deselect all is clicked")
+	public void portfolio_deselect_all_is_clicked() {
+		driver.get(ROOT_URL); 
+		
+		//login first
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// * Try to avoid ssl issues
+		avoid_ssl_issues();
+				
+		driver.findElement(By.id("login-username")).sendKeys("test_user");
+		driver.findElement(By.id("login-password")).sendKeys("test_password");
+		WebElement loginButton = driver.findElement(By.id("login-submit"));
+		loginButton.click();
+		
+		WebDriverWait wait = new WebDriverWait(driver, 5);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
+		
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		WebElement selectAllButton = driver.findElement(By.id("deselectAllPortfolioButton"));
+		selectAllButton.click();
+		
+	}
+
+	@Then("the total portfolio value is equal to zero")
+	public void the_total_portfolio_value_is_equal_to_zero() {
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		WebDriverWait wait = new WebDriverWait(driver, 5);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
+		
+		try {
+			double currentPortfolioValue = Double.parseDouble(driver.findElement(By.id("todayPortfolioPoint")).getText());
+
+			assertTrue(currentPortfolioValue == 0);
+			
+		} catch (Exception e) {
+			System.out.println("Failed to parse dates... Try again");
+		} 
+		
+		driver.close();
+	}
+	
+	@Given("the portfolio deselect all is clicked")
+	public void the_portfolio_deselect_all_is_clicked() {
+		driver.get(ROOT_URL); 
+		
+		//login first
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// * Try to avoid ssl issues
+		avoid_ssl_issues();
+				
+		driver.findElement(By.id("login-username")).sendKeys("test_user");
+		driver.findElement(By.id("login-password")).sendKeys("test_password");
+		WebElement loginButton = driver.findElement(By.id("login-submit"));
+		loginButton.click();
+		
+		WebDriverWait wait = new WebDriverWait(driver, 5);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
+		
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		WebElement selectAllButton = driver.findElement(By.id("deselectAllPortfolioButton"));
+		selectAllButton.click();
+		
+	}
+
+	@Then("all positions are removed from the total portfolio line")
+	public void all_positions_are_removed_from_the_total_portfolio_line() {
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		WebDriverWait wait = new WebDriverWait(driver, 5);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
+		
+		try {
+			double currentPortfolioValue = Double.parseDouble(driver.findElement(By.id("todayPortfolioPoint")).getText());
+
+			assertTrue(currentPortfolioValue == 0);
+			
+		} catch (Exception e) {
+			System.out.println("Failed to parse dates... Try again");
+		} 
+		
+		driver.close();
+	}
+	
+	
+	//graphHistorical.feature 
+	//
+	//
+	//
+	//graphHistorical.feature
+	@Given("historical select all is clicked")
+	public void historical_select_all_is_clicked() {
+		driver.get(ROOT_URL); 
+		
+		//login first
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// * Try to avoid ssl issues
+		avoid_ssl_issues();
+				
+		driver.findElement(By.id("login-username")).sendKeys("test_user");
+		driver.findElement(By.id("login-password")).sendKeys("test_password");
+		WebElement loginButton = driver.findElement(By.id("login-submit"));
+		loginButton.click();
+		
+		WebDriverWait wait = new WebDriverWait(driver, 5);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
+		
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+
+	@Then("the number of graph points increases by the correct number")
+	public void the_number_of_graph_points_increases_by_the_correct_number() {
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		int pointsOnGraphBefore = Integer.parseInt(driver.findElement(By.id("graphPoints")).getText());
+		
+		WebElement selectAllButton = driver.findElement(By.id("selectAllHistoricalButton"));
+		selectAllButton.click();
+		
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		int pointsOnGraphAfter = Integer.parseInt(driver.findElement(By.id("graphPoints")).getText());
+		
+		assertTrue(pointsOnGraphAfter > pointsOnGraphBefore);
+		
+		driver.close();
+	}
+	
+	@Given("historical deselect all is clicked")
+	public void historical_deselect_all_is_clicked() {
+		driver.get(ROOT_URL); 
+		
+		//login first
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// * Try to avoid ssl issues
+		avoid_ssl_issues();
+				
+		driver.findElement(By.id("login-username")).sendKeys("test_user");
+		driver.findElement(By.id("login-password")).sendKeys("test_password");
+		WebElement loginButton = driver.findElement(By.id("login-submit"));
+		loginButton.click();
+		
+		WebDriverWait wait = new WebDriverWait(driver, 5);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
+		
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	@Then("the number of graph points decreases by the correct number")
+	public void the_number_of_graph_points_decreases_by_the_correct_number() {
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		int pointsOnGraphBefore = Integer.parseInt(driver.findElement(By.id("graphPoints")).getText());
+		
+		WebElement selectAllButton = driver.findElement(By.id("deselectAllHistoricalButton"));
+		selectAllButton.click();
+		
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		int pointsOnGraphAfter = Integer.parseInt(driver.findElement(By.id("graphPoints")).getText());
+		
+		assertTrue(pointsOnGraphBefore > pointsOnGraphAfter);
+		
+		driver.close();
+	}
+
 	@After()
 	public void after() {
 		driver.quit();
