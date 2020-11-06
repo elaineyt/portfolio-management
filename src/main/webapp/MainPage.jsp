@@ -124,6 +124,7 @@ canvas{
 				</div>
 				<div class='row' style='margin-top:10px;margin-left:0px;' id='add-stock-button-row'>
 					<button id="addStockModalButton" type="button" class="btn btn-primary">Add Stock</button>
+					<button id="bulkEditModalButton" type="button" class="btn btn-primary">Bulk Edit</button>
 				</div>
 				<div class="modal fade" id="addStockModal" tabindex="-1"
 					role="dialog" aria-hidden="true">
@@ -170,7 +171,7 @@ canvas{
 					</div>
 				</div>
 				
-				<button id="bulkEditModalButton" type="button" class="btn btn-primary">Bulk Edit</button>
+				
 				<div class="modal fade" id="bulkEditModal" tabindex="-1"
 					role="dialog" aria-hidden="true">
 					<div class="modal-dialog" role="document">
@@ -192,8 +193,8 @@ canvas{
     								</div>
     								<div class="mt-3">
     									<button type="button" class="btn btn-secondary" id="closeButton"
-											data-dismiss="modal">Exit</button>
-      									<button type="submit" id="submitBulk" class="btn btn-primary">Submit</button>
+											data-dismiss="modal">Cancel</button>
+      									<button type="submit" id="submitBulk" class="btn btn-primary">Upload File</button>
     								</div>
   								</form>
 							</div>
@@ -315,6 +316,7 @@ canvas{
 	const finnhub_token = "bts376n48v6teecg7ul0";
 	
 	var graphEndDate = addDaysAndFormat(new Date(), 0);
+	var graphStartDate = addDaysAndFormat(new Date(), -92);
 	
 	class Position {
 		constructor(tickerSymbol, shares, buyDate, sellDate){
@@ -327,6 +329,7 @@ canvas{
 	
 	var positions = new Map();
 	var historicalPositions = new Map();
+	var earliestStartDates = new Map();
 	var zooming_graph_lock = false;
 	var initial_request = false;
 	
@@ -698,7 +701,7 @@ canvas{
 			$("#greenUpTriangle").css('display', 'inline');
 		}
 	}
-	
+
 	// Populate portfolio list
 	function getPositions() {
         var username = '<%= session.getAttribute("username")%>'
@@ -722,11 +725,12 @@ canvas{
         	prev_checked_positions = new_prev_checked;
         }
         
+        console.log(prev_checked_positions);
         $("#positions").html("");
         
         var row = "<div class='row' style='border-width:thin;border:solid;border-radius:5px;display:flex;flex-wrap:wrap;justify-content:center;' id='select-all-portfolio'>" +
-		"<button id=\"selectAllPortfolioButton\" style='margin:5px;' type=\"button\" onclick='stockChecked(\"Select-All\", { checked: true})' class=\"btn btn-primary\">Select All</button>" +
-		"<button id=\"deselectAllPortfolioButton\" style='margin:5px;' type=\"button\" onclick='stockChecked(\"Select-All\", { checked: false})' class=\"btn btn-primary\">DeSelect All</button>" +
+		"<button id=\"selectAllPortfolioButton\" style='margin:5px;' type=\"button\" onclick='stockChecked(\"Select-All\", { checked: true}, false)' class=\"btn btn-primary\">Select All</button>" +
+		"<button id=\"deselectAllPortfolioButton\" style='margin:5px;' type=\"button\" onclick='stockChecked(\"Select-All\", { checked: false}, false)' class=\"btn btn-primary\">DeSelect All</button>" +
 		"</div>";
 		$("#positions").append(row);
 		
@@ -738,7 +742,6 @@ canvas{
         	if(HTTP.readyState == 4 && HTTP.status == 200){
         		//$("#positions").html("");
         		var getPositionResponse = JSON.parse(HTTP.responseText);
-        		
         		
         		// * Check if Total Portfolio Value is not already populated
         		if(stockHistoryLabels.indexOf("Total Portfolio Value") == -1){
@@ -780,12 +783,12 @@ canvas{
 		        			var today = new Date();
 		        			if(Date.parse(dateBought) <= today && today <= Date.parse(dateSold)){
 		        				// if(!positions.has(tickerSymbol)) {
-			        				var row = "<div class='row' style='border-width:thin;border:solid;border-radius:5px;margin-top:5px;padding-right:10px;' id='r" + tickerSymbol + "'><div class='p-2 position-padding'><input type='checkbox' id='cb-portfolio-" + tickerSymbol + "' onclick='stockChecked(\"" + tickerSymbol + "\", this)'/></div><div class='position-padding'>" + tickerSymbol + 
+			        				var row = "<div class='row' style='border-width:thin;border:solid;border-radius:5px;margin-top:5px;padding-right:10px;' id='r" + tickerSymbol + "'><div class='p-2 position-padding'><input type='checkbox' id='cb-portfolio-" + tickerSymbol + "' onclick='stockChecked(\"" + tickerSymbol + "\", this, false)'/></div><div class='position-padding'>" + tickerSymbol + 
 			        				"</div><div><button type='button' class='btn' onclick=deleteStockModal('" + tickerSymbol + "')>X</button></div></div>";
 			                		$("#positions").append(row);
 			                		positions.set(tickerSymbol, new Position(tickerSymbol, shareCount, formatDate(dateBought), formatDate(dateSold)));
 			                		if(prev_checked_positions.indexOf(tickerSymbol) !== -1) {
-			                			stockChecked(tickerSymbol, {checked: true})
+			                			stockChecked(tickerSymbol, {checked: true}, true)
 			                		}
 		        				// }
 		        			}
@@ -922,7 +925,7 @@ canvas{
 				$("#r-historical-" + tickerSymbol).remove();
 				var index = stockHistoryLabels.indexOf('Historical-' + tickerSymbol);
         		if(index >= 0){
-        			removeFromConfigDataSets('Historical-' + tickerSymbol);
+        			removeFromConfigDataSets(tickerSymbol);
         			stockHistory.splice(index, 1);
         			stockHistoryLabels.splice(index, 1);
         		}
@@ -1174,7 +1177,7 @@ canvas{
        	        			$("#addStockModal").modal('hide');
        	        			var today = new Date();
        	            		if(Date.parse(buyDate.toString()) <= today && today <= Date.parse(sellDate.toString())){
-       	            			var row = "<div class='row' style='border-width:thin;border:solid;border-radius:5px;margin-top:5px;padding-right:10px;' id='r" + tickerSymbol + "'><div class='p-2 position-padding'><input type='checkbox' id='cb-portfolio-" + tickerSymbol + "' onclick='stockChecked(\"" + tickerSymbol + "\", this)'/></div><div class='position-padding'>" + tickerSymbol + 
+       	            			var row = "<div class='row' style='border-width:thin;border:solid;border-radius:5px;margin-top:5px;padding-right:10px;' id='r" + tickerSymbol + "'><div class='p-2 position-padding'><input type='checkbox' id='cb-portfolio-" + tickerSymbol + "' onclick='stockChecked(\"" + tickerSymbol + "\", this, false)'/></div><div class='position-padding'>" + tickerSymbol + 
        	        				"</div><div><button type='button' class='btn' onclick=deleteStockModal('" + tickerSymbol + "')>X</button></div></div>";
        	                		$("#positions").append(row);
        	                		positions.set(tickerSymbol, new Position(tickerSymbol, numShares, buyDate, sellDate));
@@ -1307,7 +1310,7 @@ canvas{
 		}
 	}
 	
-    function stockChecked(tickerSymbol, checkBox){
+    function stockChecked(tickerSymbol, checkBox, fromGetPositions){
     	// if unchecked, remove from stock history and redraw
     	if(!checkBox.checked){
     		if(tickerSymbol === "Select-All") {
@@ -1315,14 +1318,53 @@ canvas{
     				if(key !== "Total Portfolio Value" && key.indexOf("Historical-") === -1) {
     					$("#cb-portfolio-" + key)[0].checked = false;
 	    		    	deleteFromTotalPortfolio(key, positions.get(key).shares);
+	    		    	earliestStartDates.delete(key);
     				}
     			});
+    			
+    			// * All are unchecked, we can set the start date back to 3 months
+    			zooming_graph_lock = true;
+    			$('#graphStartDate').datepicker("update", addDaysAndFormat(new Date(), -92));
+    			zooming_graph_lock = false;
+    			
     		} else {
 	    		deleteFromTotalPortfolio(tickerSymbol, positions.get(tickerSymbol).shares);
+	    		earliestStartDates.delete(tickerSymbol);
+	    		
+	    		var earliest_position_bought_date = new Date();
+				earliestStartDates.forEach((pos, key) => {
+					if(new Date(earliestStartDates.get(key).buyDate) < earliest_position_bought_date) {
+	    				earliest_position_bought_date = new Date(earliestStartDates.get(key).buyDate) ;
+	    			}
+				});
+				
+				zooming_graph_lock = true;
+				$('#graphStartDate').datepicker("update", addDaysAndFormat(earliest_position_bought_date, 0));
+		    	zooming_graph_lock = false;
     		}
     	}
     	else {
     		if(tickerSymbol === "Select-All") {
+    			positions.forEach((pos, key) => {
+    				if(key !== "Total Portfolio Value" && key.indexOf("Historical-") === -1) {
+    					$("#cb-portfolio-" + key)[0].checked = true;
+    					earliestStartDates.set(key, positions.get(key));
+    				}
+    			});
+    			
+    			if(!fromGetPositions) {
+    				var earliest_position_bought_date = new Date();
+        			earliestStartDates.forEach((pos, key) => {
+        				if(new Date(earliestStartDates.get(key).buyDate) < earliest_position_bought_date) {
+            				earliest_position_bought_date = new Date(earliestStartDates.get(key).buyDate);
+            			}
+        			});
+        			
+        			zooming_graph_lock = true;
+        			$('#graphStartDate').datepicker("update", addDaysAndFormat(earliest_position_bought_date, 0));
+        	    	zooming_graph_lock = false;
+    			}
+    			
     			positions.forEach((pos, key) => {
     				if(key !== "Total Portfolio Value" && key.indexOf("Historical-") === -1) {
     					$("#cb-portfolio-" + key)[0].checked = true;
@@ -1331,8 +1373,25 @@ canvas{
     			});
     		} else {
 				$("#cb-portfolio-" + tickerSymbol)[0].checked = true;
+				earliestStartDates.set(tickerSymbol, positions.get(tickerSymbol));
+				
+				if(!fromGetPositions) {
+					var earliest_position_bought_date = new Date();
+					earliestStartDates.forEach((pos, key) => {
+						if(new Date(earliestStartDates.get(key).buyDate) < earliest_position_bought_date) {
+		    				earliest_position_bought_date = new Date(earliestStartDates.get(key).buyDate);
+		    			}
+					});
+					
+					zooming_graph_lock = true;
+					$('#graphStartDate').datepicker("update", addDaysAndFormat(earliest_position_bought_date, 0));
+			    	zooming_graph_lock = false;
+				}
+		    	
 				addToTotalPortfolio(tickerSymbol, positions.get(tickerSymbol).shares);
 	    	}
+    		
+    		
     	}
     }
     
@@ -1389,12 +1448,22 @@ canvas{
     	HTTP.open("GET", url);
     	HTTP.send();
 
+    	
     	HTTP.onreadystatechange = (e) => {
     		if(HTTP.readyState == 4 && HTTP.status == 200){
     			var response = JSON.parse(HTTP.responseText);
     			var rawData = response.c;
     			var temp_length = rawData ? rawData.length : 0;
     			let result_arr = [];
+    			
+    			var increment = DaysBetween($('#graphStartDate').val(), $('#graphEndDate').val())/rawData.length;
+    			config.data.labels = []
+    			
+    			// * Set default data
+				for(var i = 0; i < temp_length; i++){
+					config.data.labels.push(addDaysAndFormat($('#graphStartDate').val(), Math.round(i*increment)));
+				}
+    			
     			for(var i = 0; i < temp_length; i++){	
     				if(stockHistory[index][i] === undefined) {
     					stockHistory[index].push(rawData[i]*numShares);   
@@ -1425,6 +1494,14 @@ canvas{
     		if(HTTP.readyState == 4 && HTTP.status == 200){
     			var response = JSON.parse(HTTP.responseText);
     			var rawData = response.c;
+    			
+    			var increment = DaysBetween($('#graphStartDate').val(), $('#graphEndDate').val())/rawData.length;
+    			config.data.labels = []
+    			
+    			// * Set default data
+				for(var i = 0; i < rawData.length; i++){
+					config.data.labels.push(addDaysAndFormat($('#graphStartDate').val(), Math.round(i*increment)));
+				}
     			
     			var index = stockHistoryLabels.indexOf("Total Portfolio Value");
     			removeFromConfigDataSets("Total Portfolio Value");
@@ -1535,12 +1612,18 @@ canvas{
 	    		$('#graphEndDate').datepicker("update", graphEndDate);	    			
     		}
     	}
-    	else{
-    		graphEndDate = $('#graphEndDate').val();
-    		$('#graphDateError').html('');
-    		if(!zooming_graph_lock) { 
-	    		getPositions();  
-	    		getHistoricalPositions();
+    	else {
+    		if(new Date($('#graphStartDate').val()).getTime() === new Date($('#graphEndDate').val()).getTime()) {
+    			zooming_graph_lock = true;
+    			$('#graphStartDate').datepicker("update", graphStartDate);
+    			zooming_graph_lock = false;
+    		} else {
+	    		graphEndDate = $('#graphEndDate').val();
+	    		$('#graphDateError').html('');
+	    		if(!zooming_graph_lock) { 
+		    		getPositions();  
+		    		getHistoricalPositions();
+	    		}    			
     		}
     	}
     }
