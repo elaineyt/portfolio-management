@@ -652,6 +652,10 @@ canvas{
 		var yesterdayPortfolioValue = 0;
 		var currentPortfolioValue = 0;
 		
+		// for graph acceptance tests
+		$('#yesterdayPortfolioPoint').html(yesterdayPortfolioValue);
+		$('#todayPortfolioPoint').html(currentPortfolioValue);
+		
 		// Pulls data from 5 days in case dates have limited values
 		var todayMinus5 = Date.parse(addDaysAndFormat(new Date(), -5))/1000;
 		var today = Date.parse(addDaysAndFormat(new Date(), 0))/1000;
