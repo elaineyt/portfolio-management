@@ -1030,7 +1030,7 @@ canvas{
     	}
 	}
 	
-	function bulkAddStock(tickerSymbol, numShares, buyDate, sellDate){
+	function bulkAddStock(tickerSymbol, numShares, buyDate, sellDate,last){
 		$('#bulkStockError').html("");
 		
 		const HTTP = new XMLHttpRequest();
