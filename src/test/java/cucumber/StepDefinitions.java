@@ -162,8 +162,8 @@ public class StepDefinitions {
 		// * Try to avoid ssl issues
 		avoid_ssl_issues();
 		
-		driver.findElement(By.id("login-username")).sendKeys("test_user");
-		driver.findElement(By.id("login-password")).sendKeys("test_password");
+		driver.findElement(By.id("login-username")).sendKeys("newhash");
+		driver.findElement(By.id("login-password")).sendKeys("newhash");
 		WebElement loginButton = driver.findElement(By.id("login-submit"));
 		loginButton.click();
 	}
@@ -1454,7 +1454,7 @@ public class StepDefinitions {
 	@Then("I toggle S&P data off number of points decreases")
 	public void i_toggle_sp_data_off_number_of_points_decreases() {
 		try {
-			Thread.sleep(2000);
+			Thread.sleep(5000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -1464,8 +1464,9 @@ public class StepDefinitions {
 		String num_points = driver.findElement(By.id("graphPoints")).getText();
 		int og_pts = Integer.parseInt(num_points);
 		sp_box.click();
+		
 		try {
-			Thread.sleep(2000);
+			Thread.sleep(5000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
