@@ -124,6 +124,7 @@ canvas{
 				</div>
 				<div class='row' style='margin-top:10px;margin-left:0px;' id='add-stock-button-row'>
 					<button id="addStockModalButton" type="button" class="btn btn-primary">Add Stock</button>
+					<button id="bulkEditModalButton" type="button" class="btn btn-primary">Bulk Edit</button>
 				</div>
 				<div class="modal fade" id="addStockModal" tabindex="-1"
 					role="dialog" aria-hidden="true">
@@ -170,7 +171,7 @@ canvas{
 					</div>
 				</div>
 				
-				<button id="bulkEditModalButton" type="button" class="btn btn-primary">Bulk Edit</button>
+				
 				<div class="modal fade" id="bulkEditModal" tabindex="-1"
 					role="dialog" aria-hidden="true">
 					<div class="modal-dialog" role="document">
