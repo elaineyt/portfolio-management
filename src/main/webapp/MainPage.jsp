@@ -481,18 +481,21 @@ canvas{
 				
 				$('#submitBulk').click(function(){
 					$('#bulkStockError').html("");
+					var last = 0;
 					const files = $('#myFile').get(0).files
 					var today = new Date();
 					var dd = String(today.getDate()).padStart(2, '0');
 					var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
 					var yyyy = today.getFullYear();
 					today = mm + '/' + dd + '/' + yyyy;
+					console.log(today);
 					if(files.length == 0)
 					{
 						return false;
 					}
 					else
 				    {
+						console.log(files);
 // 						var suffix = files[0].split(".");
 // 						if((suffix[1] != "txt") || (suffix[1] != "csv"))
 // 						{
@@ -540,8 +543,12 @@ canvas{
 // 	 						}
 	 						for(var i = 0; i < stocks.length; i++)
 	 						{
+	 							if(i == stocks.length-1)
+	 							{
+	 								last = 1;
+	 							}
 	 							var stock = stocks[i].split(",");
-	 							bulkAddStock(stock[0],stock[1],stock[2],stock[3]);
+	 							bulkAddStock(stock[0],stock[1],stock[2],stock[3],last);
 	 						}
 	 					}
 	 					reader.onerror = function(error)
@@ -1088,7 +1095,10 @@ canvas{
        	            
        	            HTTP.onreadystatechange = (e) => {
        	            	if(HTTP.readyState == 4 && HTTP.status == 200){
-       	        			$("#bulkEditModal").modal('hide');
+       	            		if(last == 1)
+       	            		{
+       	            			$("#bulkEditModal").modal('hide');
+       	            		}
        	        			var today = new Date();
        	            		if(Date.parse(buyDate.toString()) <= today && today <= Date.parse(sellDate.toString())){
        	            			var row = "<div class='row' style='border-width:thin;border:solid;border-radius:5px;margin-top:5px;padding-right:10px;' id='r" + tickerSymbol + "'><div class='col-sm-2 position-padding'><input type='checkbox' id='cb-portfolio-" + tickerSymbol + "' onclick='stockChecked(\"" + tickerSymbol + "\", this)'/></div><div class='col-sm-8 position-padding'>" + tickerSymbol + 
