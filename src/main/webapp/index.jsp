@@ -34,7 +34,7 @@
 								<a href="#" class="active" id="login-form-link">Login</a>
 							</div>
 							<div class="col-xs-6">
-								<a href="#" id="register-form-link">Create Account</a>
+								<a href="#" id="register-form-link">Create User</a>
 							</div>
 						</div>
 						<hr>
@@ -72,7 +72,7 @@
 									<div class="form-group">
 										<div class="row">
 											<div class="col-sm-6 col-sm-offset-3">
-												<input type="button" name="register-submit" id="register-submit" tabindex="4" class="form-control btn btn-register" value="Create Account">
+												<input type="button" name="register-submit" id="register-submit" tabindex="4" class="form-control btn btn-register" value="Create User">
 											</div>
 										</div>
 									</div>
