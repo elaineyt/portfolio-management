@@ -1959,11 +1959,6 @@ public class StepDefinitions {
 		loginButton.click();
 		WebDriverWait wait = new WebDriverWait(driver, 5);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
-		
-		// * Set the earliest start date
-		driver.findElement(By.id("graphStartDate")).clear();
-		driver.findElement(By.id("graphStartDate")).sendKeys(new SimpleDateFormat("MM/dd/yyyy").format(new Date()));
-				
 	}
 
 	@Then("the start date and end date should be equal")
