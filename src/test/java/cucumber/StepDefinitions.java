@@ -3369,6 +3369,31 @@ public class StepDefinitions {
 		assertTrue(newTodayPortfolioPoint < todayPortfolioPoint);
 		assertTrue(newYesterdayPortfolioPoint < yesterdayPortfolioPoint);
 		
+		// Add MSFT back
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		WebElement addStock = driver.findElement(By.id("addStockModalButton"));
+		addStock.click();
+		
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		driver.findElement(By.id("addStockTicker")).sendKeys("MSFT");
+		driver.findElement(By.id("addStockShares")).sendKeys("1");
+		driver.findElement(By.id("addStockBuyDate")).sendKeys("10/15/2020");
+		driver.findElement(By.id("addStockSellDate")).sendKeys("12/31/2020");
+		
+		WebElement addStockButton = driver.findElement(By.id("addStock"));
+		addStockButton.click();
+		
 		driver.close();
 	}
 
