@@ -2489,6 +2489,7 @@ public class StepDefinitions {
 
 		WebDriver mobileDriver = new ChromeDriver(chromeOptions);
 		
+		
 		mobileDriver.get(ROOT_URL);
 		
 		try {
@@ -2499,7 +2500,26 @@ public class StepDefinitions {
 		}
 		
 		// * Try to avoid ssl issues
-		avoid_ssl_issues();
+		try {
+			WebDriverWait wait = new WebDriverWait(mobileDriver, 10);
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("details-button")));
+			WebElement details = mobileDriver.findElement(By.id("details-button"));
+			details.click();
+			wait = new WebDriverWait(mobileDriver, 10);
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("proceed-link")));
+			WebElement proceed = mobileDriver.findElement(By.id("proceed-link"));
+			proceed.click();
+			Thread.sleep(2000);
+		} catch (Exception e) {
+			/* IGNORE */
+		}
+		
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		WebDriverWait wait = new WebDriverWait(mobileDriver, 5);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("login-submit")));
