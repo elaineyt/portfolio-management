@@ -16,6 +16,7 @@ public class MD5Test extends Mockito{
 	//tests the hash function
 	@Test
 	public void testHash() {
+		new MD5();
 		String test = "Hello";
 		assertTrue(test != MD5.hash(test));
 	}

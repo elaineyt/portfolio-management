@@ -59,14 +59,22 @@ public class Login extends HttpServlet {
 		boolean locked_out = false;
 		
 		boolean invalid_request = false;
-		if(username == null || username.equals("")) {
+		if(username == null) {
 			jsonStr = "{\"Error\": \"Failed to log in user. No username provided.\"}";
 			invalid_request = true;
         }
-		else if(password == null || password.equals("")) {
+		else if(username.equals("")) {
+			jsonStr = "{\"Error\": \"Failed to log in user. No username provided.\"}";
+			invalid_request = true;
+		}
+		else if(password == null) {
         	jsonStr = "{\"Error\": \"Failed to log in user. No password provided.\"}";
 			invalid_request = true;
         }
+		else if(password.equals("")) {
+			jsonStr = "{\"Error\": \"Failed to log in user. No password provided.\"}";
+			invalid_request = true;
+		}
         
         // ! Returns JSON Object in a String format due to bad request
         if(invalid_request) {
@@ -96,7 +104,6 @@ public class Login extends HttpServlet {
             		//get curr time 
         			Timestamp curr = new Timestamp(System.currentTimeMillis());
         			Timestamp lockout_time = rs.getTimestamp("lockout_time");
-        			
         			if(lockout_time != null) {
     	    			long lockout_diff = curr.getTime() - lockout_time.getTime();
     	    			int lockout_time_diff = (int) lockout_diff;
@@ -111,7 +118,6 @@ public class Login extends HttpServlet {
     	    			}
     	    			
         			}
-        			
             		// * Send Result
             		if(jsonStr == "{\"Success\": \"Successfully logged in.\"}") {
             	        session.setAttribute("username", username);
@@ -125,6 +131,7 @@ public class Login extends HttpServlet {
     		 	        ps.executeUpdate();
             		}
             		//increment failed login attempts
+            		
             		else if(locked_out != true){
             			
             			int failed_attempts = rs.getInt("failed_login_attempts");
@@ -157,7 +164,8 @@ public class Login extends HttpServlet {
     	        	        		+ "SET lockout_time  = ?"
     	        	                + "WHERE username = ?";
     	 			 	      ps = conn.prepareStatement(sqlUpdate);
-    	 			 	      ps.setTimestamp(1, new Timestamp(System.currentTimeMillis()));
+    	 			 	      Timestamp currTime = new Timestamp(System.currentTimeMillis());
+    	 			 	      ps.setTimestamp(1, currTime);
     	 			 	      ps.setString(2, username);
     	 			 	      ps.executeUpdate();
     			 	        
@@ -199,12 +207,11 @@ public class Login extends HttpServlet {
         		out.flush();
         	} 
         	catch (SQLException sqle) { /* Ignore */ } 
-        	finally {
-        		try {
-					conn.close();
-				} catch (SQLException e) {}
+        	
+        	try {
+				conn.close();
+			} catch (Exception e) {}
         		
-        	}
         }
     }
 }

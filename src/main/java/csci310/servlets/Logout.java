@@ -45,5 +45,6 @@ public class Logout extends HttpServlet {
 		
 		out.print(jsonStr);
 		out.flush();
+		
     }
 }
