@@ -176,7 +176,22 @@ public class StepDefinitions {
 	//mainpage.feature
 	@Given("I am on mainpage.jsp")
 	public void i_am_on_mainpage_jsp() {
-	    driver.get(ROOT_URL + "MainPage.jsp"); 
+		driver.get(ROOT_URL);  
+		//login first
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// * Try to avoid ssl issues
+		avoid_ssl_issues();
+		
+		driver.findElement(By.id("login-username")).sendKeys("newhash");
+		driver.findElement(By.id("login-password")).sendKeys("newhash");
+		WebElement loginButton = driver.findElement(By.id("login-submit"));
+		loginButton.click();
 	}
 	
 	@Then("the banner color should be grey")
@@ -1383,6 +1398,8 @@ public class StepDefinitions {
 	//
 	//
 	//graph.feature
+	
+	
 	@Given("I enter a start date that is before my end date")
 	public void i_enter_a_start_date_that_is_before_my_end_date() {
 		driver.get(ROOT_URL);  
@@ -1445,6 +1462,48 @@ public class StepDefinitions {
 		
 		driver.manage().timeouts().implicitlyWait(120, TimeUnit.SECONDS);
 	}
+	
+
+	@Then("S&P data is present")
+	public void s_P_data_is_present(){
+			try {
+				Thread.sleep(5000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			Boolean isChecked = driver.findElement(By.id("cb-historical-spy")).isSelected();
+			//WebElement sp_box = driver.findElement(By.id("cb-historical-spy"));
+			assertTrue(isChecked);
+		}
+	
+	@Then("I toggle S&P data off number of points decreases")
+	public void i_toggle_sp_data_off_number_of_points_decreases() {
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		WebElement sp_box = driver.findElement(By.id("cb-historical-spy"));
+		//get num of points before clicking
+		String num_points = driver.findElement(By.id("graphPoints")).getText();
+		int og_pts = Integer.parseInt(num_points);
+		sp_box.click();
+		
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		num_points = driver.findElement(By.id("graphPoints")).getText();
+		int new_pts = Integer.parseInt(num_points);
+		assertTrue(new_pts<og_pts);
+		
+	
+	}
+	
 	
 	//zoom.feature 
 	//
@@ -2485,7 +2544,7 @@ public class StepDefinitions {
 		WebDriverWait wait = new WebDriverWait(driver, 5);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("submitBulk")));
 		WebElement bulkButton = driver.findElement(By.id("submitBulk"));
-		assertEquals("Submit",bulkButton.getText());
+		assertEquals("Upload File",bulkButton.getText());
 	}
 	@Then("there should be a close button")
 	public void there_should_be_a_close_button()
@@ -2493,7 +2552,7 @@ public class StepDefinitions {
 		WebDriverWait wait = new WebDriverWait(driver, 5);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("closeButton")));
 		WebElement bulkButton = driver.findElement(By.id("closeButton"));
-		assertEquals("Exit",bulkButton.getText());
+		assertEquals("Cancel",bulkButton.getText());
 	}
 	
 	@Given("I have logged in with no portfolio")
