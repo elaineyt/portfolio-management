@@ -1440,8 +1440,15 @@ public class StepDefinitions {
 
 	@Then("S&P data is present")
 	public void s_P_data_is_present(){
-			WebElement sp_box = driver.findElement(By.id("cb-historical-spy"));
-			assertTrue(sp_box.isSelected());
+			try {
+				Thread.sleep(5000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			Boolean isChecked = driver.findElement(By.id("cb-historical-spy")).isSelected();
+			//WebElement sp_box = driver.findElement(By.id("cb-historical-spy"));
+			assertTrue(isChecked);
 		}
 	
 	@Then("I toggle S&P data off number of points decreases")
