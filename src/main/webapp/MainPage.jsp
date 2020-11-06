@@ -124,6 +124,7 @@ canvas{
 				</div>
 				<div class='row' style='margin-top:10px;margin-left:0px;' id='add-stock-button-row'>
 					<button id="addStockModalButton" type="button" class="btn btn-primary">Add Stock</button>
+					<button id="bulkEditModalButton" type="button" class="btn btn-primary">Bulk Edit</button>
 				</div>
 				<div class="modal fade" id="addStockModal" tabindex="-1"
 					role="dialog" aria-hidden="true">
@@ -170,7 +171,7 @@ canvas{
 					</div>
 				</div>
 				
-				<button id="bulkEditModalButton" type="button" class="btn btn-primary">Bulk Edit</button>
+				
 				<div class="modal fade" id="bulkEditModal" tabindex="-1"
 					role="dialog" aria-hidden="true">
 					<div class="modal-dialog" role="document">
@@ -192,8 +193,8 @@ canvas{
     								</div>
     								<div class="mt-3">
     									<button type="button" class="btn btn-secondary" id="closeButton"
-											data-dismiss="modal">Exit</button>
-      									<button type="submit" id="submitBulk" class="btn btn-primary">Submit</button>
+											data-dismiss="modal">Cancel</button>
+      									<button type="submit" id="submitBulk" class="btn btn-primary">Upload File</button>
     								</div>
   								</form>
 							</div>
@@ -924,7 +925,7 @@ canvas{
 				$("#r-historical-" + tickerSymbol).remove();
 				var index = stockHistoryLabels.indexOf('Historical-' + tickerSymbol);
         		if(index >= 0){
-        			removeFromConfigDataSets('Historical-' + tickerSymbol);
+        			removeFromConfigDataSets(tickerSymbol);
         			stockHistory.splice(index, 1);
         			stockHistoryLabels.splice(index, 1);
         		}

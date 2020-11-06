@@ -2485,7 +2485,7 @@ public class StepDefinitions {
 		WebDriverWait wait = new WebDriverWait(driver, 5);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("submitBulk")));
 		WebElement bulkButton = driver.findElement(By.id("submitBulk"));
-		assertEquals("Submit",bulkButton.getText());
+		assertEquals("Upload File",bulkButton.getText());
 	}
 	@Then("there should be a close button")
 	public void there_should_be_a_close_button()
@@ -2493,9 +2493,226 @@ public class StepDefinitions {
 		WebDriverWait wait = new WebDriverWait(driver, 5);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("closeButton")));
 		WebElement bulkButton = driver.findElement(By.id("closeButton"));
-		assertEquals("Exit",bulkButton.getText());
+		assertEquals("Cancel",bulkButton.getText());
 	}
 	
+	@Given("I have logged in with no portfolio")
+	public void i_have_logged_in_with_no_portfolio() {
+		driver.get(ROOT_URL);  
+		//login first
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// * Try to avoid ssl issues
+		avoid_ssl_issues();
+		
+		driver.findElement(By.id("login-username")).sendKeys("test_user");
+		driver.findElement(By.id("login-password")).sendKeys("test_password");
+		WebElement loginButton = driver.findElement(By.id("login-submit"));
+		loginButton.click();
+		
+		
+	}
+
+	@Then("total portfolio value is zero")
+	public void total_portfolio_value_is_zero() {
+		WebDriverWait wait = new WebDriverWait(driver, 10);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("currentPortfolioValue")));
+		
+		String currentPortfolioValue = driver.findElement(By.id("currentPortfolioValue")).getText();
+		assertTrue(currentPortfolioValue.equals("$0.00"));
+	}
+
+	@Given("I have clicked cmg")
+	public void i_have_clicked_cmg() {
+		driver.get(ROOT_URL);  
+		//login first
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// * Try to avoid ssl issues
+		avoid_ssl_issues();
+		
+		driver.findElement(By.id("login-username")).sendKeys("test_user");
+		driver.findElement(By.id("login-password")).sendKeys("test_password");
+		WebElement loginButton = driver.findElement(By.id("login-submit"));
+		loginButton.click();
+		
+		WebDriverWait wait = new WebDriverWait(driver, 10);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("cb-portfolio-CMG")));
+		WebElement cmgCheckBox = driver.findElement(By.id("cb-portfolio-CMG"));
+		cmgCheckBox.click();
+	}
+
+	@Then("percent change value is greater than zero")
+	public void percent_change_value_is_greater_than_zero() {
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		WebDriverWait wait = new WebDriverWait(driver, 10);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("yesterdayPortfolioPoint")));
+		double yesterdayPortfolioValue = Double.parseDouble(driver.findElement(By.id("yesterdayPortfolioPoint")).getText());
+		double currentPortfolioValue = Double.parseDouble(driver.findElement(By.id("todayPortfolioPoint")).getText());
+		double percentChange = (((currentPortfolioValue-yesterdayPortfolioValue)/yesterdayPortfolioValue)*100);
+		String roundedValue = String.format("%.2f", percentChange);
+		String percentChangeValue = driver.findElement(By.id("currentPortfolioValueChange")).getText();
+		assertTrue(percentChangeValue.equals("+" + roundedValue + "%") && percentChange > 0);
+				
+				
+		
+	}
+
+	@Given("the percent change value is above zero")
+	public void the_percent_change_value_is_above_zero() {
+		driver.get(ROOT_URL);  
+		//login first
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// * Try to avoid ssl issues
+		avoid_ssl_issues();
+		
+		driver.findElement(By.id("login-username")).sendKeys("test_user");
+		driver.findElement(By.id("login-password")).sendKeys("test_password");
+		WebElement loginButton = driver.findElement(By.id("login-submit"));
+		loginButton.click();
+		
+		WebDriverWait wait = new WebDriverWait(driver, 10);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("cb-portfolio-CMG")));
+		WebElement cmgCheckBox = driver.findElement(By.id("cb-portfolio-CMG"));
+		cmgCheckBox.click();
+	}
+
+	@Then("green arrow displays")
+	public void green_arrow_displays() {
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		WebElement greenArrow = driver.findElement(By.id("greenUpTriangle"));
+		String arrow = greenArrow.getCssValue("display");
+		assertTrue(arrow.equals("inline"));
+		
+	}
+	
+	@Given("I have an unchecked position")
+	public void i_have_an_unchecked_position() {
+		driver.get(ROOT_URL);  
+		//login first
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// * Try to avoid ssl issues
+		avoid_ssl_issues();
+		
+		driver.findElement(By.id("login-username")).sendKeys("test_user");
+		driver.findElement(By.id("login-password")).sendKeys("test_password");
+		WebElement loginButton = driver.findElement(By.id("login-submit"));
+		loginButton.click();
+	}
+
+	@Then("when I check the position the number of graph points increase")
+	public void when_I_check_the_position_the_number_of_graph_points_increase() {
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		int pointsOnGraphBefore = Integer.parseInt(driver.findElement(By.id("graphPoints")).getText());
+		
+		WebElement cmgCheckBox = driver.findElement(By.xpath("//*[@id=\"cb-historical-AAPl\"]"));
+		cmgCheckBox.click();
+		
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		int pointsOnGraphAfter = Integer.parseInt(driver.findElement(By.id("graphPoints")).getText());
+		
+		assertTrue(pointsOnGraphBefore < pointsOnGraphAfter);
+		
+	}
+
+	@Given("I have a checked position")
+	public void i_have_a_checked_position() {
+		driver.get(ROOT_URL);  
+		//login first
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// * Try to avoid ssl issues
+		avoid_ssl_issues();
+		
+		driver.findElement(By.id("login-username")).sendKeys("test_user");
+		driver.findElement(By.id("login-password")).sendKeys("test_password");
+		WebElement loginButton = driver.findElement(By.id("login-submit"));
+		loginButton.click();
+		
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		WebElement cmgCheckBox = driver.findElement(By.xpath("//*[@id=\"cb-historical-AAPl\"]"));
+		cmgCheckBox.click();   
+	}
+
+	@Then("when I uncheck the position the number of graph points decrease")
+	public void when_I_uncheck_the_position_the_number_of_graph_points_decrease() {
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		int pointsOnGraphBefore = Integer.parseInt(driver.findElement(By.id("graphPoints")).getText());
+		
+		WebElement cmgCheckBox = driver.findElement(By.xpath("//*[@id=\"cb-historical-AAPl\"]"));
+		cmgCheckBox.click();
+		
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		int pointsOnGraphAfter = Integer.parseInt(driver.findElement(By.id("graphPoints")).getText());
+		
+		assertTrue(pointsOnGraphBefore > pointsOnGraphAfter);
+	}
 	@After()
 	public void after() {
 		driver.quit();
