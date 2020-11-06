@@ -5,7 +5,7 @@ Feature: Test Portfolio Select All and Deselect All changes the graph
 
   Scenario: Select All Changes the total portfolio line
     Given the portfolio select all is clicked
-    Then the total portfolio value is greater than zero
+    Then total portfolio value has the data from positions
         
   Scenario: Deselect All sets the total portfolio value to zero
     Given portfolio deselect all is clicked
