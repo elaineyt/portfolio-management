@@ -2788,7 +2788,7 @@ public class StepDefinitions {
 		// * Try to avoid ssl issues
 		avoid_ssl_issues();
 				
-		driver.findElement(By.id("login-username")).sendKeys("test_user");
+		driver.findElement(By.id("login-username")).sendKeys("test_graph_portfolio_user");
 		driver.findElement(By.id("login-password")).sendKeys("test_password");
 		WebElement loginButton = driver.findElement(By.id("login-submit"));
 		loginButton.click();
@@ -2847,7 +2847,7 @@ public class StepDefinitions {
 		// * Try to avoid ssl issues
 		avoid_ssl_issues();
 				
-		driver.findElement(By.id("login-username")).sendKeys("test_user");
+		driver.findElement(By.id("login-username")).sendKeys("test_graph_portfolio_user");
 		driver.findElement(By.id("login-password")).sendKeys("test_password");
 		WebElement loginButton = driver.findElement(By.id("login-submit"));
 		loginButton.click();
@@ -2906,7 +2906,7 @@ public class StepDefinitions {
 		// * Try to avoid ssl issues
 		avoid_ssl_issues();
 				
-		driver.findElement(By.id("login-username")).sendKeys("test_user");
+		driver.findElement(By.id("login-username")).sendKeys("test_graph_portfolio_user");
 		driver.findElement(By.id("login-password")).sendKeys("test_password");
 		WebElement loginButton = driver.findElement(By.id("login-submit"));
 		loginButton.click();
@@ -2965,7 +2965,7 @@ public class StepDefinitions {
 		// * Try to avoid ssl issues
 		avoid_ssl_issues();
 				
-		driver.findElement(By.id("login-username")).sendKeys("test_user");
+		driver.findElement(By.id("login-username")).sendKeys("test_graph_portfolio_user");
 		driver.findElement(By.id("login-password")).sendKeys("test_password");
 		WebElement loginButton = driver.findElement(By.id("login-submit"));
 		loginButton.click();
@@ -3030,7 +3030,7 @@ public class StepDefinitions {
 		// * Try to avoid ssl issues
 		avoid_ssl_issues();
 				
-		driver.findElement(By.id("login-username")).sendKeys("test_user");
+		driver.findElement(By.id("login-username")).sendKeys("test_graph_portfolio_user");
 		driver.findElement(By.id("login-password")).sendKeys("test_password");
 		WebElement loginButton = driver.findElement(By.id("login-submit"));
 		loginButton.click();
@@ -3089,7 +3089,7 @@ public class StepDefinitions {
 		// * Try to avoid ssl issues
 		avoid_ssl_issues();
 				
-		driver.findElement(By.id("login-username")).sendKeys("test_user");
+		driver.findElement(By.id("login-username")).sendKeys("test_graph_portfolio_user");
 		driver.findElement(By.id("login-password")).sendKeys("test_password");
 		WebElement loginButton = driver.findElement(By.id("login-submit"));
 		loginButton.click();
