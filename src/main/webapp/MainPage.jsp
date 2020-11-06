@@ -309,7 +309,7 @@ canvas{
 	Number of points on graph: <div id="graphPoints">0</div>
 	Yesterday's total portfolio value: <div id="yesterdayPortfolioPoint">0</div>
 	Today's total portfolio value: <div id="todayPortfolioPoint">0</div>
-	
+	Graph Colors: <div id="graphColor1"></div><div id="graphColor2"></div>
 	<script>
 	var graphPoints = 0;
 	
@@ -376,6 +376,9 @@ canvas{
 			        idleTimeout = setTimeout(() => window.location.href = redirectUrl, idleDurationSecs * 1000);
 			    };
 			
+			    $('#graphColor1').html("#FF0000");
+			    $('#graphColor2').html("#00FF00");
+			    
 			    // Init on page load
 			    resetIdleTimeout();
 			

@@ -3754,6 +3754,61 @@ public class StepDefinitions {
 		
 		driver.close();
 	}
+	
+	
+	//graphColor.feature 
+	//
+	//
+	//
+	//graphColor.feature
+	@Given("i am logged into the app with multiple historical positions checked")
+	public void i_am_logged_into_the_app_with_multiple_historical_positions_checked() {
+		driver.get(ROOT_URL); 
+		
+		//login first
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// * Try to avoid ssl issues
+		avoid_ssl_issues();
+				
+		driver.findElement(By.id("login-username")).sendKeys("test_graph_colors_user");
+		driver.findElement(By.id("login-password")).sendKeys("test_password");
+		WebElement loginButton = driver.findElement(By.id("login-submit"));
+		loginButton.click();
+		
+		WebDriverWait wait = new WebDriverWait(driver, 5);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("graphStartDate")));
+		
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+
+	@Then("there all the lines on the graph should have difference colors")
+	public void there_all_the_lines_on_the_graph_should_have_difference_colors() {
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		String graphColor1 = driver.findElement(By.id("graphColor1")).getText();
+		String graphColor2 = driver.findElement(By.id("graphColor2")).getText();
+
+		assertTrue(graphColor1 != graphColor2);
+		
+		driver.close();
+	}
 
 	@After()
 	public void after() {
