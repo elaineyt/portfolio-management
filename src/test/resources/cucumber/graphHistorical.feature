@@ -1,16 +1,8 @@
 Feature: Test Portfolio Select All and Deselect All changes the graph
-  Scenario: Select All Changes the total portfolio value
-    Given portfolio select all is clicked
-    Then the total portfolio value is greater than zero
-
-  Scenario: Select All Changes the total portfolio line
-    Given the portfolio select all is clicked
-    Then the total portfolio value is greater than zero
-        
-  Scenario: Deselect All sets the total portfolio value to zero
-    Given portfolio deselect all is clicked
-    Then the total portfolio value is equal to zero
+  Scenario: Select All Changes increases the correct number of graph points
+    Given historical select all is clicked
+    Then the number of graph points increases by the correct number
     
-  Scenario: Deselect All removes positions from total portfolio line
-    Given the portfolio deselect all is clicked
-    Then all positions are removed from the total portfolio line
+  Scenario: Deselect All Changes decreses the correct number of graph points
+    Given historical deselect all is clicked
+    Then the number of graph points decreases by the correct number
