@@ -192,8 +192,8 @@ canvas{
     								</div>
     								<div class="mt-3">
     									<button type="button" class="btn btn-secondary" id="closeButton"
-											data-dismiss="modal">Exit</button>
-      									<button type="submit" id="submitBulk" class="btn btn-primary">Submit</button>
+											data-dismiss="modal">Cancel</button>
+      									<button type="submit" id="submitBulk" class="btn btn-primary">Upload File</button>
     								</div>
   								</form>
 							</div>

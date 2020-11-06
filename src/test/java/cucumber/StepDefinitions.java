@@ -2485,7 +2485,7 @@ public class StepDefinitions {
 		WebDriverWait wait = new WebDriverWait(driver, 5);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("submitBulk")));
 		WebElement bulkButton = driver.findElement(By.id("submitBulk"));
-		assertEquals("Submit",bulkButton.getText());
+		assertEquals("Upload File",bulkButton.getText());
 	}
 	@Then("there should be a close button")
 	public void there_should_be_a_close_button()
@@ -2493,7 +2493,7 @@ public class StepDefinitions {
 		WebDriverWait wait = new WebDriverWait(driver, 5);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("closeButton")));
 		WebElement bulkButton = driver.findElement(By.id("closeButton"));
-		assertEquals("Exit",bulkButton.getText());
+		assertEquals("Cancel",bulkButton.getText());
 	}
 	
 	@Given("I have logged in with no portfolio")
