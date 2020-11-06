@@ -223,7 +223,19 @@ public class StepDefinitions {
 	
 	@Given("I am on index.jsp")
 	public void i_am_on_index_jsp() {
-		driver.get(ROOT_URL);  
+		driver.get(ROOT_URL);
+		
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		avoid_ssl_issues();
+		
+		
+		
 	}
 	
 	@When("I login")
@@ -2570,10 +2582,7 @@ public class StepDefinitions {
 		assertEquals("Cancel",bulkButton.getText());
 	}
   
-  //graphA.feature
-  //
-  //
-  //graphA.feature
+  
 	
 	@When("I upload a malformed file")
 	public void i_upload_a_malformed_file() {
@@ -2586,7 +2595,8 @@ public class StepDefinitions {
 		WebDriverWait wait = new WebDriverWait(driver, 5);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("myFile")));
 		WebElement bulkButton = driver.findElement(By.id("myFile"));
-		bulkButton.sendKeys("C:\\Users\\rjens\\git\\new\\src\\test\\resources\\CSVTestFiles\\invalidStock.txt");
+		bulkButton.sendKeys("/Users/adamdillard/Documents/GitHub/project-20203b-groupf-20203/src/test/resources/CSVTestFiles/invalidStock.txt");
+		
 		System.out.println("hit");
 		driver.findElement(By.id("submitBulk")).click();
 		
@@ -2600,6 +2610,11 @@ public class StepDefinitions {
 		WebElement bulkButton = driver.findElement(By.id("bulkStockError"));
 	    assertEquals("Invalid ticker symbol.",bulkButton.getText());
 	}
+	
+	//graphA.feature
+	  //
+	  //
+	  //graphA.feature
 	
 	@Given("I have logged in with no portfolio")
 	public void i_have_logged_in_with_no_portfolio() {
