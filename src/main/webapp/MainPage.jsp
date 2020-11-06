@@ -486,14 +486,12 @@ canvas{
 					var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
 					var yyyy = today.getFullYear();
 					today = mm + '/' + dd + '/' + yyyy;
-					console.log(today);
 					if(files.length == 0)
 					{
 						return false;
 					}
 					else
 				    {
-						console.log(files);
 // 						var suffix = files[0].split(".");
 // 						if((suffix[1] != "txt") || (suffix[1] != "csv"))
 // 						{
@@ -724,7 +722,6 @@ canvas{
         	prev_checked_positions = new_prev_checked;
         }
         
-        console.log(prev_checked_positions);
         $("#positions").html("");
         
         var row = "<div class='row' style='border-width:thin;border:solid;border-radius:5px;display:flex;flex-wrap:wrap;justify-content:center;' id='select-all-portfolio'>" +
@@ -923,8 +920,8 @@ canvas{
        			$("#deleteHistoricalStockModal").modal('hide');	
 				$("#r-historical-" + tickerSymbol).remove();
 				var index = stockHistoryLabels.indexOf('Historical-' + tickerSymbol);
-        		if(index >= 0){
-        			removeFromConfigDataSets('Historical-' + tickerSymbol);
+        		if(index >= 0) {
+        			removeFromConfigDataSets(tickerSymbol);
         			stockHistory.splice(index, 1);
         			stockHistoryLabels.splice(index, 1);
         		}
