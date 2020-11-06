@@ -16,8 +16,11 @@
     <link rel="shortcut icon" href="">
 	<title>USC CS310 Stock Portfolio Management HomePage</title>
 	</head>	
-<body>
-
+<body 
+	style="background-image: url(img/40450Edit.png); 
+		background-size: cover;
+		background-repeat:no-repeat;
+		">
 	
 	<div class="topnav" style="padding-top: 2%; padding-bottom: 2.5%;">
 		<h1 style="color: #white; font-family:Lato; font-size:250%; padding-left: 7%;">USC CS310 Stock Portfolio Management </h1>
@@ -34,7 +37,7 @@
 								<a href="#" class="active" id="login-form-link">Login</a>
 							</div>
 							<div class="col-xs-6">
-								<a href="#" id="register-form-link">Create Account</a>
+								<a href="#" id="register-form-link">Create User</a>
 							</div>
 						</div>
 						<hr>
@@ -72,7 +75,7 @@
 									<div class="form-group">
 										<div class="row">
 											<div class="col-sm-6 col-sm-offset-3">
-												<input type="button" name="register-submit" id="register-submit" tabindex="4" class="form-control btn btn-register" value="Create Account">
+												<input type="button" name="register-submit" id="register-submit" tabindex="4" class="form-control btn btn-register" value="Create User">
 											</div>
 										</div>
 									</div>

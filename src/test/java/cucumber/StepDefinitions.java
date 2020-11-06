@@ -2714,7 +2714,6 @@ public class StepDefinitions {
 		assertTrue(pointsOnGraphBefore > pointsOnGraphAfter);
 	}
 	
-	
 	//graphPortfolio.feature 
 	//
 	//
