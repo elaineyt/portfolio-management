@@ -11,6 +11,7 @@ import org.junit.runner.RunWith;
  */
 @RunWith(Cucumber.class)
 @CucumberOptions(strict = true, features = {
+
 		"src/test/resources/cucumber/graphHistorical.feature",
 		"src/test/resources/cucumber/graphPortfolio.feature",
 		"src/test/resources/cucumber/graphA.feature",

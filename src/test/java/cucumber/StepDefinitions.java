@@ -2569,6 +2569,11 @@ public class StepDefinitions {
 		WebElement bulkButton = driver.findElement(By.id("closeButton"));
 		assertEquals("Cancel",bulkButton.getText());
 	}
+  
+  //graphA.feature
+  //
+  //
+  //graphA.feature
 	
 	@When("I upload a malformed file")
 	public void i_upload_a_malformed_file() {
@@ -2646,31 +2651,85 @@ public class StepDefinitions {
 		WebElement loginButton = driver.findElement(By.id("login-submit"));
 		loginButton.click();
 		
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		WebElement button = driver.findElement(By.id("addStockModalButton"));
+		button.click();
+		
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		driver.findElement(By.id("addStockTicker")).sendKeys("CMG");
+		driver.findElement(By.id("addStockShares")).sendKeys("1");
+		driver.findElement(By.id("addStockBuyDate")).sendKeys("10/15/2020");
+		driver.findElement(By.id("addStockSellDate")).sendKeys("11/30/2020");
+		
+		WebElement button1 = driver.findElement(By.id("addStock"));
+		button1.click();
+		
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
 		WebDriverWait wait = new WebDriverWait(driver, 10);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("cb-portfolio-CMG")));
 		WebElement cmgCheckBox = driver.findElement(By.id("cb-portfolio-CMG"));
 		cmgCheckBox.click();
+			
 	}
 
 	@Then("percent change value is greater than zero")
 	public void percent_change_value_is_greater_than_zero() {
 		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			WebDriverWait wait = new WebDriverWait(driver, 10);
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("yesterdayPortfolioPoint")));
+			double yesterdayPortfolioValue = Double.parseDouble(driver.findElement(By.id("yesterdayPortfolioPoint")).getText());
+			double currentPortfolioValue = Double.parseDouble(driver.findElement(By.id("todayPortfolioPoint")).getText());
+			double percentChange = (((currentPortfolioValue-yesterdayPortfolioValue)/yesterdayPortfolioValue)*100);
+			String roundedValue = String.format("%.2f", percentChange);
+			String percentChangeValue = driver.findElement(By.id("currentPortfolioValueChange")).getText();
+			assertTrue(percentChangeValue.equals("+" + roundedValue + "%") && percentChange > 0);
 		}
-		WebDriverWait wait = new WebDriverWait(driver, 10);
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("yesterdayPortfolioPoint")));
-		double yesterdayPortfolioValue = Double.parseDouble(driver.findElement(By.id("yesterdayPortfolioPoint")).getText());
-		double currentPortfolioValue = Double.parseDouble(driver.findElement(By.id("todayPortfolioPoint")).getText());
-		double percentChange = (((currentPortfolioValue-yesterdayPortfolioValue)/yesterdayPortfolioValue)*100);
-		String roundedValue = String.format("%.2f", percentChange);
-		String percentChangeValue = driver.findElement(By.id("currentPortfolioValueChange")).getText();
-		assertTrue(percentChangeValue.equals("+" + roundedValue + "%") && percentChange > 0);
-				
-				
+		finally {
+			WebDriverWait wait1 = new WebDriverWait(driver, 5);
+			wait1.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='rCMG']/div[3]/button")));
+			WebElement button1 = driver.findElement(By.xpath("//*[@id='rCMG']/div[3]/button"));
+			try {
+				Thread.sleep(5000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		
+			button1.click();
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			WebElement button2 = driver.findElement(By.id("deleteStock"));
+			button2.click();
+		}		
 	}
 
 	@Given("the percent change value is above zero")
@@ -2692,6 +2751,38 @@ public class StepDefinitions {
 		WebElement loginButton = driver.findElement(By.id("login-submit"));
 		loginButton.click();
 		
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		WebElement button = driver.findElement(By.id("addStockModalButton"));
+		button.click();
+		
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		driver.findElement(By.id("addStockTicker")).sendKeys("CMG");
+		driver.findElement(By.id("addStockShares")).sendKeys("1");
+		driver.findElement(By.id("addStockBuyDate")).sendKeys("10/15/2020");
+		driver.findElement(By.id("addStockSellDate")).sendKeys("11/30/2020");
+		
+		WebElement button1 = driver.findElement(By.id("addStock"));
+		button1.click();
+		
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		WebDriverWait wait = new WebDriverWait(driver, 10);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("cb-portfolio-CMG")));
 		WebElement cmgCheckBox = driver.findElement(By.id("cb-portfolio-CMG"));
@@ -2701,15 +2792,39 @@ public class StepDefinitions {
 	@Then("green arrow displays")
 	public void green_arrow_displays() {
 		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			WebElement greenArrow = driver.findElement(By.id("greenUpTriangle"));
+			String arrow = greenArrow.getCssValue("display");
+			assertTrue(arrow.equals("inline"));
 		}
+		finally {
+			WebDriverWait wait1 = new WebDriverWait(driver, 5);
+			wait1.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='rCMG']/div[3]/button")));
+			WebElement button1 = driver.findElement(By.xpath("//*[@id='rCMG']/div[3]/button"));
+			try {
+				Thread.sleep(5000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		
-		WebElement greenArrow = driver.findElement(By.id("greenUpTriangle"));
-		String arrow = greenArrow.getCssValue("display");
-		assertTrue(arrow.equals("inline"));
+			button1.click();
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			WebElement button2 = driver.findElement(By.id("deleteStock"));
+			button2.click();
+			
+		}
 		
 	}
 	
@@ -2731,31 +2846,81 @@ public class StepDefinitions {
 		driver.findElement(By.id("login-password")).sendKeys("test_password");
 		WebElement loginButton = driver.findElement(By.id("login-submit"));
 		loginButton.click();
+		
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		WebElement button = driver.findElement(By.id("addHistoricalStockModalButton"));
+		button.click();
+		
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		driver.findElement(By.id("addHistoricalStockTicker")).sendKeys("AAPL");
+		driver.findElement(By.id("addHistoricalStockShares")).sendKeys("1");
+		driver.findElement(By.id("addHistoricalStockBuyDate")).sendKeys("10/15/2020");
+		driver.findElement(By.id("addHistoricalStockSellDate")).sendKeys("11/30/2020");
+		
+		WebElement button1 = driver.findElement(By.id("addHistoricalStock"));
+		button1.click();
+	
 	}
 
 	@Then("when I check the position the number of graph points increase")
 	public void when_I_check_the_position_the_number_of_graph_points_increase() {
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		try {	
+			try {
+				Thread.sleep(5000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			int pointsOnGraphBefore = Integer.parseInt(driver.findElement(By.id("graphPoints")).getText());
+			
+			WebElement cmgCheckBox = driver.findElement(By.xpath("//*[@id=\"cb-historical-AAPL\"]"));
+			cmgCheckBox.click();
+			
+			try {
+				Thread.sleep(5000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			int pointsOnGraphAfter = Integer.parseInt(driver.findElement(By.id("graphPoints")).getText());
+			
+			assertTrue(pointsOnGraphBefore < pointsOnGraphAfter);
 		}
-		int pointsOnGraphBefore = Integer.parseInt(driver.findElement(By.id("graphPoints")).getText());
-		
-		WebElement cmgCheckBox = driver.findElement(By.xpath("//*[@id=\"cb-historical-AAPl\"]"));
-		cmgCheckBox.click();
-		
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		finally {
+			
+			WebDriverWait wait1 = new WebDriverWait(driver, 5);
+			wait1.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"r-historical-AAPL\"]/div[3]/button")));
+			WebElement button1 = driver.findElement(By.xpath("//*[@id=\"r-historical-AAPL\"]/div[3]/button"));
+			try {
+				Thread.sleep(5000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			button1.click();
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			WebElement button2 = driver.findElement(By.id("deleteHistoricalStock"));
+			button2.click();
 		}
-		
-		int pointsOnGraphAfter = Integer.parseInt(driver.findElement(By.id("graphPoints")).getText());
-		
-		assertTrue(pointsOnGraphBefore < pointsOnGraphAfter);
 		
 	}
 
@@ -2785,12 +2950,143 @@ public class StepDefinitions {
 			e.printStackTrace();
 		}
 		
-		WebElement cmgCheckBox = driver.findElement(By.xpath("//*[@id=\"cb-historical-AAPl\"]"));
+		WebElement button = driver.findElement(By.id("addHistoricalStockModalButton"));
+		button.click();
+		
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		driver.findElement(By.id("addHistoricalStockTicker")).sendKeys("AAPL");
+		driver.findElement(By.id("addHistoricalStockShares")).sendKeys("1");
+		driver.findElement(By.id("addHistoricalStockBuyDate")).sendKeys("10/15/2020");
+		driver.findElement(By.id("addHistoricalStockSellDate")).sendKeys("11/30/2020");
+		
+		WebElement button1 = driver.findElement(By.id("addHistoricalStock"));
+		button1.click();
+		
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		WebElement cmgCheckBox = driver.findElement(By.xpath("//*[@id=\"cb-historical-AAPL\"]"));
 		cmgCheckBox.click();   
 	}
 
 	@Then("when I uncheck the position the number of graph points decrease")
 	public void when_I_uncheck_the_position_the_number_of_graph_points_decrease() {
+		try {
+			try {
+				Thread.sleep(5000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			int pointsOnGraphBefore = Integer.parseInt(driver.findElement(By.id("graphPoints")).getText());
+			
+			WebElement cmgCheckBox = driver.findElement(By.xpath("//*[@id=\"cb-historical-AAPL\"]"));
+			cmgCheckBox.click();
+			
+			try {
+				Thread.sleep(5000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			int pointsOnGraphAfter = Integer.parseInt(driver.findElement(By.id("graphPoints")).getText());
+			
+			assertTrue(pointsOnGraphBefore > pointsOnGraphAfter);
+			
+		}
+		finally {
+			
+			
+			WebDriverWait wait1 = new WebDriverWait(driver, 5);
+			wait1.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"r-historical-AAPL\"]/div[3]/button")));
+			WebElement button1 = driver.findElement(By.xpath("//*[@id=\"r-historical-AAPL\"]/div[3]/button"));
+			try {
+				Thread.sleep(5000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	
+			button1.click();
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			WebElement button2 = driver.findElement(By.id("deleteHistoricalStock"));
+			button2.click();
+		}
+	}
+	
+	@Given("I have a checked historical position")
+	public void i_have_a_checked_historical_position() {
+		driver.get(ROOT_URL);  
+		//login first
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// * Try to avoid ssl issues
+		avoid_ssl_issues();
+		
+		driver.findElement(By.id("login-username")).sendKeys("test_user");
+		driver.findElement(By.id("login-password")).sendKeys("test_password");
+		WebElement loginButton = driver.findElement(By.id("login-submit"));
+		loginButton.click();
+		
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		WebElement button = driver.findElement(By.id("addHistoricalStockModalButton"));
+		button.click();
+		
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		driver.findElement(By.id("addHistoricalStockTicker")).sendKeys("GOOG");
+		driver.findElement(By.id("addHistoricalStockShares")).sendKeys("1");
+		driver.findElement(By.id("addHistoricalStockBuyDate")).sendKeys("10/15/2020");
+		driver.findElement(By.id("addHistoricalStockSellDate")).sendKeys("11/30/2020");
+		
+		WebElement button1 = driver.findElement(By.id("addHistoricalStock"));
+		button1.click();
+		
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		WebElement cmgCheckBox = driver.findElement(By.xpath("//*[@id=\"cb-historical-GOOG\"]"));
+		cmgCheckBox.click();   
+	}
+
+	@Then("when I delete the position the number of graph points decrease")
+	public void when_I_delete_the_position_the_number_of_graph_points_decrease() {
 		try {
 			Thread.sleep(5000);
 		} catch (InterruptedException e) {
@@ -2799,8 +3095,25 @@ public class StepDefinitions {
 		}
 		int pointsOnGraphBefore = Integer.parseInt(driver.findElement(By.id("graphPoints")).getText());
 		
-		WebElement cmgCheckBox = driver.findElement(By.xpath("//*[@id=\"cb-historical-AAPl\"]"));
-		cmgCheckBox.click();
+		WebDriverWait wait1 = new WebDriverWait(driver, 5);
+		wait1.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"r-historical-GOOG\"]/div[3]/button")));
+		WebElement button1 = driver.findElement(By.xpath("//*[@id=\"r-historical-GOOG\"]/div[3]/button"));
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		button1.click();
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		WebElement button2 = driver.findElement(By.id("deleteHistoricalStock"));
+		button2.click();
 		
 		try {
 			Thread.sleep(5000);
@@ -2808,7 +3121,6 @@ public class StepDefinitions {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 		int pointsOnGraphAfter = Integer.parseInt(driver.findElement(By.id("graphPoints")).getText());
 		
 		assertTrue(pointsOnGraphBefore > pointsOnGraphAfter);

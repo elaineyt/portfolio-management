@@ -6,7 +6,7 @@ Feature: GraphA
 	Scenario: Percent Change 
 		Given I have clicked cmg
 		Then percent change value is greater than zero
-		
+
 	Scenario: Arrow
 		Given the percent change value is above zero
 		Then green arrow displays
@@ -18,6 +18,10 @@ Feature: GraphA
 	Scenario: Unchecking a checked historical position should decrease number of points on graph
 		Given I have a checked position
 		Then when I uncheck the position the number of graph points decrease
+		
+	Scenario: Deleting a checked historical position should decrease number of points on graph
+		Given I have a checked historical position
+		Then when I delete the position the number of graph points decrease
 
 
 	
