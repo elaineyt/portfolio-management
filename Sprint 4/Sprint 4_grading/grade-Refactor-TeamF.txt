@@ -1,0 +1,14 @@
+Best Practice Refactor Report
+Owner: TeamF
+Grade: 10.0/10
+Comments: 
+Issue 119
+	Mittens34 satisfied 7 of 7 requirements for this issue.
+Issue 117
+	abigger87 satisfied 7 of 7 requirements for this issue.
+Issue 115
+	17adillard satisfied 7 of 7 requirements for this issue.
+Issue 112
+	elaineyt satisfied 7 of 7 requirements for this issue.
+Issue 110
+	henrycikanek satisfied 7 of 7 requirements for this issue.
