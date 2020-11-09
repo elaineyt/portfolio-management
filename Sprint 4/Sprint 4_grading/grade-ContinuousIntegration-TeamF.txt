@@ -1,0 +1,9 @@
+Best Practice ContinuousIntegration Report
+Owner: TeamF
+Grade: 7/10
+Comments: 
+Develop branch check failed: https://github.com/CSCI310/project-20203b-groupf-20203/commit/7d5a3ff29ed55b369fe9106c78c4e4b47eb5ce44
+Develop branch check failed: https://github.com/CSCI310/project-20203b-groupf-20203/commit/ade5c28025fd7a99cd62913073ce77100aa87511
+Develop branch check failed: https://github.com/CSCI310/project-20203b-groupf-20203/commit/fa78ba1030b695ebedc9db4d57c2bc2cea794bb6
+Total successful commits: 31
+Total failing commits: 3
