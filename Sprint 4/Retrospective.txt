@@ -1,0 +1,26 @@
+11/09/20
+Sprint #4 Retrospective
+
+Meeting Participants:
+Adam Dillard
+Tyler Jensen
+Elaine Tran
+Andreas Bigger
+Henry Cikanek
+
+Changes to be made to Process:
+Need to have only one team member absent at most during scrum meetings
+Prevent incorrect TDD methods
+We had one missing method
+Give more time to test locally and ensure database is functioning properly so we aren’t forced to rely on Travis
+Make sure we don’t have outliers for sustainable pace
+We performed well on the low end committing changes most days, but had one outlier with a large number of commits on the last day of the sprint.
+Make sure each branch has proper naming prefix “feature-” 
+One of our branches had prefix “fix-” for a hotfix to develop
+Ensure coverage is complete 
+We still had a few exceptions measured by cobertura as not completely covered
+
+Based on feedback from our demo, we must be better at attending scrum meetings consistently, only allowing for a single members absence at a time. We also must allot enough time to test locally and ensure our databases are functioning correctly, in order to ensure contingency against failures of travis. We must level out our consistency and avoid backloading a lot of commits on the last days of sprints. We had one branch that did not follow naming conventions and will correct that mistake in the future. Finally, we must continue to strive for complete coverage. This can be done through thorough and early testing with careful attention given to cobertura reports.
+
+Tasks that will be added to product backlog
+None
