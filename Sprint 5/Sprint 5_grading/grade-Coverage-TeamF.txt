@@ -1,0 +1,8 @@
+Best Practice Coverage Report
+Owner: TeamF
+Grade: 9.8/10
+Comments: 
+Using commit: https://github.com/CSCI310/project-20203b-groupf-20203/commit/ad95c880273f8b86d79fe2c43a306f05c4a00ada
+Reported statement coverage: 97.0
+Reported branch coverage: 98.0
+Average coverage: 97.5
