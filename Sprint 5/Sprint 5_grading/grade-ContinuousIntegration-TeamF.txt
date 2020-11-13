@@ -1,0 +1,6 @@
+Best Practice ContinuousIntegration Report
+Owner: TeamF
+Grade: 10/10
+Comments: 
+Total successful commits: 0
+Total failing commits: 0
