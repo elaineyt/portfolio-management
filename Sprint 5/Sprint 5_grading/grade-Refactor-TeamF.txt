@@ -1,0 +1,6 @@
+Best Practice Refactor Report
+Owner: TeamF
+Grade: 0.0/10
+Comments: 
+
+The following students did not create an issue: {'elaineyt', 'Mittens34', 'abigger87', '17adillard', 'henrycikanek'}
